@@ -1,8 +1,11 @@
-﻿namespace ATE.Core.Entities
+﻿using System.Collections.Generic;
+
+namespace ATE.Core.Entities
 {
     public class Client : BaseEntity
     {
         public string FirstName { get; set; }
         public string SecondName { get; set; }
+        public List<Contract> Contracts { get; set; }
     }
 }

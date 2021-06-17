@@ -12,11 +12,5 @@ namespace ATE.Core.Entities
         public string Number { get; }
         public int ContractId { get; }
         public Contract Contract { get; }
-        
-        public static IPhoneNumber GenerateNumber(Contract contract)
-        {
-
-        }
-        
     }
 }

@@ -9,12 +9,20 @@ namespace ATE.Infrastructure.Data
         public DbSet<Client> Clients { get; set; }
         public DbSet<Contract> Contracts { get; set; }
 
+        public AteContext()
+        { }
+
         public AteContext(DbContextOptions options):base(options)
         { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlServer(@"Data Source = (localdb)\MSSQLLocalDB;Initial Catalog=Ate;");
         }
     }
 }
