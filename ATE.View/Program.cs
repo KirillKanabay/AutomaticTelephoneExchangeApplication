@@ -1,4 +1,5 @@
 ﻿using ATE.Configurations.IoC;
+using ATE.Views;
 using Autofac;
 
 namespace ATE
@@ -14,7 +15,7 @@ namespace ATE
 
             using (var scope = container.BeginLifetimeScope())
             {
-                
+                container.Resolve<MainMenuView>().Show();
             }
         }
     }

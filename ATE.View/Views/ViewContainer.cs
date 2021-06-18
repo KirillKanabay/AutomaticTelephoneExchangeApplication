@@ -5,13 +5,13 @@ namespace ATE.Views
 {
     internal class ViewContainer
     {
-        private readonly IContainer _container;
+        private readonly ILifetimeScope _scope;
 
-        public ViewContainer(IContainer container)
+        public ViewContainer(ILifetimeScope scope)
         {
-            _container = container;
+            _scope = scope;
         }
 
-        public BaseView Resolve<TView>() where TView : BaseView => _container.Resolve<TView>();
+        public BaseView Resolve<TView>() where TView : BaseView => _scope.Resolve<TView>();
     }
 }

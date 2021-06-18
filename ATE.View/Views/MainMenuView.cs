@@ -13,22 +13,9 @@ namespace ATE.Views
             _viewContainer = viewContainer;
         }
 
-        public override void Show()
-        {
-            Console.Title = "Automatic Telephone Exchange - Главное окно";
-            Console.WriteLine("\tГлавное окно");
-            ShowHelp();
-
-            ConsoleKeyInfo cki;
-            do
-            {
-                Console.Write("Нажмите клавишу <F1 - справка>:");
-                cki = Console.ReadKey(false);
-                Console.WriteLine();
-                KeyEvent.OnKeyPress(cki);
-            } while (cki.Key != ConsoleKey.F4);
-        }
-
+        public override string Title { get; protected set; } = "Automatic Telephone Exchange - Главное окно";
+        public override string Header { get; protected set; } = "Главное окно";
+        
         protected override void OnKeyPress(object sender, KeyEventArgs e)
         {
             switch (e.ConsoleKeyInfo.Key)
@@ -48,7 +35,7 @@ namespace ATE.Views
             }
         }
 
-        private void ShowHelp()
+        protected override void ShowHelp()
         {
             Console.WriteLine($"<F1> - Справка{Environment.NewLine}" +
                               $"<F4> - Выход из программы{Environment.NewLine}" +

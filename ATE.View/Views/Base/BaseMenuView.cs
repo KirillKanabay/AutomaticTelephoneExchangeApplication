@@ -1,4 +1,5 @@
-﻿using ATE.Helpers;
+﻿using System;
+using ATE.Helpers;
 
 namespace ATE.Views.Base
 {
@@ -12,5 +13,21 @@ namespace ATE.Views.Base
         }
 
         protected abstract void OnKeyPress(object sender, KeyEventArgs e);
+        protected abstract void ShowHelp();
+        public override void Show()
+        {
+            Console.Title = Title;
+            Clear();
+            ShowHelp();
+
+            ConsoleKeyInfo cki;
+            do
+            {
+                Console.Write("Нажмите клавишу <F1 - справка>:");
+                cki = Console.ReadKey(false);
+                Console.WriteLine();
+                KeyEvent.OnKeyPress(cki);
+            } while (cki.Key != ConsoleKey.F4);
+        }
     }
 }

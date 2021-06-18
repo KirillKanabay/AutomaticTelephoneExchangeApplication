@@ -1,15 +1,16 @@
 ﻿using System.Collections.Generic;
 using ATE.Core.Entities;
+using ATE.Core.Specifications;
 
 namespace ATE.Core.Interfaces
 {
     public interface IGenericRepository<TEntity> where TEntity : BaseEntity
     {
-        TEntity Add(TEntity item);
+        void Add(TEntity item);
         TEntity GetById(int id);
         IReadOnlyList<TEntity> ListAll();
-        TEntity Delete(TEntity item);
-        TEntity GetEntityWithSpec();
-        IReadOnlyList<TEntity> List();
+        void Remove(TEntity item);
+        TEntity GetEntityWithSpec(ISpecification<TEntity> spec);
+        IReadOnlyList<TEntity> List(ISpecification<TEntity> spec);
     }
 }
