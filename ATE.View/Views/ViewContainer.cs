@@ -3,7 +3,7 @@ using Autofac;
 
 namespace ATE.Views
 {
-    internal class ViewContainer
+    public class ViewContainer
     {
         private readonly ILifetimeScope _scope;
 

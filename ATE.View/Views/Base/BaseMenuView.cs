@@ -3,7 +3,7 @@ using ATE.Helpers;
 
 namespace ATE.Views.Base
 {
-    abstract class BaseMenuView : BaseView 
+    public abstract class BaseMenuView : BaseView 
     {
         protected readonly KeyEvent KeyEvent;
         protected BaseMenuView(string title) : base(title)

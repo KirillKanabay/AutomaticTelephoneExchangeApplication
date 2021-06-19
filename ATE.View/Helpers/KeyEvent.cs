@@ -2,14 +2,14 @@
 
 namespace ATE.Helpers
 {
-    internal delegate void KeyHandler(object source, KeyEventArgs e);
+    public delegate void KeyHandler(object source, KeyEventArgs e);
 
-    internal class KeyEventArgs : EventArgs
+    public class KeyEventArgs : EventArgs
     {
         public ConsoleKeyInfo ConsoleKeyInfo;
     }
 
-    internal class KeyEvent
+    public class KeyEvent
     {
         public event KeyHandler KeyPressEvent;
         public void OnKeyPress(ConsoleKeyInfo consoleKeyInfo)

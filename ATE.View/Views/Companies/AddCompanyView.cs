@@ -31,11 +31,17 @@ namespace ATE.Views.Companies
         private Core.Entities.Company ReadCompany()
         {
             var company = new Core.Entities.Company();
+            
             Console.Write("Введите название компании:");
             company.Name = Console.ReadLine();
 
+            Console.Write("Введите код страны компании:");
+            company.CountryCode = Console.ReadLine();
+            
+            Console.Write("Введите код компании:");
+            company.CompanyCode = Console.ReadLine();
+            
             return company;
-
         }
     }
 }

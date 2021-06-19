@@ -10,6 +10,11 @@ namespace ATE.Infrastructure.Data
         public DbSet<Contract> Contracts { get; set; }
         public DbSet<Company> Companies { get; set; }
 
+        public AteContext()
+        {
+            
+        }
+        
         public AteContext(DbContextOptions options) : base(options)
         {
             Database.EnsureCreated();

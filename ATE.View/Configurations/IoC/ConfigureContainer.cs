@@ -1,9 +1,12 @@
 ﻿using ATE.Core.Interfaces;
+using ATE.Generators;
 using ATE.Helpers;
 using ATE.Infrastructure.Data;
 using ATE.Views;
 using ATE.Views.Clients;
 using ATE.Views.Companies;
+using ATE.Views.Contracts;
+using ATE.Views.Tariffs;
 using Autofac;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,7 +34,7 @@ namespace ATE.Configurations.IoC
             builder.RegisterType<ViewContainer>().AsSelf().SingleInstance();
 
             builder.RegisterType<MainMenuView>().AsSelf().InstancePerLifetimeScope();
-
+            
             #region Company
 
             builder.RegisterType<CompanyMenuView>().AsSelf().InstancePerLifetimeScope();
@@ -47,10 +50,24 @@ namespace ATE.Configurations.IoC
             builder.RegisterType<AddClientView>().AsSelf().InstancePerLifetimeScope();
 
             #endregion
+
+            #region Contract
+
+            builder.RegisterType<ContractMenuView>().AsSelf().InstancePerLifetimeScope();
+            builder.RegisterType<AddContractView>().AsSelf().InstancePerLifetimeScope();
+            #endregion
+            
+            #region Tariff
+
+            builder.RegisterType<TariffMenuView>().AsSelf().InstancePerLifetimeScope();
+            builder.RegisterType<AddTariffView>().AsSelf().InstancePerLifetimeScope();
+
+            #endregion
         }
 
         private void LoadHelpers(ContainerBuilder builder)
         {
+            builder.RegisterType<PhoneNumberGenerator>().As<IPhoneNumberGenerator>().SingleInstance();
             builder.RegisterType<KeyEvent>().AsSelf().InstancePerDependency();
         }
     }

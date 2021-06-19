@@ -48,6 +48,16 @@ namespace ATE.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("CompanyCode")
+                        .IsRequired()
+                        .HasMaxLength(5)
+                        .HasColumnType("nvarchar(5)");
+
+                    b.Property<string>("CountryCode")
+                        .IsRequired()
+                        .HasMaxLength(5)
+                        .HasColumnType("nvarchar(5)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -80,6 +90,9 @@ namespace ATE.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("TariffId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ClientId");
@@ -90,7 +103,39 @@ namespace ATE.Infrastructure.Migrations
 
                     b.HasIndex("CompanyId1");
 
+                    b.HasIndex("TariffId");
+
                     b.ToTable("Contracts");
+                });
+
+            modelBuilder.Entity("ATE.Core.Entities.Tariff", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CompanyId1")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<decimal>("PricePerCall")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompanyId");
+
+                    b.HasIndex("CompanyId1");
+
+                    b.ToTable("Tariff");
                 });
 
             modelBuilder.Entity("ATE.Core.Entities.Contract", b =>
@@ -115,7 +160,30 @@ namespace ATE.Infrastructure.Migrations
                         .WithMany("Contracts")
                         .HasForeignKey("CompanyId1");
 
+                    b.HasOne("ATE.Core.Entities.Tariff", "Tariff")
+                        .WithMany()
+                        .HasForeignKey("TariffId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Client");
+
+                    b.Navigation("Company");
+
+                    b.Navigation("Tariff");
+                });
+
+            modelBuilder.Entity("ATE.Core.Entities.Tariff", b =>
+                {
+                    b.HasOne("ATE.Core.Entities.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ATE.Core.Entities.Company", null)
+                        .WithMany("Tariffs")
+                        .HasForeignKey("CompanyId1");
 
                     b.Navigation("Company");
                 });
@@ -128,6 +196,8 @@ namespace ATE.Infrastructure.Migrations
             modelBuilder.Entity("ATE.Core.Entities.Company", b =>
                 {
                     b.Navigation("Contracts");
+
+                    b.Navigation("Tariffs");
                 });
 #pragma warning restore 612, 618
         }

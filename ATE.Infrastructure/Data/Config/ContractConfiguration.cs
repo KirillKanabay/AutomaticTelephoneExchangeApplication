@@ -11,10 +11,12 @@ namespace ATE.Infrastructure.Data.Config
             builder.Property(c => c.Id).IsRequired();
             builder.Property(c => c.ClientId).IsRequired();
             builder.Property(c => c.CompanyId).IsRequired();
+            builder.Property(c => c.TariffId).IsRequired();
             builder.Property(c => c.PhoneNumber).IsRequired();
 
             builder.HasOne(c => c.Client).WithMany().HasForeignKey(c => c.ClientId);
             builder.HasOne(c => c.Company).WithMany().HasForeignKey(c => c.CompanyId);
+            builder.HasOne(c => c.Tariff).WithMany().HasForeignKey(c => c.TariffId);
         }
     }
 }
