@@ -2,7 +2,7 @@
 
 namespace ATE.Views.Base
 {
-    internal abstract class BaseView
+    abstract class BaseView
     {
         public string Title { get; protected set; }
         public string TitleWindow { get; protected set; }

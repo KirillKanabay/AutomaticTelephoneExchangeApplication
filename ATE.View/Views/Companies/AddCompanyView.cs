@@ -19,11 +19,11 @@ namespace ATE.Views.Companies
             if(company != null)
             {
                 _repo.Add(company);
-                ConsoleEx.WriteLineWithColor("Компания добавлена. Нажмите любую клавишу...", ConsoleColor.Green);
+                ConsoleEx.WriteLineWithColor("Компания добавлена. Нажмите любую кнопку...", ConsoleColor.Green);
             }
             else
             {
-                ConsoleEx.WriteLineError("Ошибка добавления компании. Нажмите любую клавишу...");
+                ConsoleEx.WriteLineError("Ошибка добавления компании. Нажмите любую кнопку...");
             }
             Console.ReadKey();
         }

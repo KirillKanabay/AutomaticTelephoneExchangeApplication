@@ -28,7 +28,11 @@ namespace ATE.Views.Companies
                 case ConsoleKey.D2:
                     _viewContainer.Resolve<ListCompanyView>().Show();
                     break;
+                case ConsoleKey.Escape:
+                    break;
                 default:
+                    ConsoleEx.WriteLineError("Такой команды не существует! Нажмите любую кнопку...");
+                    Console.ReadKey();
                     break;
             }
             Clear();

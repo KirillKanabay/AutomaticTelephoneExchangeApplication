@@ -2,6 +2,7 @@
 using ATE.Helpers;
 using ATE.Infrastructure.Data;
 using ATE.Views;
+using ATE.Views.Clients;
 using ATE.Views.Companies;
 using Autofac;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +19,7 @@ namespace ATE.Configurations.IoC
                     .UseSqlServer("Data Source = (localdb)\\MSSQLLocalDB;Initial Catalog=ate_db;").Options;
                 return new AteContext(options);
             }).AsSelf().InstancePerLifetimeScope();
+            
             builder.RegisterGeneric(typeof(GenericRepository<>)).As(typeof(IRepository<>));
 
             LoadViews(builder);
@@ -38,6 +40,13 @@ namespace ATE.Configurations.IoC
             
             #endregion
 
+            #region Client
+
+            builder.RegisterType<ListClientView>().AsSelf().InstancePerLifetimeScope();
+            builder.RegisterType<ClientMenuView>().AsSelf().InstancePerLifetimeScope();
+            builder.RegisterType<AddClientView>().AsSelf().InstancePerLifetimeScope();
+
+            #endregion
         }
 
         private void LoadHelpers(ContainerBuilder builder)
