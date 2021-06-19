@@ -4,9 +4,16 @@ namespace ATE.Views.Base
 {
     internal abstract class BaseView
     {
-        public abstract string Title { get; protected set; }
-        public abstract string Header { get; protected set; }
-        
+        public string Title { get; protected set; }
+        public string TitleWindow { get; protected set; }
+
+        public BaseView(string title)
+        {
+            Title = title;
+            TitleWindow = $"Automatic Telephone Exchange - {title}";
+            Clear();
+        }
+
         /// <summary>
         /// Показ представления
         /// </summary>
@@ -15,7 +22,8 @@ namespace ATE.Views.Base
         protected virtual void Clear()
         {
             Console.Clear();
-            Console.WriteLine($"\t{Header}");
+            Console.Title = TitleWindow;
+            Console.WriteLine($"\t{Title}");
         }
 
         /// <summary>

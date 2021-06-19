@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ATE.Infrastructure.Migrations
 {
     [DbContext(typeof(AteContext))]
-    [Migration("20210615094225_InitialMigration")]
+    [Migration("20210618194033_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -56,7 +56,7 @@ namespace ATE.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Company");
+                    b.ToTable("Companies");
                 });
 
             modelBuilder.Entity("ATE.Core.Entities.Contract", b =>

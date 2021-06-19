@@ -1,26 +1,24 @@
 ﻿using System;
 using ATE.Helpers;
 using ATE.Views.Base;
-using ATE.Views.Company;
+using ATE.Views.Companies;
 
 namespace ATE.Views
 {
     internal class MainMenuView : BaseMenuView
     {
         private readonly ViewContainer _viewContainer;
-        public MainMenuView(KeyEvent keyEvent, ViewContainer viewContainer) : base(keyEvent)
+        public MainMenuView(ViewContainer viewContainer) : base("Главное окно")
         {
             _viewContainer = viewContainer;
         }
-
-        public override string Title { get; protected set; } = "Automatic Telephone Exchange - Главное окно";
-        public override string Header { get; protected set; } = "Главное окно";
-        
+       
         protected override void OnKeyPress(object sender, KeyEventArgs e)
         {
             switch (e.ConsoleKeyInfo.Key)
             {
                 case ConsoleKey.F1:
+                    Clear();
                     ShowHelp();
                     break;
                 case ConsoleKey.F4:
@@ -28,6 +26,7 @@ namespace ATE.Views
                     break;
                 case ConsoleKey.D1:
                     _viewContainer.Resolve<CompanyMenuView>().Show();
+                    Clear();
                     break;
                 default:
                     ConsoleEx.WriteLineError("Такой команды не существует!");
@@ -37,8 +36,7 @@ namespace ATE.Views
 
         protected override void ShowHelp()
         {
-            Console.WriteLine($"<F1> - Справка{Environment.NewLine}" +
-                              $"<F4> - Выход из программы{Environment.NewLine}" +
+            Console.WriteLine($"<F4> - Выход из программы{Environment.NewLine}" +
                               $"<1> - Управление компаниями{Environment.NewLine}" +
                               $"<2> - Управление клиентами{Environment.NewLine}");
         }

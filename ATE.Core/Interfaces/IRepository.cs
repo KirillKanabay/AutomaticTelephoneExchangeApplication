@@ -4,7 +4,7 @@ using ATE.Core.Specifications;
 
 namespace ATE.Core.Interfaces
 {
-    public interface IGenericRepository<TEntity> where TEntity : BaseEntity
+    public interface IRepository<TEntity> where TEntity : BaseEntity
     {
         void Add(TEntity item);
         TEntity GetById(int id);

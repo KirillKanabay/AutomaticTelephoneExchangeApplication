@@ -7,7 +7,7 @@ using ATE.Core.Specifications;
 
 namespace ATE.Infrastructure.Data
 {
-    public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : BaseEntity
+    public class GenericRepository<TEntity> : IRepository<TEntity> where TEntity : BaseEntity
     {
         private readonly AteContext _db;
 
@@ -19,6 +19,7 @@ namespace ATE.Infrastructure.Data
         public void Add(TEntity item)
         {
             _db.Set<TEntity>().Add(item);
+            _db.SaveChanges();
         }
 
         public TEntity GetById(int id)
@@ -34,6 +35,7 @@ namespace ATE.Infrastructure.Data
         public void Remove(TEntity item)
         {
             _db.Set<TEntity>().Remove(item);
+            _db.SaveChanges();
         }
 
         public TEntity GetEntityWithSpec(ISpecification<TEntity> spec)

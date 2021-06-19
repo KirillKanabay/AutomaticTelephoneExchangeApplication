@@ -8,12 +8,12 @@ namespace ATE.Infrastructure.Data
     {
         public DbSet<Client> Clients { get; set; }
         public DbSet<Contract> Contracts { get; set; }
+        public DbSet<Company> Companies { get; set; }
 
-        public AteContext()
-        { }
-
-        public AteContext(DbContextOptions options):base(options)
-        { }
+        public AteContext(DbContextOptions options) : base(options)
+        {
+            Database.EnsureCreated();
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -22,7 +22,7 @@ namespace ATE.Infrastructure.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Data Source = (localdb)\MSSQLLocalDB;Initial Catalog=Ate;");
+            optionsBuilder.UseSqlServer("Data Source = (localdb)\\MSSQLLocalDB;Initial Catalog=ate_db;");
         }
     }
 }

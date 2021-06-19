@@ -54,7 +54,7 @@ namespace ATE.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Company");
+                    b.ToTable("Companies");
                 });
 
             modelBuilder.Entity("ATE.Core.Entities.Contract", b =>

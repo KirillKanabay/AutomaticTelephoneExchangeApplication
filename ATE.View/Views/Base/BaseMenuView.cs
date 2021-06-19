@@ -6,9 +6,9 @@ namespace ATE.Views.Base
     abstract class BaseMenuView : BaseView 
     {
         protected readonly KeyEvent KeyEvent;
-        protected BaseMenuView(KeyEvent keyEvent)
+        protected BaseMenuView(string title) : base(title)
         {
-            KeyEvent = keyEvent;
+            KeyEvent = new KeyEvent();
             KeyEvent.KeyPressEvent += OnKeyPress;
         }
 
@@ -17,17 +17,19 @@ namespace ATE.Views.Base
         public override void Show()
         {
             Console.Title = Title;
-            Clear();
-            ShowHelp();
-
+            
             ConsoleKeyInfo cki;
             do
             {
-                Console.Write("Нажмите клавишу <F1 - справка>:");
+                Clear();
+                ShowHelp();
+                
+                Console.Write("Нажмите клавишу:");
+                
                 cki = Console.ReadKey(false);
                 Console.WriteLine();
                 KeyEvent.OnKeyPress(cki);
-            } while (cki.Key != ConsoleKey.F4);
+            } while (cki.Key != ConsoleKey.Escape);
         }
     }
 }
