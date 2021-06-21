@@ -1,8 +1,10 @@
 ﻿using System;
+using ATE.Core.Entities;
 using ATE.Helpers;
 using ATE.Views.Base;
 using ATE.Views.Clients;
 using ATE.Views.Companies;
+using ATE.Views.Contracts;
 using ATE.Views.Tariffs;
 
 namespace ATE.Views
@@ -39,6 +41,10 @@ namespace ATE.Views
                     _viewContainer.Resolve<TariffMenuView>().Show();
                     Clear();
                     break;
+                case ConsoleKey.D4:
+                    _viewContainer.Resolve<ContractMenuView>().Show();
+                    Clear();
+                    break;
                 default:
                     ConsoleEx.WriteLineError("Такой команды не существует! Нажмите любую кнопку...");
                     Console.ReadKey();
@@ -51,7 +57,8 @@ namespace ATE.Views
             Console.WriteLine($"<F4> - Выход из программы{Environment.NewLine}" +
                               $"<1> - Управление компаниями{Environment.NewLine}" +
                               $"<2> - Управление клиентами{Environment.NewLine}" +
-                              $"<3> - Управление тарифами{Environment.NewLine}");
+                              $"<3> - Управление тарифами{Environment.NewLine}" +
+                              $"<4> - Управление контрактами{Environment.NewLine}");
         }
     }
 }

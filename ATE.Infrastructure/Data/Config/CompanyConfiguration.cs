@@ -12,7 +12,6 @@ namespace ATE.Infrastructure.Data.Config
             builder.Property(c => c.Name).IsRequired();
             builder.Property(c => c.CountryCode).IsRequired().HasMaxLength(5);
             builder.Property(c => c.CompanyCode).IsRequired().HasMaxLength(5);
-            builder.HasMany(c => c.Contracts).WithOne().HasForeignKey(c => c.CompanyId);
         }
     }
 }

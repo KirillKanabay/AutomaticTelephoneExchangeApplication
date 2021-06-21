@@ -9,7 +9,7 @@ namespace ATE.Core.Entities
         public string CompanyCode { get; set; }
         public List<Contract> Contracts { get; set; }
         
-        public List<Tariff> Tariffs { get; set; }
+        public virtual List<Tariff> Tariffs { get; set; }
         public override string ToString()
         {
             return $"#{Id} Название: {Name}. Код страны: {CountryCode}. Код компании: {CompanyCode}";

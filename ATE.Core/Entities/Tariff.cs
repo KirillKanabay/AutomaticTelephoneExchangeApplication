@@ -3,8 +3,11 @@
     public class Tariff : BaseEntity
     {
         public string Name { get; set; }
-        public decimal PricePerCall { get; set; }
-        public int CompanyId { get; set; }
-        public Company Company { get; set; }
+        public decimal PricePerMinuteCall { get; set; }
+
+        public override string ToString()
+        {
+            return $"#{Id} {Name} Стоимость одной минуты звонка:{PricePerMinuteCall}";
+        }
     }
 }

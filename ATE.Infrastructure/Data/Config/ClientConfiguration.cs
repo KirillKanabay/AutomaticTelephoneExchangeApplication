@@ -12,7 +12,7 @@ namespace ATE.Infrastructure.Data.Config
             builder.Property(pb => pb.FirstName).IsRequired().HasMaxLength(128);
             builder.Property(pb => pb.SecondName).IsRequired().HasMaxLength(128);
 
-            builder.HasMany(c => c.Contracts).WithOne().HasForeignKey(c => c.ClientId);
+            builder.HasMany(c => c.Contracts).WithOne(c => c.Client).HasForeignKey(c => c.ClientId);
         }
     }
 }

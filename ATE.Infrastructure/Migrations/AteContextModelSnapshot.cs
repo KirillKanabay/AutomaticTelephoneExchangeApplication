@@ -77,13 +77,7 @@ namespace ATE.Infrastructure.Migrations
                     b.Property<int>("ClientId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ClientId1")
-                        .HasColumnType("int");
-
                     b.Property<int>("CompanyId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("CompanyId1")
                         .HasColumnType("int");
 
                     b.Property<string>("PhoneNumber")
@@ -97,11 +91,7 @@ namespace ATE.Infrastructure.Migrations
 
                     b.HasIndex("ClientId");
 
-                    b.HasIndex("ClientId1");
-
                     b.HasIndex("CompanyId");
-
-                    b.HasIndex("CompanyId1");
 
                     b.HasIndex("TariffId");
 
@@ -115,10 +105,7 @@ namespace ATE.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("CompanyId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("CompanyId1")
+                    b.Property<int?>("CompanyId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -126,14 +113,12 @@ namespace ATE.Infrastructure.Migrations
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
 
-                    b.Property<decimal>("PricePerCall")
+                    b.Property<decimal>("PricePerMinuteCall")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CompanyId");
-
-                    b.HasIndex("CompanyId1");
 
                     b.ToTable("Tariff");
                 });
@@ -141,24 +126,16 @@ namespace ATE.Infrastructure.Migrations
             modelBuilder.Entity("ATE.Core.Entities.Contract", b =>
                 {
                     b.HasOne("ATE.Core.Entities.Client", "Client")
-                        .WithMany()
+                        .WithMany("Contracts")
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ATE.Core.Entities.Client", null)
-                        .WithMany("Contracts")
-                        .HasForeignKey("ClientId1");
-
                     b.HasOne("ATE.Core.Entities.Company", "Company")
-                        .WithMany()
+                        .WithMany("Contracts")
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("ATE.Core.Entities.Company", null)
-                        .WithMany("Contracts")
-                        .HasForeignKey("CompanyId1");
 
                     b.HasOne("ATE.Core.Entities.Tariff", "Tariff")
                         .WithMany()
@@ -175,17 +152,9 @@ namespace ATE.Infrastructure.Migrations
 
             modelBuilder.Entity("ATE.Core.Entities.Tariff", b =>
                 {
-                    b.HasOne("ATE.Core.Entities.Company", "Company")
-                        .WithMany()
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("ATE.Core.Entities.Company", null)
                         .WithMany("Tariffs")
-                        .HasForeignKey("CompanyId1");
-
-                    b.Navigation("Company");
+                        .HasForeignKey("CompanyId");
                 });
 
             modelBuilder.Entity("ATE.Core.Entities.Client", b =>

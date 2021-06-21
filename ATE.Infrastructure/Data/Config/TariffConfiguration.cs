@@ -10,10 +10,7 @@ namespace ATE.Infrastructure.Data.Config
         {
             builder.Property(t => t.Id).IsRequired();
             builder.Property(t => t.Name).IsRequired().HasMaxLength(128);
-            builder.Property(t => t.PricePerCall).IsRequired();
-            builder.Property(t => t.CompanyId).IsRequired();
-
-            builder.HasOne(t => t.Company).WithMany().HasForeignKey(t => t.CompanyId).OnDelete(DeleteBehavior.ClientNoAction);
+            builder.Property(t => t.PricePerMinuteCall).IsRequired();
         }
     }
 }

@@ -17,7 +17,6 @@ namespace ATE.Infrastructure.Data
         
         public AteContext(DbContextOptions options) : base(options)
         {
-            Database.EnsureCreated();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

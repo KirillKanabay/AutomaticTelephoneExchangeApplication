@@ -13,14 +13,17 @@ namespace ATE.Views.Contracts
         private readonly IRepository<Contract> _contractRepo;
         private readonly IRepository<Client> _clientRepo;
         private readonly IRepository<Company> _companyRepo;
+        private readonly IRepository<Tariff> _tariffRepo;
         private readonly IPhoneNumberGenerator _phoneNumberGenerator;
 
-        public AddContractView(IRepository<Contract> contractRepo, IRepository<Client> clientRepo, IRepository<Company> companyRepo, IPhoneNumberGenerator phoneNumberGenerator)
+        public AddContractView(IRepository<Contract> contractRepo, IRepository<Client> clientRepo, IRepository<Company> companyRepo, 
+            IPhoneNumberGenerator phoneNumberGenerator, IRepository<Tariff> tariffRepo)
         :base("Добавление контракта")
         {
             _contractRepo = contractRepo;
             _clientRepo = clientRepo;
             _companyRepo = companyRepo;
+            _tariffRepo = tariffRepo;
             _phoneNumberGenerator = phoneNumberGenerator;
         }
 
@@ -28,7 +31,16 @@ namespace ATE.Views.Contracts
         {
             var client = SelectClient();
             var company = SelectCompany();
-            var tariff = SelectTariff(company);
+            var tariff = SelectTariff();
+            
+            Clear();
+            var number = _phoneNumberGenerator.Generate(company.CountryCode, company.CompanyCode);
+            Console.WriteLine($"Сгенерированный номер телефона: {number}");
+            
+            _contractRepo.Add(new Contract(){ClientId = client.Id, CompanyId = company.Id, PhoneNumber = number, TariffId = tariff.Id});
+            
+            ConsoleEx.WriteLineWithColor("Контракт успешно добавлен. Нажмите любую кнопку...", ConsoleColor.Green);
+            Console.ReadKey();
         }
 
         private Client SelectClient()
@@ -68,7 +80,8 @@ namespace ATE.Views.Contracts
         {
             Clear();
             var spec = new CompanyWithTariffsSpec();
-            foreach (var company in _companyRepo.List(spec))
+            var companies = _companyRepo.List(spec);
+            foreach (var company in companies)
             {
                 Console.WriteLine(company);
             }
@@ -80,7 +93,7 @@ namespace ATE.Views.Contracts
                 try
                 {
                     int idCompany= int.Parse(Console.ReadLine() ?? "-1");
-                    gotCompany = _companyRepo.GetById(idCompany);
+                    gotCompany = companies.FirstOrDefault(c => c.Id == idCompany);
                 }
                 catch
                 {
@@ -97,12 +110,12 @@ namespace ATE.Views.Contracts
             return gotCompany;
         }
 
-        private Tariff SelectTariff(Company company)
+        private Tariff SelectTariff()
         {
             Clear();
-            foreach (var tariff in company.Tariffs)
+            foreach (var tariff in _tariffRepo.ListAll())
             {
-                Console.WriteLine(company);
+                Console.WriteLine(tariff);
             }
 
             Tariff gotTariff = null;
@@ -112,7 +125,7 @@ namespace ATE.Views.Contracts
                 try
                 {
                     int idTariff = int.Parse(Console.ReadLine() ?? "-1");
-                    gotTariff = company.Tariffs.Find(t => t.Id == idTariff);
+                    gotTariff = _tariffRepo.GetById(idTariff);
                 }
                 catch
                 {

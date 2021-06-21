@@ -20,44 +20,11 @@ namespace ATE.Views.Tariffs
 
         public override void Show()
         {
-            var company = SelectCompany();
-            var tariff = ReadTariff(company);
+            var tariff = ReadTariff();
             _tariffRepo.Add(tariff);
         }
-
-        private Company SelectCompany()
-        {
-            Clear();
-            foreach (var company in _companyRepo.ListAll())
-            {
-                Console.WriteLine(company);
-            }
-
-            Company gotCompany = null;
-            while (true)
-            {
-                Console.Write("Введите Id компании:");
-                try
-                {
-                    int idCompany= int.Parse(Console.ReadLine() ?? "-1");
-                    gotCompany = _companyRepo.GetById(idCompany);
-                }
-                catch
-                {
-                    ConsoleEx.WriteLineError("Ошибка ввода, попробуйте еще раз...");
-                }
-
-                if (gotCompany == null)
-                {
-                    ConsoleEx.WriteLineError("Такой компании не существует. Попробуйте еще раз...");
-                }
-                break;
-            }
-
-            return gotCompany;
-        }
         
-        private Tariff ReadTariff(Company company)
+        private Tariff ReadTariff()
         {
             Clear();
             var tariff = new Tariff();
@@ -66,10 +33,8 @@ namespace ATE.Views.Tariffs
             tariff.Name = Console.ReadLine();
             
             Console.Write("Введите цену за одну минуту звонка:");
-            tariff.PricePerCall = decimal.Parse(Console.ReadLine() ?? "0");
-
-            tariff.CompanyId = company.Id;
-
+            tariff.PricePerMinuteCall = decimal.Parse(Console.ReadLine() ?? "0");
+            
             return tariff;
         }
     }
