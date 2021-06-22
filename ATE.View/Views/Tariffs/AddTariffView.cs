@@ -1,8 +1,6 @@
 ﻿using System;
 using ATE.Core.Entities;
 using ATE.Core.Interfaces;
-using ATE.Core.Specifications.Companies;
-using ATE.Helpers;
 using ATE.Views.Base;
 
 namespace ATE.Views.Tariffs
@@ -27,15 +25,14 @@ namespace ATE.Views.Tariffs
         private Tariff ReadTariff()
         {
             Clear();
-            var tariff = new Tariff();
             
             Console.Write("Введите название тарифа:");
-            tariff.Name = Console.ReadLine();
+            var name = Console.ReadLine();
             
             Console.Write("Введите цену за одну минуту звонка:");
-            tariff.PricePerMinuteCall = decimal.Parse(Console.ReadLine() ?? "0");
+            var pricePerMinuteCall = decimal.Parse(Console.ReadLine() ?? "0");
             
-            return tariff;
+            return new Tariff(name, pricePerMinuteCall);
         }
     }
 }

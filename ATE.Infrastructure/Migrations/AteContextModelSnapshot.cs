@@ -70,9 +70,7 @@ namespace ATE.Infrastructure.Migrations
             modelBuilder.Entity("ATE.Core.Entities.Contract", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
 
                     b.Property<int>("ClientId")
                         .HasColumnType("int");
@@ -96,6 +94,31 @@ namespace ATE.Infrastructure.Migrations
                     b.HasIndex("TariffId");
 
                     b.ToTable("Contracts");
+                });
+
+            modelBuilder.Entity("ATE.Core.Entities.Phone", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("ClientId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ContractId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
+
+                    b.ToTable("Phone");
                 });
 
             modelBuilder.Entity("ATE.Core.Entities.Tariff", b =>
@@ -137,6 +160,12 @@ namespace ATE.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("ATE.Core.Entities.Phone", "Phone")
+                        .WithOne("Contract")
+                        .HasForeignKey("ATE.Core.Entities.Contract", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("ATE.Core.Entities.Tariff", "Tariff")
                         .WithMany()
                         .HasForeignKey("TariffId")
@@ -147,7 +176,16 @@ namespace ATE.Infrastructure.Migrations
 
                     b.Navigation("Company");
 
+                    b.Navigation("Phone");
+
                     b.Navigation("Tariff");
+                });
+
+            modelBuilder.Entity("ATE.Core.Entities.Phone", b =>
+                {
+                    b.HasOne("ATE.Core.Entities.Client", null)
+                        .WithMany("Phones")
+                        .HasForeignKey("ClientId");
                 });
 
             modelBuilder.Entity("ATE.Core.Entities.Tariff", b =>
@@ -160,6 +198,8 @@ namespace ATE.Infrastructure.Migrations
             modelBuilder.Entity("ATE.Core.Entities.Client", b =>
                 {
                     b.Navigation("Contracts");
+
+                    b.Navigation("Phones");
                 });
 
             modelBuilder.Entity("ATE.Core.Entities.Company", b =>
@@ -167,6 +207,11 @@ namespace ATE.Infrastructure.Migrations
                     b.Navigation("Contracts");
 
                     b.Navigation("Tariffs");
+                });
+
+            modelBuilder.Entity("ATE.Core.Entities.Phone", b =>
+                {
+                    b.Navigation("Contract");
                 });
 #pragma warning restore 612, 618
         }

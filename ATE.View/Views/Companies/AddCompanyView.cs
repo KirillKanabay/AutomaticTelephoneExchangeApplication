@@ -1,4 +1,5 @@
 ﻿using System;
+using ATE.Core.Entities;
 using ATE.Core.Interfaces;
 using ATE.Helpers;
 using ATE.Views.Base;
@@ -30,18 +31,16 @@ namespace ATE.Views.Companies
 
         private Core.Entities.Company ReadCompany()
         {
-            var company = new Core.Entities.Company();
-            
             Console.Write("Введите название компании:");
-            company.Name = Console.ReadLine();
+            var name = Console.ReadLine();
 
             Console.Write("Введите код страны компании:");
-            company.CountryCode = Console.ReadLine();
+            var countryCode = Console.ReadLine();
             
             Console.Write("Введите код компании:");
-            company.CompanyCode = Console.ReadLine();
+            var companyCode = Console.ReadLine();
             
-            return company;
+            return new Company(name, countryCode, companyCode);
         }
     }
 }

@@ -37,7 +37,7 @@ namespace ATE.Views.Clients
             Console.Write("Введите фамилию клиента:");
             string secondName = Console.ReadLine();
 
-            return new Client {FirstName = name, SecondName = secondName};
+            return new Client(name, secondName);
         }
     }
 }
