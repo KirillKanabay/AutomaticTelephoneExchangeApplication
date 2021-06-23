@@ -1,7 +1,9 @@
-﻿namespace ATE.Core.Interfaces
+﻿using ATE.Core.Entities;
+
+namespace ATE.Core.Interfaces
 {
     public interface IPhoneNumberGenerator
     {
-        string Generate(string countryCode, string companyCode);
+        string Generate(Company company);
     }
 }

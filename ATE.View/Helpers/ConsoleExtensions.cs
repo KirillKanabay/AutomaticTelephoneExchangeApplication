@@ -11,10 +11,15 @@ namespace ATE.Helpers
 
         public static bool CheckContinue(string message)
         {
-            Console.Write(message);
-            char key = Console.ReadKey().KeyChar;
-            Console.WriteLine();
-            return char.ToLower(key) == 'y';
+            char readedKey = ' ';
+            do
+            {
+                Console.Write(message);
+                readedKey = Console.ReadKey().KeyChar;
+                Console.WriteLine();
+            } while (readedKey != 'y' && readedKey != 'n');
+            
+            return char.ToLower(readedKey) == 'y';
         }
 
         public static void WriteLineWithColor(string message, ConsoleColor foregroundColor)

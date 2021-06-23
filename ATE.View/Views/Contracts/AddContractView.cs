@@ -34,7 +34,7 @@ namespace ATE.Views.Contracts
             var tariff = SelectTariff();
             
             Clear();
-            var number = _phoneNumberGenerator.Generate(company.CountryCode, company.CompanyCode);
+            var number = _phoneNumberGenerator.Generate(company);
             Console.WriteLine($"Сгенерированный номер телефона: {number}");
             
             _contractRepo.Add(new Contract(number, client.Id, tariff.Id, company.Id));

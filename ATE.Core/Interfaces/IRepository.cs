@@ -6,7 +6,7 @@ namespace ATE.Core.Interfaces
 {
     public interface IRepository<TEntity> where TEntity : BaseEntity
     {
-        void Add(TEntity item);
+        TEntity Add(TEntity item);
         TEntity GetById(int id);
         IReadOnlyList<TEntity> ListAll();
         void Remove(TEntity item);

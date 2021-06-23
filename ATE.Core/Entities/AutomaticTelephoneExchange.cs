@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using ATE.Core.Args;
 using ATE.Core.Enums;
 using ATE.Core.Interfaces;
 
@@ -28,7 +30,38 @@ namespace ATE.Core.Entities
 
         public Port Connect(ITerminal terminal)
         {
-            return Ports.FirstOrDefault(p => p.Value == null).Key;
+            var port =  Ports.FirstOrDefault(p => p.Value == null).Key;
+            if (port != null)
+            {
+                Ports[port] = terminal;
+                port.Status = PortStatus.Connected;
+
+                terminal.CallEvent += OnTerminalCall;
+                terminal.CallEvent += port.OnTerminalCall;
+            }
+            //todo: выкидывать исключение если порт null
+            return port;
+        }
+
+        public void Disconnect(ITerminal terminal)
+        {
+            var port = Ports.FirstOrDefault(p => p.Value == terminal);
+            port.Key.Status = PortStatus.Disconnected;
+        }
+
+        public void OnTerminalCall(object sender, TerminalArgs e)
+        {
+            ITerminal destinationTerminal = Ports.Values.FirstOrDefault(t => t.Number == e.TargetNumber);
+
+            if (destinationTerminal == null)
+            {
+                throw new Exception("Неправильно набран номер");
+            }
+
+            if (destinationTerminal.Port.Status == PortStatus.InCall)
+            {
+                throw new Exception("Абонент занят. Перезвоните позже.");
+            }
         }
     }
 }

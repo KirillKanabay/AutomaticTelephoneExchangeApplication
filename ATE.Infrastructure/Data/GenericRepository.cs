@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using ATE.Core.Entities;
 using ATE.Core.Interfaces;
@@ -16,10 +15,12 @@ namespace ATE.Infrastructure.Data
             _db = db;
         }
 
-        public void Add(TEntity item)
+        public TEntity Add(TEntity item)
         {
             _db.Set<TEntity>().Add(item);
             _db.SaveChanges();
+
+            return item;
         }
 
         public TEntity GetById(int id)
