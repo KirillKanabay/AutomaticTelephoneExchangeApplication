@@ -39,7 +39,10 @@ namespace ATE.Core.Entities
                 terminal.CallEvent += OnTerminalCall;
                 terminal.CallEvent += port.OnTerminalCall;
             }
-            //todo: выкидывать исключение если порт null
+            else
+            {
+                throw new Exception("Все доступные порты станции заняты. Попробуйте позже!");
+            }
             return port;
         }
 

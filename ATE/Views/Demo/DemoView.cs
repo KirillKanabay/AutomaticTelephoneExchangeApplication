@@ -33,8 +33,8 @@ namespace ATE.Views.Demo
 
             IPhoneNumberGenerator numGenerator = new PhoneNumberGenerator();
 
-            Contract client1Contract = new Contract(numGenerator.Generate(company), tariff, client1, company); //todo: передавать ссылки
-            Contract client2Contract = new Contract(numGenerator.Generate(company), tariff, client1, company);
+            Contract client1Contract = new Contract(numGenerator.Generate(company), tariff, client1, company);
+            Contract client2Contract = new Contract(numGenerator.Generate(company), tariff, client2, company);
             
             BaseTerminal terminal1 = new Phone(client1Contract);
             BaseTerminal terminal2 = new Phone(client2Contract);

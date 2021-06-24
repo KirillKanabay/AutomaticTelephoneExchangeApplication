@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ATE.Core", "ATE.Core\ATE.Co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ATE.Infrastructure", "ATE.Infrastructure\ATE.Infrastructure.csproj", "{705630C9-795A-45A4-91BE-410A7583C522}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ATE.View", "ATE.View\ATE.View.csproj", "{EEA30515-1CDF-4B25-919D-BF0D822F6800}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ATE", "ATE\ATE.csproj", "{EEA30515-1CDF-4B25-919D-BF0D822F6800}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
