@@ -7,37 +7,30 @@ using ATE.Core.Interfaces;
 
 namespace ATE.Core.Entities
 {
-    public class AutomaticTelephoneExchange
+    public class AutomaticTelephoneExchange //TODO: сделать интерфейс
     {
         private readonly Company _company;
-        public IDictionary<Port, BaseTerminal> Ports { get; private set; }
-
+        private ICollection<IPort> Ports { get; set; }
+        
         public AutomaticTelephoneExchange(Company company, int portCount)
         {
             _company = company;
+            if (portCount <= 0)
+            {
+                throw new ArgumentException("Количество портов станции не может быть меньше или равно нулю.");
+            }
             InitPorts(portCount);
         }
 
-        private void InitPorts(int portCount)
+        public IPort Connect(BaseTerminal terminal)
         {
-            Ports = new Dictionary<Port, BaseTerminal>();
-            for (var portNumber = 1; portNumber <= portCount; portNumber++)
-            {
-                var port = new Port(portNumber, PortStatus.Disconnected);
-                Ports.Add(port, null);
-            }
-        }
-
-        public Port Connect(BaseTerminal terminal)
-        {
-            var port =  Ports.FirstOrDefault(p => p.Value == null).Key;
+            var port =  Ports.FirstOrDefault(p => p.Terminal == null);
             if (port != null)
             {
-                Ports[port] = terminal;
-                port.Status = PortStatus.Connected;
-
+                port.ConnectTerminal(terminal);
+                
                 terminal.CallEvent += OnTerminalCall;
-                terminal.CallEvent += port.OnTerminalCall;
+                terminal.DisconnectedEvent += OnTerminalDisconnected;
             }
             else
             {
@@ -45,30 +38,38 @@ namespace ATE.Core.Entities
             }
             return port;
         }
-
-        public void Disconnect(ITerminal terminal)
+        
+        private void InitPorts(int portCount)
         {
-            var port = Ports.FirstOrDefault(p => p.Value == terminal);
-            port.Key.Status = PortStatus.Disconnected;
+            Ports = new List<IPort>();
+            for (var portNumber = 1; portNumber <= portCount; portNumber++)
+            {
+                var port = new Port(portNumber);
+                Ports.Add(port);
+            }
         }
-
-        public void OnTerminalCall(object sender, TerminalArgs e)
+        
+        private void OnTerminalDisconnected(object sender, TerminalArgs e)
         {
-            ITerminal destinationTerminal = Ports.Values.FirstOrDefault(t => t.Number == e.TargetNumber);
+            e.Terminal.CallEvent -= OnTerminalCall;
+            e.Terminal.DisconnectedEvent -= OnTerminalDisconnected;
+        }
+        
+        private void OnTerminalCall(object sender, CallArgs e)
+        {
+            BaseTerminal targetTerminal = Ports.FirstOrDefault(t => t.Terminal?.Number == e.Call.TargetNumber)?.Terminal;
 
-            if (destinationTerminal == null)
+            if (targetTerminal == null)
             {
                 throw new Exception("Неправильно набран номер");
             }
 
-            if (destinationTerminal.Port.Status == PortStatus.InCall)
+            if (targetTerminal.Port.Status == PortStatus.InCall)
             {
                 throw new Exception("Абонент занят. Перезвоните позже.");
             }
-
-            Call call = new Call(e.FromTerminal.Number, e.TargetNumber);
             
-            destinationTerminal.HandleIncomingCall(call);
+            targetTerminal.HandleIncomingCall(e.Call);
         }
     }
 }

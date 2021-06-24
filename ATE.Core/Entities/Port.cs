@@ -1,4 +1,5 @@
-﻿using ATE.Core.Args;
+﻿using System;
+using ATE.Core.Args;
 using ATE.Core.Enums;
 using ATE.Core.Interfaces;
 
@@ -7,31 +8,41 @@ namespace ATE.Core.Entities
     public class Port : IPort
     {
         public int PortNumber { get; }
-        public PortStatus Status { get; set; }
-
-        public Port(int portNumber, PortStatus status)
+        public PortStatus Status { get; private set; }
+        public BaseTerminal Terminal { get; private set; }
+        public Port(int portNumber)
         {
             PortNumber = portNumber;
-            Status = status;
         }
-        
-        public void OnTerminalCall(object sender, TerminalArgs e)
+
+        public void ConnectTerminal(BaseTerminal terminal)
+        {
+            if (Terminal != null)
+            {
+                throw new Exception("К данному порту уже подключен терминал");
+            }
+            
+            Terminal = terminal;
+            Status = PortStatus.Connected;
+            
+            terminal.DisconnectedEvent += OnTerminalDisconnected;
+            terminal.CallEvent += OnTerminalCall;
+        }
+        public void OnTerminalCall(object sender, CallArgs e)
         {
             Status = PortStatus.InCall;
         }
-
-        public void OnTerminalEndCall(object sender, TerminalArgs e)
+        public void OnTerminalEndCall(object sender, CallArgs e)
         {
             Status = PortStatus.Connected;
         }
-
-        public void Disconnect()
+        public void OnTerminalDisconnected(object sender, TerminalArgs e)
         {
-            //TODO: Реализовать отключение порта
-        }
-        public override int GetHashCode()
-        {
-            return PortNumber.GetHashCode();
+            Terminal.CallEvent -= OnTerminalCall;
+            Terminal.CallEvent -= OnTerminalEndCall;
+            Terminal.DisconnectedEvent -= OnTerminalDisconnected;
+            Terminal = null;
+            Status = PortStatus.Disconnected;
         }
     }
 }

@@ -1,17 +1,16 @@
 ﻿using System;
+using ATE.Core.Entities;
 using ATE.Core.Interfaces;
 
 namespace ATE.Core.Args
 {
     public class TerminalArgs : EventArgs
     {
-        public ITerminal FromTerminal { get; }
-        public string TargetNumber { get; }
+        public BaseTerminal Terminal { get; }
 
-        public TerminalArgs(ITerminal fromTerminal, string targetNumber)
+        public TerminalArgs(BaseTerminal terminal)
         {
-            FromTerminal = fromTerminal;
-            TargetNumber = targetNumber;
+            Terminal = terminal;
         }
     }
 }

@@ -6,13 +6,14 @@ namespace ATE.Core.Entities
 {
     public abstract class BaseTerminal : ITerminal
     {
-        public event EventHandler<TerminalArgs> CallEvent;
+        public event EventHandler<CallArgs> CallEvent;
         public event EventHandler<CallArgs> IncomingCallEvent;
         public event EventHandler<CallArgs> CallAcceptedEvent;
         public event EventHandler<CallArgs> CallEndedEvent;
         public event EventHandler<CallArgs> CallRejectedEvent;
+        public event EventHandler<TerminalArgs> DisconnectedEvent; 
         public string Number => Contract.PhoneNumber;
-        public Port Port { get; protected set; }
+        public IPort Port { get; protected set; }
         public Contract Contract { get; }
 
         protected BaseTerminal(Contract contract)
@@ -36,39 +37,41 @@ namespace ATE.Core.Entities
                 throw new Exception("Телефон не подключен к АТС");
             }
             
-            Port.Disconnect();
+            RaiseTerminalDisconnectedEvent();
+            
+            Port = null;
         }
         
-        public abstract void CallTo(string number);
+        public abstract void CallTo(string targetNumber);
         public abstract void HandleIncomingCall(Call call);
         public abstract void AcceptIncomingCall(Call call);
         public abstract void RejectIncomingCall(Call call);
-        
 
-        protected void RaiseCallEvent(string number)
+        protected void RaiseTerminalDisconnectedEvent()
         {
-            var args = new TerminalArgs(this, number);
+            var args = new TerminalArgs(this);
+            DisconnectedEvent?.Invoke(this, args);
+        }
+        protected void RaiseCallEvent(string targetNumber)
+        {
+            var args = new CallArgs(new Call(Number, targetNumber));
             CallEvent?.Invoke(this, args);
         }
-        
         protected void RaiseIncomingCallEvent(Call call) //todo: Сделать Call интерфейсом
         {
             var args = new CallArgs(call);
             IncomingCallEvent?.Invoke(this, args);
         }
-        
         protected void RaiseCallEndedEvent(Call call)
         {
             var args = new CallArgs(call);
             CallEndedEvent?.Invoke(this, args);
         }
-        
         protected void RaiseCallAcceptedEvent(Call call)
         {
             var args = new CallArgs(call);
             CallAcceptedEvent?.Invoke(this, args);
         }
-        
         protected void RaiseRejectedEvent(Call call)
         {
             var args = new CallArgs(call);

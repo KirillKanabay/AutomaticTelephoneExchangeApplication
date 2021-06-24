@@ -1,4 +1,6 @@
-﻿using ATE.Core.Args;
+﻿using System;
+using ATE.Core.Args;
+using ATE.Core.Entities;
 using ATE.Core.Enums;
 
 namespace ATE.Core.Interfaces
@@ -6,8 +8,10 @@ namespace ATE.Core.Interfaces
     public interface IPort
     {
         int PortNumber { get; }
-        PortStatus Status { get; set; }
-
-        void OnTerminalCall(object sender, TerminalArgs e);
+        PortStatus Status { get; }
+        BaseTerminal Terminal { get; }
+        void ConnectTerminal(BaseTerminal terminal);
+        void OnTerminalDisconnected(object sender, TerminalArgs e);
+        void OnTerminalCall(object sender, CallArgs e);
     }
 }

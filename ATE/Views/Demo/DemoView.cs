@@ -42,7 +42,7 @@ namespace ATE.Views.Demo
             TerminalView terminal1View = new TerminalView(terminal1);
             TerminalView terminal2View = new TerminalView(terminal2);
             
-            AutomaticTelephoneExchange ate = new AutomaticTelephoneExchange(company, 256); //todo: проверка количества портов
+            AutomaticTelephoneExchange ate = new AutomaticTelephoneExchange(company, 256);
             
             terminal1.ConnectTo(ate);
             terminal2.ConnectTo(ate);

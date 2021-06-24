@@ -22,7 +22,7 @@ namespace ATE.Core.Entities
 
         public override void AcceptIncomingCall(Call call)
         {
-            RaiseIncomingCallEvent(call);
+            RaiseCallAcceptedEvent(call);
         }
 
         public override void RejectIncomingCall(Call call)

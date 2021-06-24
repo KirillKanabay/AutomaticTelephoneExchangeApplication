@@ -17,11 +17,12 @@ namespace ATE.Views.Terminals
             _terminal.IncomingCallEvent += OnIncomingCall;
             _terminal.CallAcceptedEvent += OnCallAccepted;
             _terminal.CallRejectedEvent += OnCallRejected;
+            _terminal.DisconnectedEvent += OnTerminalDisconnected;
         }
 
-        public void OnCall(object sender, TerminalArgs e)
+        public void OnCall(object sender, CallArgs e)
         {
-            ConsoleEx.WriteLineWithColor($"[{_terminal.Number}]: Происходит вызов номера: {e.TargetNumber}", ConsoleColor.Green);
+            ConsoleEx.WriteLineWithColor($"[{_terminal.Number}]: Происходит вызов номера: {e.Call.TargetNumber}", ConsoleColor.Green);
         }
         
         public void OnIncomingCall(object sender, CallArgs e)
@@ -47,6 +48,10 @@ namespace ATE.Views.Terminals
         {
             ConsoleEx.WriteLineWithColor($"[{_terminal.Number}]: Звонок с {e.Call.TargetNumber} был отклонен", ConsoleColor.Red);
         }
-        
+
+        public void OnTerminalDisconnected(object sender, TerminalArgs e)
+        {
+            ConsoleEx.WriteLineWithColor($"[{_terminal.Number}] отключен от станции АТС", ConsoleColor.DarkMagenta);
+        }
     }
 }
