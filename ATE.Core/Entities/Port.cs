@@ -24,7 +24,11 @@ namespace ATE.Core.Entities
         {
             Status = PortStatus.Connected;
         }
-        
+
+        public void Disconnect()
+        {
+            //TODO: Реализовать отключение порта
+        }
         public override int GetHashCode()
         {
             return PortNumber.GetHashCode();

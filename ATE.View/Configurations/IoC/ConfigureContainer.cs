@@ -6,6 +6,7 @@ using ATE.Views;
 using ATE.Views.Clients;
 using ATE.Views.Companies;
 using ATE.Views.Contracts;
+using ATE.Views.Demo;
 using ATE.Views.Tariffs;
 using Autofac;
 using Microsoft.EntityFrameworkCore;
@@ -34,7 +35,9 @@ namespace ATE.Configurations.IoC
             builder.RegisterType<ViewContainer>().AsSelf().SingleInstance();
 
             builder.RegisterType<MainMenuView>().AsSelf().InstancePerLifetimeScope();
-            
+
+            builder.RegisterType<DemoView>().AsSelf().InstancePerLifetimeScope();
+           
             #region Company
 
             builder.RegisterType<CompanyMenuView>().AsSelf().InstancePerLifetimeScope();

@@ -13,12 +13,17 @@ namespace ATE.Core.Entities
         public virtual Client Client { get; }
         public virtual Company Company { get; }
 
-        public Contract(string phoneNumber, int clientId, int tariffId, int companyId)
+        public Contract(string phoneNumber, Tariff tariff, Client client, Company company)
         {
             PhoneNumber = phoneNumber;
-            ClientId = clientId;
-            TariffId = tariffId;
-            CompanyId = companyId;
+
+            Tariff = tariff;
+            Client = client;
+            Company = company;
+            
+            ClientId = client.Id;
+            TariffId = tariff.Id;
+            CompanyId = company.Id;
         }
         
         public Phone Phone

@@ -37,7 +37,7 @@ namespace ATE.Views.Contracts
             var number = _phoneNumberGenerator.Generate(company);
             Console.WriteLine($"Сгенерированный номер телефона: {number}");
             
-            _contractRepo.Add(new Contract(number, client.Id, tariff.Id, company.Id));
+            _contractRepo.Add(new Contract(number, tariff, client, company));
             
             ConsoleEx.WriteLineWithColor("Контракт успешно добавлен. Нажмите любую кнопку...", ConsoleColor.Green);
             Console.ReadKey();

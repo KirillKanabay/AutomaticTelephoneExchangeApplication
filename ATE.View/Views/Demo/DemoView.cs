@@ -10,6 +10,11 @@ namespace ATE.Views.Demo
     {
         private readonly IRepository<Client> _clientRepo;
         private readonly IRepository<Contract> _contractRepo;
+
+        public DemoView() : base("Демонстрация работы")
+        {
+            
+        }
         
         public DemoView(IRepository<Client> clientRepo, IRepository<Contract> contractRepo) : base("Демонстрация работы")
         {
@@ -28,18 +33,19 @@ namespace ATE.Views.Demo
 
             IPhoneNumberGenerator numGenerator = new PhoneNumberGenerator();
 
-            Contract client1Contract = new Contract(numGenerator.Generate(company), client1.Id, tariff.Id, company.Id); //todo: передавать ссылки
-            Contract client2Contract = new Contract(numGenerator.Generate(company), client2.Id, tariff.Id, company.Id);
+            Contract client1Contract = new Contract(numGenerator.Generate(company), tariff, client1, company); //todo: передавать ссылки
+            Contract client2Contract = new Contract(numGenerator.Generate(company), tariff, client1, company);
             
-            ITerminal terminal1 = new Phone(client1Contract);
-            ITerminal terminal2 = new Phone(client2Contract);
+            BaseTerminal terminal1 = new Phone(client1Contract);
+            BaseTerminal terminal2 = new Phone(client2Contract);
             
             TerminalView terminal1View = new TerminalView(terminal1);
+            TerminalView terminal2View = new TerminalView(terminal2);
             
             AutomaticTelephoneExchange ate = new AutomaticTelephoneExchange(company, 256); //todo: проверка количества портов
             
-            terminal1.ConnectToPort(ate);
-            terminal2.ConnectToPort(ate);
+            terminal1.ConnectTo(ate);
+            terminal2.ConnectTo(ate);
             
             terminal2.CallTo(terminal1.Number);
         }

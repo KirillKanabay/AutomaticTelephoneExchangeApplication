@@ -10,7 +10,7 @@ namespace ATE.Core.Entities
     public class AutomaticTelephoneExchange
     {
         private readonly Company _company;
-        public IDictionary<Port, ITerminal> Ports { get; private set; }
+        public IDictionary<Port, BaseTerminal> Ports { get; private set; }
 
         public AutomaticTelephoneExchange(Company company, int portCount)
         {
@@ -20,7 +20,7 @@ namespace ATE.Core.Entities
 
         private void InitPorts(int portCount)
         {
-            Ports = new Dictionary<Port, ITerminal>();
+            Ports = new Dictionary<Port, BaseTerminal>();
             for (var portNumber = 1; portNumber <= portCount; portNumber++)
             {
                 var port = new Port(portNumber, PortStatus.Disconnected);
@@ -28,7 +28,7 @@ namespace ATE.Core.Entities
             }
         }
 
-        public Port Connect(ITerminal terminal)
+        public Port Connect(BaseTerminal terminal)
         {
             var port =  Ports.FirstOrDefault(p => p.Value == null).Key;
             if (port != null)
@@ -62,6 +62,10 @@ namespace ATE.Core.Entities
             {
                 throw new Exception("Абонент занят. Перезвоните позже.");
             }
+
+            Call call = new Call(e.FromTerminal.Number, e.TargetNumber);
+            
+            destinationTerminal.HandleIncomingCall(call);
         }
     }
 }

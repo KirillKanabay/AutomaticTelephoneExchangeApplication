@@ -15,11 +15,11 @@ namespace ATE.Helpers
             do
             {
                 Console.Write(message);
-                readedKey = Console.ReadKey().KeyChar;
+                readedKey = char.ToLower(Console.ReadKey().KeyChar);
                 Console.WriteLine();
             } while (readedKey != 'y' && readedKey != 'n');
             
-            return char.ToLower(readedKey) == 'y';
+            return readedKey == 'y';
         }
 
         public static void WriteLineWithColor(string message, ConsoleColor foregroundColor)
