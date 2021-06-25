@@ -2,13 +2,12 @@
 
 namespace ATE.Core.Entities
 {
-    public class Client : BaseEntity
+    public class User
     {
         public string FirstName { get; private set; }
         public string SecondName { get; private set; }
-        public virtual List<Contract> Contracts { get; }
 
-        public Client(string firstName, string secondName)
+        public User(string firstName, string secondName)
         {
             FirstName = firstName;
             SecondName = secondName;
@@ -16,7 +15,7 @@ namespace ATE.Core.Entities
         
         public override string ToString()
         {
-            return $"#{Id} {FirstName} {SecondName}";
+            return $"#{FirstName} {SecondName}";
         }
     }
 }

@@ -1,11 +1,11 @@
 ﻿namespace ATE.Core.Entities.Billing
 {
-    public class BillingClientAccount : BillingAccount
+    public class BillingUserAccount : BillingAccount
     {
-        private readonly Client _client;
-        public BillingClientAccount(Client client)
+        private readonly User _user;
+        public BillingUserAccount(User user)
         {
-            _client = client;
+            _user = user;
         }
     }
 }

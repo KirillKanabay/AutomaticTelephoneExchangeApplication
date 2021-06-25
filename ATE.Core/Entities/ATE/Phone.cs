@@ -2,7 +2,7 @@
 {
     public class Phone : BaseTerminal
     {
-        public Phone(Contract contract) : base(contract)
+        public Phone(string number) : base(number)
         {
         }
 

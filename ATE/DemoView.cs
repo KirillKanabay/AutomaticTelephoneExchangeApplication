@@ -1,5 +1,7 @@
 ﻿using ATE.Core.Entities;
 using ATE.Core.Entities.ATE;
+using ATE.Core.Entities.Billing;
+using ATE.Core.Factories;
 using ATE.Core.Generators;
 using ATE.Core.Interfaces;
 using ATE.Views.Terminals;
@@ -10,34 +12,27 @@ namespace ATE
     {
         public void Show()
         {
-            Client client1 = new Client("Kirill", "Kanabay");
-            Client client2 = new Client("Ivan", "Ivanov");
-
-            Tariff tariff = new Tariff("Light", 0.05m);
-            Company company = new Company("MTC", "375", "29");
-
-            IPhoneNumberGenerator numGenerator = new PhoneNumberGenerator();
-
-            Contract client1Contract = new Contract(numGenerator.Generate(company), tariff, client1, company);
-            Contract client2Contract = new Contract(numGenerator.Generate(company), tariff, client2, company);
+            User user1 = new User("Kirill", "Kanabay");
+            User user2 = new User("Ivan", "Ivanov");
             
-            BaseTerminal terminal1 = new Phone(client1Contract);
-            BaseTerminal terminal2 = new Phone(client1Contract);
-            BaseTerminal terminal3 = new Phone(client2Contract);
-            
-            TerminalView terminal1View = new TerminalView(terminal1);
-            TerminalView terminal2View = new TerminalView(terminal2);
-            
+            Company company = new Company
+                    .Builder("МТС").Tariff(new Tariff("Light", 0.05m))
+                .NumberParams(new PhoneNumberParameters("375", "29"))
+                .BillingSystem(new BillingSystem()).Build();
+
+            Subscriber subscriber1 = company.Subscribe(new SubscriberFactory(user1));
+            Subscriber subscriber2 = company.Subscribe(new SubscriberFactory(user2));
+
+            TerminalView terminal1View = new TerminalView(subscriber1.Terminal);
+            TerminalView terminal2View = new TerminalView(subscriber2.Terminal);
+
             AutomaticTelephoneExchange ate = new AutomaticTelephoneExchange(company, 256);
-            
-            terminal1.ConnectTo(ate);
-            terminal2.ConnectTo(ate);
-            
-            terminal1.CallTo(terminal2.Number);
-            // terminal2.CallTo(terminal1.Number);
-            
+
+            subscriber1.Terminal.ConnectTo(ate);
+            subscriber2.Terminal.ConnectTo(ate);
+
+            subscriber1.Terminal.CallTo(subscriber2.Terminal.Number);
+            //terminal2.CallTo(terminal1.Number);
         }
-        
-        
     }
 }

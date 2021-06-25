@@ -20,9 +20,9 @@ namespace ATE.Core.Entities.Billing
             return billingAccount;
         }
 
-        public BillingAccount Register(Client client)
+        public BillingAccount Register(User client)
         {
-            var billingAccount = new BillingClientAccount(client);
+            var billingAccount = new BillingUserAccount(client);
             BillingAccounts.Add(billingAccount);
 
             return billingAccount;

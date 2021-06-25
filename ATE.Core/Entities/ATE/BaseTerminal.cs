@@ -14,13 +14,13 @@ namespace ATE.Core.Entities.ATE
         public event EventHandler<CallArgs> CallRejectedEvent;
         public event EventHandler<TerminalArgs> DisconnectedEvent;
         
-        public string Number => Contract.PhoneNumber;
+        public string Number { get; }
         public IPort Port { get; protected set; }
         public Contract Contract { get; }
 
-        protected BaseTerminal(Contract contract)
+        protected BaseTerminal(string number)
         {
-            Contract = contract;
+            Number = number;
         }
         
         public virtual void ConnectTo(AutomaticTelephoneExchange ate)
