@@ -2,6 +2,7 @@
 using System.Reflection.Metadata;
 using ATE.Core.Entities.ATE;
 using ATE.Core.Entities.Billing;
+using ATE.Core.Generators;
 
 namespace ATE.Core.Entities
 {
@@ -12,8 +13,8 @@ namespace ATE.Core.Entities
         public string Name { get; }
         public string CountryCode { get; }
         public string CompanyCode { get; }
-        public virtual List<Contract> Contracts { get; }
-        public virtual List<Tariff> Tariffs { get; }
+        public List<Contract> Contracts { get; }
+        public List<Tariff> Tariffs { get; }
 
         public Company(string name, string countryCode, string companyCode)
         {
@@ -29,5 +30,15 @@ namespace ATE.Core.Entities
 
         public BillingSystem BillingSystem => _billingSystem ??= new BillingSystem();
         public AutomaticTelephoneExchange Ate => _ate ??= new AutomaticTelephoneExchange(this, 65536);
+
+        public Contract CreateContract(Client client, Tariff tariff)
+        {
+            var phoneNumber = new PhoneNumberGenerator().Generate(company: this);
+            var contract = new Contract(phoneNumber, tariff, client, this);
+            Contracts.Add(contract);
+
+            return contract;
+        }
+        
     }
 }

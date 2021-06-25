@@ -1,7 +1,7 @@
 ﻿using ATE.Core.Entities;
 using ATE.Core.Entities.ATE;
+using ATE.Core.Generators;
 using ATE.Core.Interfaces;
-using ATE.Generators;
 using ATE.Views.Base;
 using ATE.Views.Terminals;
 
