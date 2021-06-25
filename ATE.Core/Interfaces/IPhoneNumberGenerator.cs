@@ -4,6 +4,6 @@ namespace ATE.Core.Interfaces
 {
     public interface IPhoneNumberGenerator
     {
-        string Generate(Company company);
+        string Generate(ICompany company);
     }
 }

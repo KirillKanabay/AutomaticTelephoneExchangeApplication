@@ -7,7 +7,7 @@ namespace ATE.Core.Generators
 {
     public class PhoneNumberGenerator : IPhoneNumberGenerator
     {
-        public string Generate(Company company)
+        public string Generate(ICompany company)
         {
             string phoneNumber;
             

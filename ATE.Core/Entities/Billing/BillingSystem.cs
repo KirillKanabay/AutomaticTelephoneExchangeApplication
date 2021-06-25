@@ -3,7 +3,7 @@ using ATE.Core.Interfaces;
 
 namespace ATE.Core.Entities.Billing
 {
-    public class BillingSystem
+    public class BillingSystem //todo: Добавить интерфейс
     {
         private readonly ICollection<IBillingAccount> BillingAccounts;
 

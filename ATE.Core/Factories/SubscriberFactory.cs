@@ -16,13 +16,13 @@ namespace ATE.Core.Factories
             _phoneNumberGenerator = new PhoneNumberGenerator();
         }
         
-        public override IBillingAccount CreateBillingAccount()
+        public override IBillingAccount CreateBillingAccount(ICompany company)
         {
-            var billingAccount = new BillingUserAccount(_user);
+            var billingAccount = company.BillingSystem.Register(_user);
             return billingAccount;
         }
 
-        public override Contract CreateContract(Company company)
+        public override IContract CreateContract(ICompany company)
         {
             var number = _phoneNumberGenerator.Generate(company);
             var contract = new Contract(number, company.Tariff, _user);
@@ -30,7 +30,7 @@ namespace ATE.Core.Factories
             return contract;
         }
 
-        public override BaseTerminal CreateTerminal(Contract contract)
+        public override BaseTerminal CreateTerminal(IContract contract)
         {
             var terminal = new Phone(contract.PhoneNumber);
             return terminal;
