@@ -1,4 +1,5 @@
-﻿using ATE.Core.Interfaces;
+﻿using ATE.Core.Entities.Users;
+using ATE.Core.Interfaces;
 
 namespace ATE.Core.Entities
 {

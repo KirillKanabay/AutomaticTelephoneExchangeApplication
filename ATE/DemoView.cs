@@ -1,10 +1,11 @@
 ﻿using ATE.Core.Entities;
 using ATE.Core.Entities.ATE;
-using ATE.Core.Entities.Billing;
+using ATE.Core.Entities.Billings;
+using ATE.Core.Entities.Users;
 using ATE.Core.Factories;
 using ATE.Core.Generators;
 using ATE.Core.Interfaces;
-using ATE.Views.Terminals;
+using ATE.Core.Interfaces.Billings;
 
 namespace ATE
 {

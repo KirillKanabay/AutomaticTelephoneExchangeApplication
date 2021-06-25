@@ -1,5 +1,5 @@
 ﻿using ATE.Core.Entities;
-using ATE.Core.Entities.Billing;
+using ATE.Core.Entities.Billings;
 
 namespace ATE.Core.Interfaces.Builders
 {

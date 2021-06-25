@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
-using ATE.Core.Interfaces;
+using ATE.Core.Entities.Users;
+using ATE.Core.Interfaces.Billings;
 
-namespace ATE.Core.Entities.Billing
+namespace ATE.Core.Entities.Billings
 {
-    public class BillingSystem //todo: Добавить интерфейс
+    public class BillingSystem : IBillingSystem//todo: Добавить интерфейс
     {
         private readonly ICollection<IBillingAccount> BillingAccounts;
 
@@ -12,7 +13,7 @@ namespace ATE.Core.Entities.Billing
             BillingAccounts = new List<IBillingAccount>();
         }
 
-        public BillingAccount Register(Company company)
+        public IBillingAccount Register(Company company)
         {
             var billingAccount = new BillingCompanyAccount(company);
             BillingAccounts.Add(billingAccount);
@@ -20,7 +21,7 @@ namespace ATE.Core.Entities.Billing
             return billingAccount;
         }
 
-        public BillingAccount Register(User client)
+        public IBillingAccount Register(User client)
         {
             var billingAccount = new BillingUserAccount(client);
             BillingAccounts.Add(billingAccount);

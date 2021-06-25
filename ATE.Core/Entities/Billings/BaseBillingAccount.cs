@@ -1,9 +1,10 @@
 ﻿using System;
 using ATE.Core.Interfaces;
+using ATE.Core.Interfaces.Billings;
 
-namespace ATE.Core.Entities.Billing
+namespace ATE.Core.Entities.Billings
 {
-    public abstract class BillingAccount : IBillingAccount
+    public abstract class BaseBillingAccount : IBillingAccount
     {
         public decimal Balance { get; private set; }
         

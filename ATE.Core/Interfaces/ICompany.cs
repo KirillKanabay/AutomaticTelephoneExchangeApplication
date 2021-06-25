@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using ATE.Core.Entities;
-using ATE.Core.Entities.Billing;
+using ATE.Core.Entities.Billings;
 using ATE.Core.Factories;
 
 namespace ATE.Core.Interfaces

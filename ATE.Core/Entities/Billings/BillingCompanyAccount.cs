@@ -1,6 +1,6 @@
-﻿namespace ATE.Core.Entities.Billing
+﻿namespace ATE.Core.Entities.Billings
 {
-    public class BillingCompanyAccount : BillingAccount
+    public class BillingCompanyAccount : BaseBillingAccount
     {
         public Company Company { get; }
 

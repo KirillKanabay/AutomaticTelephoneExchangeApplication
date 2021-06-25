@@ -1,11 +1,9 @@
 ﻿using System;
 using ATE.Core.Args;
-using ATE.Core.Entities;
 using ATE.Core.Entities.ATE;
-using ATE.Core.Interfaces;
 using ATE.Helpers;
 
-namespace ATE.Views.Terminals
+namespace ATE
 {
     public class TerminalView
     {

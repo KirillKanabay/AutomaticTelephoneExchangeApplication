@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using ATE.Core.Entities.ATE;
-using ATE.Core.Entities.Billing;
+using ATE.Core.Entities.Billings;
 using ATE.Core.Factories;
 using ATE.Core.Interfaces;
+using ATE.Core.Interfaces.Billings;
 using ATE.Core.Interfaces.Builders;
 
 namespace ATE.Core.Entities

@@ -1,6 +1,8 @@
-﻿namespace ATE.Core.Entities.Billing
+﻿using ATE.Core.Entities.Users;
+
+namespace ATE.Core.Entities.Billings
 {
-    public class BillingUserAccount : BillingAccount
+    public class BillingUserAccount : BaseBillingAccount
     {
         private readonly User _user;
         public BillingUserAccount(User user)
