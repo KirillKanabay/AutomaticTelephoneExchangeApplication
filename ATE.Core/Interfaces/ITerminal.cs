@@ -10,6 +10,7 @@ namespace ATE.Core.Interfaces
         void ConnectTo(AutomaticTelephoneExchange ate);
         void Disconnect();
         void CallTo(string number);
+        void EndCall(Call call);
         void HandleIncomingCall(Call call);
         void AcceptIncomingCall(Call call);
         void RejectIncomingCall(Call call);

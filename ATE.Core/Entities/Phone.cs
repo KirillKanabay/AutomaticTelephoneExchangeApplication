@@ -15,6 +15,11 @@ namespace ATE.Core.Entities
             RaiseCallEvent(number);
         }
 
+        public override void EndCall(Call call)
+        {
+            RaiseCallEndedEvent(call);
+        }
+
         public override void HandleIncomingCall(Call call)
         {
             RaiseIncomingCallEvent(call);

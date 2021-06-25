@@ -13,10 +13,12 @@ namespace ATE.Views.Terminals
         public TerminalView(BaseTerminal terminal)
         {
             _terminal = terminal;
+            _terminal.ConnectedEvent += OnTerminalConnected;
             _terminal.CallEvent += OnCall;
             _terminal.IncomingCallEvent += OnIncomingCall;
             _terminal.CallAcceptedEvent += OnCallAccepted;
             _terminal.CallRejectedEvent += OnCallRejected;
+            _terminal.CallEndedEvent += OnCallEnded;
             _terminal.DisconnectedEvent += OnTerminalDisconnected;
         }
 
@@ -27,7 +29,7 @@ namespace ATE.Views.Terminals
         
         public void OnIncomingCall(object sender, CallArgs e)
         {
-            ConsoleEx.WriteLineWithColor($"[{_terminal.Number}]: Входящий вызов от {e.Call.FromNumber}",
+            ConsoleEx.WriteLineWithColor($"\n[{_terminal.Number}]: Входящий вызов от {e.Call.FromNumber}",
                 ConsoleColor.Green);
             if (ConsoleEx.CheckContinue("Принять вызов?([Y]es/[N]o):"))
             {
@@ -41,17 +43,27 @@ namespace ATE.Views.Terminals
 
         public void OnCallAccepted(object sender, CallArgs e)
         {
-            ConsoleEx.WriteLineWithColor($"[{_terminal.Number}]: Вызов от {e.Call.FromNumber} был принят", ConsoleColor.Green);
+            ConsoleEx.WriteLineWithColor($"\n[{_terminal.Number}] Звонок от {e.Call.FromNumber} был принят", ConsoleColor.Green);
         }
 
         public void OnCallRejected(object sender, CallArgs e)
         {
-            ConsoleEx.WriteLineWithColor($"[{_terminal.Number}]: Звонок с {e.Call.TargetNumber} был отклонен", ConsoleColor.Red);
+            ConsoleEx.WriteLineWithColor($"\n[{_terminal.Number}] Звонок с {e.Call.TargetNumber} был отклонен", ConsoleColor.Red);
         }
 
+        public void OnCallEnded(object sender, CallArgs e)
+        {
+            ConsoleEx.WriteLineWithColor($"\n[{_terminal.Number}] Звонок с {e.Call.TargetNumber} был завершен", ConsoleColor.DarkGreen);
+        }
+
+        public void OnTerminalConnected(object sender, TerminalArgs e)
+        {
+            ConsoleEx.WriteLineWithColor($"\n[{_terminal.Number}] Был подключен к АТС", ConsoleColor.DarkMagenta);
+        }
+        
         public void OnTerminalDisconnected(object sender, TerminalArgs e)
         {
-            ConsoleEx.WriteLineWithColor($"[{_terminal.Number}] отключен от станции АТС", ConsoleColor.DarkMagenta);
+            ConsoleEx.WriteLineWithColor($"\n[{_terminal.Number}] отключен от станции АТС", ConsoleColor.DarkMagenta);
         }
     }
 }

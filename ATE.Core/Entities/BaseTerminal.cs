@@ -6,12 +6,14 @@ namespace ATE.Core.Entities
 {
     public abstract class BaseTerminal : ITerminal
     {
+        public event EventHandler<TerminalArgs> ConnectedEvent;
         public event EventHandler<CallArgs> CallEvent;
         public event EventHandler<CallArgs> IncomingCallEvent;
         public event EventHandler<CallArgs> CallAcceptedEvent;
         public event EventHandler<CallArgs> CallEndedEvent;
         public event EventHandler<CallArgs> CallRejectedEvent;
-        public event EventHandler<TerminalArgs> DisconnectedEvent; 
+        public event EventHandler<TerminalArgs> DisconnectedEvent;
+        
         public string Number => Contract.PhoneNumber;
         public IPort Port { get; protected set; }
         public Contract Contract { get; }
@@ -28,6 +30,8 @@ namespace ATE.Core.Entities
                 throw new Exception("Терминал уже подключен к АТС");
             }
             Port = ate.Connect(this);
+            
+            RaiseTerminalConnectedEvent();
         }
 
         public virtual void Disconnect()
@@ -46,7 +50,13 @@ namespace ATE.Core.Entities
         public abstract void HandleIncomingCall(Call call);
         public abstract void AcceptIncomingCall(Call call);
         public abstract void RejectIncomingCall(Call call);
+        public abstract void EndCall(Call call);
 
+        protected void RaiseTerminalConnectedEvent()
+        {
+            var args = new TerminalArgs(this);
+            ConnectedEvent?.Invoke(this, args);
+        }
         protected void RaiseTerminalDisconnectedEvent()
         {
             var args = new TerminalArgs(this);

@@ -37,7 +37,8 @@ namespace ATE.Views.Demo
             Contract client2Contract = new Contract(numGenerator.Generate(company), tariff, client2, company);
             
             BaseTerminal terminal1 = new Phone(client1Contract);
-            BaseTerminal terminal2 = new Phone(client2Contract);
+            BaseTerminal terminal2 = new Phone(client1Contract);
+            BaseTerminal terminal3 = new Phone(client2Contract);
             
             TerminalView terminal1View = new TerminalView(terminal1);
             TerminalView terminal2View = new TerminalView(terminal2);
@@ -47,7 +48,9 @@ namespace ATE.Views.Demo
             terminal1.ConnectTo(ate);
             terminal2.ConnectTo(ate);
             
-            terminal2.CallTo(terminal1.Number);
+            terminal1.CallTo(terminal2.Number);
+            // terminal2.CallTo(terminal1.Number);
+            
         }
         
         

@@ -7,9 +7,10 @@ using ATE.Core.Interfaces;
 
 namespace ATE.Core.Entities
 {
-    public class AutomaticTelephoneExchange //TODO: сделать интерфейс
+    public class AutomaticTelephoneExchange  //TODO: сделать интерфейс
     {
         private readonly Company _company;
+        
         private ICollection<IPort> Ports { get; set; }
         
         public AutomaticTelephoneExchange(Company company, int portCount)

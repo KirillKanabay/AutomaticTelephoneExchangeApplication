@@ -2,8 +2,8 @@
 {
     public enum CallStatus
     {
-        Waiting,
-        Accepted,
-        Rejected
+        Waiting = 0,
+        Accepted = 1,
+        Rejected =2
     }
 }
