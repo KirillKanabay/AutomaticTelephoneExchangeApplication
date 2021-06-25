@@ -5,7 +5,7 @@ using ATE.Core.Args;
 using ATE.Core.Enums;
 using ATE.Core.Interfaces;
 
-namespace ATE.Core.Entities
+namespace ATE.Core.Entities.ATE
 {
     public class AutomaticTelephoneExchange  //TODO: сделать интерфейс
     {

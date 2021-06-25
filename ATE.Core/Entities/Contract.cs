@@ -1,4 +1,5 @@
 ﻿using System.Reflection.Metadata;
+using ATE.Core.Entities.ATE;
 
 namespace ATE.Core.Entities
 {

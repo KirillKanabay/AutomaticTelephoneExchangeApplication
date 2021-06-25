@@ -1,8 +1,4 @@
-﻿using System;
-using ATE.Core.Args;
-using ATE.Core.Interfaces;
-
-namespace ATE.Core.Entities
+﻿namespace ATE.Core.Entities.ATE
 {
     public class Phone : BaseTerminal
     {

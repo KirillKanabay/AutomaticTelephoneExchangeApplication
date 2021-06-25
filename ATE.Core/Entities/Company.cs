@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Reflection.Metadata;
+using ATE.Core.Entities.ATE;
+using ATE.Core.Entities.Billing;
 
 namespace ATE.Core.Entities
 {
