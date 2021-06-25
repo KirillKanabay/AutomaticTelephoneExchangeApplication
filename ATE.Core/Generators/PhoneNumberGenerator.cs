@@ -14,7 +14,7 @@ namespace ATE.Core.Generators
             do
             {
                 int userNumber = new Random().Next(1, 10000000);
-                phoneNumber = $"+{company.CountryCode}{company.CompanyCode}{userNumber:D7}";
+                phoneNumber = $"+{company.NumberParams.CountryCode}{company.NumberParams.CompanyCode}{userNumber:D7}";
                 if (company.Contracts.Any(c => c.PhoneNumber == phoneNumber))
                 {
                     phoneNumber = String.Empty;

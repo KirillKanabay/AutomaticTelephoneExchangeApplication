@@ -4,11 +4,13 @@
     {
         public string Name { get; }
         public decimal PricePerMinuteCall { get; }
-
-        public Tariff(string name, decimal pricePerMinuteCall)
+        public Company Company { get; }
+        
+        public Tariff(string name, decimal pricePerMinuteCall, Company company)
         {
             Name = name;
             PricePerMinuteCall = pricePerMinuteCall;
+            Company = company;
         }
         
         public override string ToString()

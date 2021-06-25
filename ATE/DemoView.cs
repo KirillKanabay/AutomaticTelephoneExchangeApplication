@@ -2,29 +2,13 @@
 using ATE.Core.Entities.ATE;
 using ATE.Core.Generators;
 using ATE.Core.Interfaces;
-using ATE.Views.Base;
 using ATE.Views.Terminals;
 
-namespace ATE.Views.Demo
+namespace ATE
 {
-    public class DemoView : BaseView
+    public class DemoView
     {
-        private readonly IRepository<Client> _clientRepo;
-        private readonly IRepository<Contract> _contractRepo;
-
-        public DemoView() : base("Демонстрация работы")
-        {
-            
-        }
-        
-        public DemoView(IRepository<Client> clientRepo, IRepository<Contract> contractRepo) : base("Демонстрация работы")
-        {
-            _clientRepo = clientRepo;
-            _contractRepo = contractRepo;
-        }
-        
-        
-        public override void Show()
+        public void Show()
         {
             Client client1 = new Client("Kirill", "Kanabay");
             Client client2 = new Client("Ivan", "Ivanov");

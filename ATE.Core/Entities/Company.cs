@@ -8,29 +8,19 @@ namespace ATE.Core.Entities
 {
     public class Company : BaseEntity
     {
-        private BillingSystem _billingSystem;
-        private AutomaticTelephoneExchange _ate;
-        public string Name { get; }
-        public string CountryCode { get; }
-        public string CompanyCode { get; }
+        public BillingSystem BillingSystem { get; }
+        public PhoneNumberParameters NumberParams { get; }
         public List<Contract> Contracts { get; }
-        public List<Tariff> Tariffs { get; }
+        
+        public Tariff Tariff { get; }
 
-        public Company(string name, string countryCode, string companyCode)
+        public Company(PhoneNumberParameters numberParams, BillingSystem billingSystem, Tariff tariff)
         {
-            Name = name;
-            CountryCode = countryCode;
-            CompanyCode = companyCode;
+            BillingSystem = billingSystem;
+            Tariff = tariff;
+            NumberParams = numberParams;
         }
         
-        public override string ToString()
-        {
-            return $"#{Id} Название: {Name}. Код страны: {CountryCode}. Код компании: {CompanyCode}";
-        }
-
-        public BillingSystem BillingSystem => _billingSystem ??= new BillingSystem();
-        public AutomaticTelephoneExchange Ate => _ate ??= new AutomaticTelephoneExchange(this, 65536);
-
         public Contract CreateContract(Client client, Tariff tariff)
         {
             var phoneNumber = new PhoneNumberGenerator().Generate(company: this);
@@ -39,6 +29,5 @@ namespace ATE.Core.Entities
 
             return contract;
         }
-        
     }
 }
