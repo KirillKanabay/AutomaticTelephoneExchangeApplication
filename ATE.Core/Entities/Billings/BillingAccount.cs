@@ -1,14 +1,21 @@
 ﻿using System;
+using ATE.Core.Entities.Users;
 using ATE.Core.Interfaces;
 using ATE.Core.Interfaces.Billings;
 
 namespace ATE.Core.Entities.Billings
 {
-    public abstract class BaseBillingAccount : IBillingAccount
+    public class BillingAccount : IBillingAccount
     {
+        public User User { get; }
         public decimal Balance { get; private set; }
+
+        public BillingAccount(User user)
+        {
+            User = user;
+        }
         
-        public virtual void Deposit(decimal money)
+        public void Deposit(decimal money)
         {
             if (money <= 0)
             {
@@ -17,19 +24,14 @@ namespace ATE.Core.Entities.Billings
             Balance += money;
         }
 
-        public virtual void WriteOff(decimal money)
+        public void WriteOff(decimal money)
         {
             if (money <= 0)
             {
                 throw new ArgumentException("Сумма списания счета не может быть меньше или равно нулю");
             }
-
-            if (Balance - money < 0)
-            {
-                throw new Exception("Недостаточно средств на балансе");
-            }
-
-            Balance += money;
+            
+            Balance -= money;
         }
     }
 }

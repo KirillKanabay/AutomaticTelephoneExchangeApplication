@@ -33,7 +33,7 @@ namespace ATE.Core.Factories
 
         public override BaseTerminal CreateTerminal(IContract contract)
         {
-            var terminal = new Phone(contract.PhoneNumber);
+            var terminal = new Phone(contract);
             return terminal;
         }
     }

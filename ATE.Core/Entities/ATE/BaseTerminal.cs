@@ -14,13 +14,17 @@ namespace ATE.Core.Entities.ATE
         public event EventHandler<CallArgs> CallRejectedEvent;
         public event EventHandler<TerminalArgs> DisconnectedEvent;
         
-        public string Number { get; }
         public IPort Port { get; protected set; }
-        public Contract Contract { get; }
-
-        protected BaseTerminal(string number)
+        public IContract Contract { get; }
+        public string Number => Contract.PhoneNumber;
+        
+        protected BaseTerminal(IContract contract)
         {
-            Number = number;
+            if (contract == null)
+            {
+                throw new ArgumentNullException("Договор не может быть null");
+            }
+            Contract = contract;
         }
         
         public virtual void ConnectTo(AutomaticTelephoneExchange ate)
@@ -67,7 +71,7 @@ namespace ATE.Core.Entities.ATE
             var args = new CallArgs(new Call(Number, targetNumber));
             CallEvent?.Invoke(this, args);
         }
-        protected void RaiseIncomingCallEvent(Call call) //todo: Сделать Call интерфейсом
+        protected void RaiseIncomingCallEvent(Call call)
         {
             var args = new CallArgs(call);
             IncomingCallEvent?.Invoke(this, args);

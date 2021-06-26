@@ -4,16 +4,17 @@ using System.Linq;
 using ATE.Core.Args;
 using ATE.Core.Enums;
 using ATE.Core.Interfaces;
+using ATE.Core.Interfaces.ATE;
 
 namespace ATE.Core.Entities.ATE
 {
-    public class AutomaticTelephoneExchange  //TODO: сделать интерфейс
+    public class AutomaticTelephoneExchange: IAutomaticTelephoneExchange
     {
-        private readonly Company _company;
+        private readonly ICompany _company;
         
         private ICollection<IPort> Ports { get; set; }
         
-        public AutomaticTelephoneExchange(Company company, int portCount)
+        public AutomaticTelephoneExchange(ICompany company, int portCount)
         {
             _company = company;
             if (portCount <= 0)
@@ -29,9 +30,7 @@ namespace ATE.Core.Entities.ATE
             if (port != null)
             {
                 port.ConnectTerminal(terminal);
-                
-                terminal.CallEvent += OnTerminalCall;
-                terminal.DisconnectedEvent += OnTerminalDisconnected;
+                SubscribeToTerminal(terminal);
             }
             else
             {
@@ -49,11 +48,22 @@ namespace ATE.Core.Entities.ATE
                 Ports.Add(port);
             }
         }
+
+        private void SubscribeToTerminal(BaseTerminal terminal)
+        {
+            terminal.CallEvent += OnTerminalCall;
+            terminal.DisconnectedEvent += OnTerminalDisconnected;
+        }
+
+        private void UnsubscribeFromTerminal(BaseTerminal terminal)
+        {
+            terminal.CallEvent -= OnTerminalCall;
+            terminal.DisconnectedEvent -= OnTerminalDisconnected;
+        }
         
         private void OnTerminalDisconnected(object sender, TerminalArgs e)
         {
-            e.Terminal.CallEvent -= OnTerminalCall;
-            e.Terminal.DisconnectedEvent -= OnTerminalDisconnected;
+            UnsubscribeFromTerminal(e.Terminal);
         }
         
         private void OnTerminalCall(object sender, CallArgs e)

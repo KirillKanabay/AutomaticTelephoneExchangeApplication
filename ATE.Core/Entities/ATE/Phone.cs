@@ -1,14 +1,16 @@
-﻿namespace ATE.Core.Entities.ATE
+﻿using ATE.Core.Interfaces;
+
+namespace ATE.Core.Entities.ATE
 {
     public class Phone : BaseTerminal
     {
-        public Phone(string number) : base(number)
+        public Phone(IContract contract) : base(contract)
         {
         }
 
-        public override void CallTo(string number)
+        public override void CallTo(string targetNumber)
         {
-            RaiseCallEvent(number);
+            RaiseCallEvent(targetNumber);
         }
 
         public override void EndCall(Call call)

@@ -37,6 +37,8 @@ namespace ATE.Core.Entities
             BaseTerminal terminal = factory.CreateTerminal(contract);
             
             var subscriber = new Subscriber(terminal, contract, account);
+            BillingSystem.SubscribeToTerminal(terminal);
+            
             Contracts.Add(contract);
             
             return subscriber;

@@ -1,5 +1,5 @@
 ﻿using System;
-using ATE.Core.Entities;
+using ATE.Core.Entities.ATE;
 
 namespace ATE.Core.Args
 {
