@@ -32,9 +32,9 @@ namespace ATE.Core.Entities
 
         public Subscriber Subscribe(AbstractSubscriberFactory factory)
         {
-            IBillingAccount account = factory.CreateBillingAccount(this);
             IContract contract = factory.CreateContract(this);
-            BaseTerminal terminal = factory.CreateTerminal(contract);
+            IBillingAccount account = factory.CreateBillingAccount(this, contract);
+            ITerminal terminal = factory.CreateTerminal(contract);
             
             var subscriber = new Subscriber(terminal, contract, account);
             BillingSystem.SubscribeToTerminal(terminal);

@@ -4,6 +4,6 @@ namespace ATE.Core.Interfaces.ATE
 {
     public interface IAutomaticTelephoneExchange
     {
-        IPort Connect(BaseTerminal terminal);
+        IPort Connect(ITerminal terminal);
     }
 }

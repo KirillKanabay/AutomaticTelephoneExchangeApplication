@@ -7,9 +7,9 @@ namespace ATE.Core.Args
 {
     public class TerminalArgs : EventArgs
     {
-        public BaseTerminal Terminal { get; }
+        public ITerminal Terminal { get; }
 
-        public TerminalArgs(BaseTerminal terminal)
+        public TerminalArgs(ITerminal terminal)
         {
             Terminal = terminal;
         }

@@ -6,6 +6,7 @@ namespace ATE.Core.Interfaces.Billings
 {
     public interface IBillingSystem
     {
-        IBillingAccount Register(User user);
+        ICollection<CallInformation> Calls { get; }
+        IBillingAccount Register(IContract contract);
     }
 }

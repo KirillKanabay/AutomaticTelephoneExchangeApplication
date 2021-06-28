@@ -8,11 +8,13 @@ namespace ATE.Core.Entities.Billings
     public class BillingAccount : IBillingAccount
     {
         public User User { get; }
+        public IContract Contract { get; }
         public decimal Balance { get; private set; }
 
-        public BillingAccount(User user)
+        public BillingAccount(IContract contract)
         {
-            User = user;
+            Contract = contract;
+            User = Contract.User;
         }
         
         public void Deposit(decimal money)

@@ -6,11 +6,11 @@ namespace ATE.Core.Entities
 {
     public class Subscriber
     {
-        public BaseTerminal Terminal { get; }
+        public ITerminal Terminal { get; }
         public IContract Contract { get; }
         public IBillingAccount BillingAccount { get; }
 
-        public Subscriber(BaseTerminal terminal, IContract contract, IBillingAccount billingAccount)
+        public Subscriber(ITerminal terminal, IContract contract, IBillingAccount billingAccount)
         {
             Terminal = terminal;
             Contract = contract;

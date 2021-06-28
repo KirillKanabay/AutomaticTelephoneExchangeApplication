@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using ATE.Core.Args;
 using ATE.Core.Entities.ATE;
-using ATE.Core.Entities.Users;
+using ATE.Core.Enums;
+using ATE.Core.Interfaces;
 using ATE.Core.Interfaces.Billings;
 
 namespace ATE.Core.Entities.Billings
@@ -11,61 +12,88 @@ namespace ATE.Core.Entities.Billings
     public class BillingSystem : IBillingSystem
     {
         private readonly ICollection<IBillingAccount> _billingAccounts;
-        private readonly ICollection<CallInformation> _calls;
-
+        public ICollection<CallInformation> Calls { get; }
+        
+        
         public BillingSystem()
         {
             _billingAccounts = new List<IBillingAccount>();
-            _calls = new List<CallInformation>();
+            Calls = new List<CallInformation>();
         }
         
-        public IBillingAccount Register(User user)
+        public IBillingAccount Register(IContract contract)
         {
-            var billingAccount = new BillingAccount(user);
+            var billingAccount = new BillingAccount(contract);
             _billingAccounts.Add(billingAccount);
 
             return billingAccount;
         }
-
-        public IEnumerable<CallInformation> GetCalls(string number)
+        
+        public void SubscribeToTerminal(ITerminal terminal)
         {
-            return _calls.Where(c => c.Call.FromNumber == number || c.Call.TargetNumber == number);
+            terminal.CallEvent += OnTerminalCall;
+            terminal.CallEndedEvent += OnTerminalCallEnded;
+        }
+
+        public void UnsubscribeFromTerminal(ITerminal terminal)
+        {
+            terminal.CallEvent -= OnTerminalCall;
+            terminal.CallEndedEvent -= OnTerminalCallEnded;
+
+        }
+
+        private void OnTerminalCall(object sender, CallArgs e)
+        {
+            var acc = _billingAccounts.FirstOrDefault(a => a.Contract.PhoneNumber == e.FromNumber);
+            if (acc?.Balance < acc?.Contract.Tariff.PricePerMinuteCall)
+            {
+                throw new ArgumentException("Недостаточно средств для совершения вызова");
+                //todo: прервать звонок
+            }
+            
         }
         
-        public void SubscribeToTerminal(BaseTerminal terminal)
-        {
-            terminal.CallEvent += OnTerminalCallEvent;
-        }
-
-        public void UnsubscribeFromTerminal(BaseTerminal terminal)
-        {
-            terminal.CallEvent -= OnTerminalCallEvent;
-        }
-
-        private void OnTerminalCallEvent(object sender, CallArgs e)
-        {
-            BaseTerminal terminal = (BaseTerminal) sender;
-            var billingUserAccount = _billingAccounts.FirstOrDefault(acc => acc.User == terminal.Contract.User);
-            //todo: bua check for null
-            
-            //todo: уменьшить цепочку вызовов
-            if (billingUserAccount?.Balance < terminal.Contract.Tariff.PricePerMinuteCall)
-            {
-                throw new ArgumentException("Недостаточно средств для совершения операции");
-            }
-           
-            var call = new CallInformation((BaseTerminal) sender, e.Call);
-
-            _calls.Add(call);
-        }
-
         private void OnTerminalCallEnded(object sender, CallArgs e)
         {
-            BaseTerminal terminal = (BaseTerminal) sender;
-            var billingUserAccount = _billingAccounts.FirstOrDefault(acc => acc.User == terminal.Contract.User);
-            var call = _calls.FirstOrDefault(c => c.Call.Id == e.Call.Id);
+            var acc = _billingAccounts.FirstOrDefault(a => a.Contract.PhoneNumber == e.FromNumber);
+
+            double durationInMinutes = e.DurationInMinutes;
+            decimal price = CalculateCallPrice(durationInMinutes, acc?.Contract.Tariff.PricePerMinuteCall ?? 0);
+
+            var callFromNumber = new CallInformation
+            {
+                ClientPhoneNumber = e.FromNumber,
+                DestinationPhoneNumber = e.TargetNumber,
+                CallDate = e.Date,
+                CallType = CallType.Outgoing,
+                Duration = durationInMinutes,
+                Price = price
+            };
             
-            billingUserAccount.WriteOff(call.Price);
+            var callTargetNumber = new CallInformation
+            {
+                ClientPhoneNumber = e.TargetNumber,
+                DestinationPhoneNumber = e.FromNumber,
+                CallDate = e.Date,
+                CallType = CallType.Incoming,
+                Duration = durationInMinutes,
+                Price = 0
+            };
+
+            Calls.Add(callFromNumber);
+            Calls.Add(callTargetNumber);
         }
+
+        private decimal CalculateCallPrice(double durationInMinutes, decimal pricePerMinuteCall)
+        {
+            decimal price = Convert.ToDecimal(durationInMinutes) * pricePerMinuteCall;
+            return price;
+        }
+
+        private void WriteOff(IBillingAccount acc, decimal price)
+        {
+            acc.WriteOff(price);
+        }
+        
     }
 }

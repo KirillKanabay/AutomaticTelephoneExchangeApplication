@@ -11,15 +11,22 @@ namespace ATE.Core.Factories
     {
         private readonly User _user;
         private readonly IPhoneNumberGenerator _phoneNumberGenerator;
+        
         public SubscriberFactory(User user)
         {
             _user = user;
             _phoneNumberGenerator = new PhoneNumberGenerator();
         }
-        
-        public override IBillingAccount CreateBillingAccount(ICompany company)
+
+        public SubscriberFactory(User user, IPhoneNumberGenerator generator)
         {
-            var billingAccount = company.BillingSystem.Register(_user);
+            _user = user;
+            _phoneNumberGenerator = generator;
+        }
+        
+        public override IBillingAccount CreateBillingAccount(ICompany company, IContract contract)
+        {
+            var billingAccount = company.BillingSystem.Register(contract);
             return billingAccount;
         }
 
@@ -31,9 +38,9 @@ namespace ATE.Core.Factories
             return contract;
         }
 
-        public override BaseTerminal CreateTerminal(IContract contract)
+        public override ITerminal CreateTerminal(IContract contract)
         {
-            var terminal = new Phone(contract);
+            var terminal = new Terminal(contract);
             return terminal;
         }
     }

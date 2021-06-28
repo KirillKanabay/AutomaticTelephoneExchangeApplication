@@ -10,8 +10,8 @@ namespace ATE.Core.Interfaces
     {
         int PortNumber { get; }
         PortStatus Status { get; }
-        BaseTerminal Terminal { get; }
-        void ConnectTerminal(BaseTerminal terminal);
+        ITerminal Terminal { get; }
+        void ConnectTerminal(ITerminal terminal);
         void OnTerminalDisconnected(object sender, TerminalArgs e);
         void OnTerminalCall(object sender, CallArgs e);
     }

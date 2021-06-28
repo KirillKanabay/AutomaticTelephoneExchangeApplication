@@ -24,7 +24,7 @@ namespace ATE.Core.Entities.ATE
             InitPorts(portCount);
         }
 
-        public IPort Connect(BaseTerminal terminal)
+        public IPort Connect(ITerminal terminal)
         {
             var port =  Ports.FirstOrDefault(p => p.Terminal == null);
             if (port != null)
@@ -49,13 +49,13 @@ namespace ATE.Core.Entities.ATE
             }
         }
 
-        private void SubscribeToTerminal(BaseTerminal terminal)
+        private void SubscribeToTerminal(ITerminal terminal)
         {
             terminal.CallEvent += OnTerminalCall;
             terminal.DisconnectedEvent += OnTerminalDisconnected;
         }
 
-        private void UnsubscribeFromTerminal(BaseTerminal terminal)
+        private void UnsubscribeFromTerminal(ITerminal terminal)
         {
             terminal.CallEvent -= OnTerminalCall;
             terminal.DisconnectedEvent -= OnTerminalDisconnected;
@@ -68,7 +68,7 @@ namespace ATE.Core.Entities.ATE
         
         private void OnTerminalCall(object sender, CallArgs e)
         {
-            BaseTerminal targetTerminal = Ports.FirstOrDefault(t => t.Terminal?.Number == e.Call.TargetNumber)?.Terminal;
+            ITerminal targetTerminal = Ports.FirstOrDefault(t => t.Terminal?.Number == e.Call.TargetNumber)?.Terminal;
 
             if (targetTerminal == null)
             {

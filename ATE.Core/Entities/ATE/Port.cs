@@ -9,13 +9,13 @@ namespace ATE.Core.Entities.ATE
     {
         public int PortNumber { get; }
         public PortStatus Status { get; private set; }
-        public BaseTerminal Terminal { get; private set; }
+        public ITerminal Terminal { get; private set; }
         public Port(int portNumber)
         {
             PortNumber = portNumber;
         }
 
-        public void ConnectTerminal(BaseTerminal terminal)
+        public void ConnectTerminal(ITerminal terminal)
         {
             if (Terminal != null)
             {

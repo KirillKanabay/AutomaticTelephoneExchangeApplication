@@ -34,7 +34,7 @@ namespace ATE
 
             subscriber1.Terminal.CallTo(subscriber2.Terminal.Number);
             
-            subscriber1.Terminal.Disconnect();
+            subscriber1.Terminal.EndCall();
             //terminal2.CallTo(terminal1.Number);
         }
     }

@@ -1,9 +1,9 @@
 ﻿namespace ATE.Core.Entities
 {
-    public struct PhoneNumberParameters
+    public readonly struct PhoneNumberParameters
     {
-        public string CountryCode { get; set; }
-        public string CompanyCode { get; set; }
+        public readonly string CountryCode;
+        public readonly string CompanyCode; 
 
         public PhoneNumberParameters(string countryCode, string companyCode)
         {
