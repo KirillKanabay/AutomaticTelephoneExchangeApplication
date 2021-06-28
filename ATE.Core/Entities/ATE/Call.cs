@@ -38,5 +38,10 @@ namespace ATE.Core.Entities.ATE
         {
             Status = CallStatus.Rejected;
         }
+
+        public void Cancel()
+        {
+            Status = CallStatus.Cancelled;
+        }
     }
 }

@@ -10,6 +10,7 @@ namespace ATE.Core.Entities.ATE
         public int PortNumber { get; }
         public PortStatus Status { get; private set; }
         public ITerminal Terminal { get; private set; }
+        
         public Port(int portNumber)
         {
             PortNumber = portNumber;
@@ -27,20 +28,31 @@ namespace ATE.Core.Entities.ATE
             
             terminal.DisconnectedEvent += OnTerminalDisconnected;
             terminal.CallEvent += OnTerminalCall;
+            terminal.CallEndedEvent += OnTerminalCallEnded;
         }
-        public void OnTerminalCall(object sender, CallArgs e)
+        
+        private void OnTerminalCall(object sender, CallArgs e)
         {
             Status = PortStatus.InCall;
         }
-        public void OnTerminalEndCall(object sender, CallArgs e)
+        
+        public void OnTerminalCallEnded(object sender, CallArgs e)
         {
             Status = PortStatus.Connected;
         }
+
+        public void OnTerminalCallRejected(object sender, CallArgs e)
+        {
+            Status = PortStatus.Connected;
+        }
+        
         public void OnTerminalDisconnected(object sender, TerminalArgs e)
         {
             Terminal.CallEvent -= OnTerminalCall;
-            Terminal.CallEvent -= OnTerminalEndCall;
+            Terminal.CallEndedEvent -= OnTerminalCallEnded;
             Terminal.DisconnectedEvent -= OnTerminalDisconnected;
+            Terminal.CallRejectedEvent -= OnTerminalCallRejected; 
+            
             Terminal = null;
             Status = PortStatus.Disconnected;
         }

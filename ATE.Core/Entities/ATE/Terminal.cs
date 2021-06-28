@@ -16,7 +16,7 @@ namespace ATE.Core.Entities.ATE
         public event EventHandler<CallArgs> CallAcceptedEvent;
         public event EventHandler<CallArgs> CallEndedEvent;
         public event EventHandler<CallArgs> CallRejectedEvent;
-        
+        public event EventHandler<CallArgs> CallCancelledEvent;
         #endregion
 
         #region Props
@@ -32,12 +32,7 @@ namespace ATE.Core.Entities.ATE
 
         public Terminal(IContract contract)
         {
-            if (contract == null)
-            {
-                throw new ArgumentNullException("Договор не может быть null");
-            }
-
-            Contract = contract;
+            Contract = contract ?? throw new ArgumentNullException(nameof(contract), "Договор не может быть null");
         }
 
         #endregion
@@ -52,7 +47,7 @@ namespace ATE.Core.Entities.ATE
             }
 
             Port = ate.Connect(this);
-
+            
             RaiseTerminalConnectedEvent();
         }
 
@@ -80,10 +75,15 @@ namespace ATE.Core.Entities.ATE
             RaiseCallEvent(CurrentCall);
         }
         
+        public void ResetCall()
+        {
+            CurrentCall = null;
+        }
+        
         public void HandleIncomingCall(Call call)
         {
             CurrentCall = call;
-            RaiseIncomingCallEvent(call);
+            RaiseIncomingCallEvent(CurrentCall);
         }
 
         public void AcceptIncomingCall()
@@ -95,7 +95,7 @@ namespace ATE.Core.Entities.ATE
         public void RejectIncomingCall()
         {
             CurrentCall.Reject();
-            RaiseRejectedEvent(CurrentCall);
+            RaiseCallRejectedEvent(CurrentCall);
         }
         
         public void EndCall()
@@ -103,7 +103,9 @@ namespace ATE.Core.Entities.ATE
             CurrentCall.End();
             RaiseCallEndedEvent(CurrentCall);
         }
+        
         #endregion
+        
         
         #region RaiseEvents
 
@@ -139,11 +141,11 @@ namespace ATE.Core.Entities.ATE
             CallAcceptedEvent?.Invoke(this, new CallArgs(call));
         }
 
-        private void RaiseRejectedEvent(Call call)
+        private void RaiseCallRejectedEvent(Call call)
         {
             CallRejectedEvent?.Invoke(this, new CallArgs(call));
         }
-
+        
         #endregion
     }
 }

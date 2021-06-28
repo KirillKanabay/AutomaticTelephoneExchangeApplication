@@ -45,7 +45,7 @@ namespace ATE.Core.Entities.Billings
         private void OnTerminalCall(object sender, CallArgs e)
         {
             var acc = _billingAccounts.FirstOrDefault(a => a.Contract.PhoneNumber == e.FromNumber);
-            if (acc?.Balance < acc?.Contract.Tariff.PricePerMinuteCall)
+            if (acc?.Balance < acc?.Tariff.PricePerMinuteCall)
             {
                 throw new ArgumentException("Недостаточно средств для совершения вызова");
                 //todo: прервать звонок
@@ -55,45 +55,27 @@ namespace ATE.Core.Entities.Billings
         
         private void OnTerminalCallEnded(object sender, CallArgs e)
         {
-            var acc = _billingAccounts.FirstOrDefault(a => a.Contract.PhoneNumber == e.FromNumber);
+            var fromAcc = FindBillingAccount(e.FromNumber);
+            var targetAcc = FindBillingAccount(e.TargetNumber);
 
-            double durationInMinutes = e.DurationInMinutes;
-            decimal price = CalculateCallPrice(durationInMinutes, acc?.Contract.Tariff.PricePerMinuteCall ?? 0);
-
-            var callFromNumber = new CallInformation
+            if (fromAcc == null || targetAcc == null)
             {
-                ClientPhoneNumber = e.FromNumber,
-                DestinationPhoneNumber = e.TargetNumber,
-                CallDate = e.Date,
-                CallType = CallType.Outgoing,
-                Duration = durationInMinutes,
-                Price = price
-            };
+                throw new Exception("Не обнаружен аккаунт абонента вызова");
+            }
             
-            var callTargetNumber = new CallInformation
-            {
-                ClientPhoneNumber = e.TargetNumber,
-                DestinationPhoneNumber = e.FromNumber,
-                CallDate = e.Date,
-                CallType = CallType.Incoming,
-                Duration = durationInMinutes,
-                Price = 0
-            };
+            var callFromNumber = new CallInformation(e.Call, fromAcc.Tariff.PricePerMinuteCall , CallType.Outgoing);
+            var callTargetNumber = new CallInformation(e.Call, targetAcc.Tariff.PricePerMinuteCall, CallType.Incoming);
 
             Calls.Add(callFromNumber);
             Calls.Add(callTargetNumber);
-        }
-
-        private decimal CalculateCallPrice(double durationInMinutes, decimal pricePerMinuteCall)
-        {
-            decimal price = Convert.ToDecimal(durationInMinutes) * pricePerMinuteCall;
-            return price;
-        }
-
-        private void WriteOff(IBillingAccount acc, decimal price)
-        {
-            acc.WriteOff(price);
+            
+            fromAcc.WriteOff(callFromNumber.Price);
+            fromAcc.WriteOff(callTargetNumber.Price);
         }
         
+        private IBillingAccount FindBillingAccount(string phoneNumber)
+        {
+            return _billingAccounts.FirstOrDefault(a => a.Contract.PhoneNumber == phoneNumber);
+        }
     }
 }

@@ -7,6 +7,7 @@ namespace ATE.Core.Interfaces.Billings
     {
         User User { get; }
         IContract Contract { get; }
+        ITariff Tariff { get; }
         decimal Balance { get; }
         void Deposit(decimal money);
         void WriteOff(decimal money);

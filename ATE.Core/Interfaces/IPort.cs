@@ -12,7 +12,5 @@ namespace ATE.Core.Interfaces
         PortStatus Status { get; }
         ITerminal Terminal { get; }
         void ConnectTerminal(ITerminal terminal);
-        void OnTerminalDisconnected(object sender, TerminalArgs e);
-        void OnTerminalCall(object sender, CallArgs e);
     }
 }

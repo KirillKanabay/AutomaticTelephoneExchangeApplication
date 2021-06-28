@@ -1,6 +1,6 @@
 ﻿namespace ATE.Core.Entities
 {
-    public class Tariff
+    public class Tariff : ITariff
     {
         public string Name { get; }
         public decimal PricePerMinuteCall { get; }
@@ -9,11 +9,6 @@
         {
             Name = name;
             PricePerMinuteCall = pricePerMinuteCall;
-        }
-        
-        public override string ToString()
-        {
-            return $"#{Name} Стоимость одной минуты звонка:{PricePerMinuteCall}";
         }
     }
 }

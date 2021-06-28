@@ -30,7 +30,7 @@ namespace ATE.Core.Entities.ATE
             if (port != null)
             {
                 port.ConnectTerminal(terminal);
-                SubscribeToTerminal(terminal);
+                SubscribeToTerminalEvents(terminal);
             }
             else
             {
@@ -49,26 +49,38 @@ namespace ATE.Core.Entities.ATE
             }
         }
 
-        private void SubscribeToTerminal(ITerminal terminal)
+        private void SubscribeToTerminalEvents(ITerminal terminal)
         {
             terminal.CallEvent += OnTerminalCall;
             terminal.DisconnectedEvent += OnTerminalDisconnected;
         }
 
-        private void UnsubscribeFromTerminal(ITerminal terminal)
+        private void UnsubscribeFromTerminalEvents(ITerminal terminal)
         {
             terminal.CallEvent -= OnTerminalCall;
             terminal.DisconnectedEvent -= OnTerminalDisconnected;
         }
+
+        private void SubscribeToTerminalCallEvents(ITerminal terminal)
+        {
+            terminal.CallRejectedEvent += OnTerminalRejectedCall;
+            terminal.CallEndedEvent += OnTerminalCallEnded;
+        }
+
+        private void UnsubscribeFromTerminalCallEvents(ITerminal terminal)
+        {
+            terminal.CallRejectedEvent -= OnTerminalRejectedCall;
+            terminal.CallEndedEvent -= OnTerminalCallEnded;
+        }
         
         private void OnTerminalDisconnected(object sender, TerminalArgs e)
         {
-            UnsubscribeFromTerminal(e.Terminal);
+            UnsubscribeFromTerminalEvents(e.Terminal);
         }
         
         private void OnTerminalCall(object sender, CallArgs e)
         {
-            ITerminal targetTerminal = Ports.FirstOrDefault(t => t.Terminal?.Number == e.Call.TargetNumber)?.Terminal;
+            ITerminal targetTerminal = FindPort(e.TargetNumber)?.Terminal;
 
             if (targetTerminal == null)
             {
@@ -81,6 +93,32 @@ namespace ATE.Core.Entities.ATE
             }
             
             targetTerminal.HandleIncomingCall(e.Call);
+        }
+
+        private void OnTerminalRejectedCall(object sender, CallArgs e)
+        {
+            ITerminal fromTerminal = Ports.FirstOrDefault(t => t.Terminal?.Number == e.Call.FromNumber)?.Terminal;
+            fromTerminal?.ResetCall();
+        }
+
+        private void OnTerminalCallEnded(object sender, CallArgs e)
+        {
+            IPort targetPort = FindPort(e.TargetNumber);
+            IPort fromPort = FindPort(e.FromNumber);
+            
+            if (fromPort?.Status == PortStatus.InCall)
+            {
+                fromPort?.Terminal.EndCall();
+            }
+            if (targetPort?.Status == PortStatus.InCall)
+            {
+                targetPort?.Terminal.EndCall();
+            }
+        }
+
+        private IPort FindPort(string phoneNumber)
+        {
+            return Ports.FirstOrDefault(t => t.Terminal?.Number == phoneNumber);
         }
     }
 }

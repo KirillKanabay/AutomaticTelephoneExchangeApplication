@@ -9,10 +9,15 @@ namespace ATE.Core.Entities.Billings
     {
         public User User { get; }
         public IContract Contract { get; }
+        public ITariff Tariff { get; }
         public decimal Balance { get; private set; }
 
         public BillingAccount(IContract contract)
         {
+            if (Contract == null)
+            {
+                throw new ArgumentException("Контракт не может быть равен Null");
+            }
             Contract = contract;
             User = Contract.User;
         }

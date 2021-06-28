@@ -6,13 +6,35 @@ using ATE.Core.Interfaces.Billings;
 
 namespace ATE.Core.Entities.Billings
 {
-    public struct CallInformation
+    public class CallInformation
     {
-        public string ClientPhoneNumber { get; set; }
-        public string DestinationPhoneNumber { get; set; }
-        public decimal Price { get; set; }
-        public double Duration { get; set; }
-        public DateTime CallDate { get; set; }
-        public CallType CallType { get; set; }
+        public readonly string ClientPhoneNumber;
+        public readonly string DestinationPhoneNumber;
+        public readonly decimal Price;
+        public readonly double Duration;
+        public readonly DateTime CallDate;
+        public readonly CallType CallType;
+
+        public CallInformation(Call call, decimal pricePerMinuteCall, CallType callType)
+        {
+            CallType = callType;
+            if (CallType == CallType.Incoming)
+            {
+                ClientPhoneNumber = call.TargetNumber;
+                DestinationPhoneNumber = call.FromNumber;
+            }
+            
+            ClientPhoneNumber = call.FromNumber;
+            DestinationPhoneNumber = call.TargetNumber;
+            Duration = call.DurationInMinutes;
+            Price = CallType == CallType.Outgoing ? CalculateCallPrice(Duration, pricePerMinuteCall) : 0;
+            CallDate = call.Date;
+        }
+        
+        private decimal CalculateCallPrice(double durationInMinutes, decimal pricePerMinuteCall)
+        {
+            decimal price = Math.Ceiling(Convert.ToDecimal(durationInMinutes)) * pricePerMinuteCall;
+            return price;
+        }
     }
 }
