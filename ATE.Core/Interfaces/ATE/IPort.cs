@@ -1,10 +1,6 @@
-﻿using System;
-using ATE.Core.Args;
-using ATE.Core.Entities;
-using ATE.Core.Entities.ATE;
-using ATE.Core.Enums;
+﻿using ATE.Core.Enums;
 
-namespace ATE.Core.Interfaces
+namespace ATE.Core.Interfaces.ATE
 {
     public interface IPort
     {

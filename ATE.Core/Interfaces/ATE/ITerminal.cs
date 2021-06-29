@@ -2,7 +2,7 @@
 using ATE.Core.Args;
 using ATE.Core.Entities.ATE;
 
-namespace ATE.Core.Interfaces
+namespace ATE.Core.Interfaces.ATE
 {
     public interface ITerminal
     {

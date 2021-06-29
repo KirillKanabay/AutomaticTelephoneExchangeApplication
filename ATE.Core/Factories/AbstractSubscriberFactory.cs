@@ -1,4 +1,5 @@
 ﻿using ATE.Core.Interfaces;
+using ATE.Core.Interfaces.ATE;
 using ATE.Core.Interfaces.Billings;
 
 namespace ATE.Core.Factories

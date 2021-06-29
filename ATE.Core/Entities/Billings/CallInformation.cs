@@ -23,9 +23,12 @@ namespace ATE.Core.Entities.Billings
                 ClientPhoneNumber = call.TargetNumber;
                 DestinationPhoneNumber = call.FromNumber;
             }
+            else
+            {
+                ClientPhoneNumber = call.FromNumber;
+                DestinationPhoneNumber = call.TargetNumber;
+            }
             
-            ClientPhoneNumber = call.FromNumber;
-            DestinationPhoneNumber = call.TargetNumber;
             Duration = call.DurationInMinutes;
             Price = CallType == CallType.Outgoing ? CalculateCallPrice(Duration, pricePerMinuteCall) : 0;
             CallDate = call.Date;

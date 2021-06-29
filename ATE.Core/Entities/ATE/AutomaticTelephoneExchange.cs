@@ -8,15 +8,12 @@ using ATE.Core.Interfaces.ATE;
 
 namespace ATE.Core.Entities.ATE
 {
-    public class AutomaticTelephoneExchange: IAutomaticTelephoneExchange
+    public class AutomaticTelephoneExchange: IAutomaticTelephoneExchange, ITerminalSubscriber
     {
-        private readonly ICompany _company;
-        
-        private ICollection<IPort> Ports { get; set; }
+        public ICollection<IPort> Ports { get; private set; }
         
         public AutomaticTelephoneExchange(ICompany company, int portCount)
         {
-            _company = company;
             if (portCount <= 0)
             {
                 throw new ArgumentException("Количество портов станции не может быть меньше или равно нулю.");
@@ -30,7 +27,7 @@ namespace ATE.Core.Entities.ATE
             if (port != null)
             {
                 port.ConnectTerminal(terminal);
-                SubscribeToTerminalEvents(terminal);
+                SubscribeToTerminal(terminal);
             }
             else
             {
@@ -41,6 +38,7 @@ namespace ATE.Core.Entities.ATE
         
         private void InitPorts(int portCount)
         {
+            //todo: перенести в порты
             Ports = new List<IPort>();
             for (var portNumber = 1; portNumber <= portCount; portNumber++)
             {
@@ -49,33 +47,23 @@ namespace ATE.Core.Entities.ATE
             }
         }
 
-        private void SubscribeToTerminalEvents(ITerminal terminal)
+        public void SubscribeToTerminal(ITerminal terminal)
         {
             terminal.CallEvent += OnTerminalCall;
+            terminal.CallEndedEvent += OnTerminalCallEnded;
             terminal.DisconnectedEvent += OnTerminalDisconnected;
         }
 
-        private void UnsubscribeFromTerminalEvents(ITerminal terminal)
+        public void UnsubscribeFromTerminal(ITerminal terminal)
         {
             terminal.CallEvent -= OnTerminalCall;
-            terminal.DisconnectedEvent -= OnTerminalDisconnected;
-        }
-
-        private void SubscribeToTerminalCallEvents(ITerminal terminal)
-        {
-            terminal.CallRejectedEvent += OnTerminalRejectedCall;
-            terminal.CallEndedEvent += OnTerminalCallEnded;
-        }
-
-        private void UnsubscribeFromTerminalCallEvents(ITerminal terminal)
-        {
-            terminal.CallRejectedEvent -= OnTerminalRejectedCall;
             terminal.CallEndedEvent -= OnTerminalCallEnded;
+            terminal.DisconnectedEvent -= OnTerminalDisconnected;
         }
         
         private void OnTerminalDisconnected(object sender, TerminalArgs e)
         {
-            UnsubscribeFromTerminalEvents(e.Terminal);
+            UnsubscribeFromTerminal(e.Terminal);
         }
         
         private void OnTerminalCall(object sender, CallArgs e)
@@ -98,7 +86,7 @@ namespace ATE.Core.Entities.ATE
         private void OnTerminalRejectedCall(object sender, CallArgs e)
         {
             ITerminal fromTerminal = Ports.FirstOrDefault(t => t.Terminal?.Number == e.Call.FromNumber)?.Terminal;
-            fromTerminal?.ResetCall();
+            fromTerminal?.ResetCall(); //todo: переработать
         }
 
         private void OnTerminalCallEnded(object sender, CallArgs e)
@@ -116,8 +104,9 @@ namespace ATE.Core.Entities.ATE
             }
         }
 
-        private IPort FindPort(string phoneNumber)
+        public IPort FindPort(string phoneNumber)
         {
+            //перенести в порты
             return Ports.FirstOrDefault(t => t.Terminal?.Number == phoneNumber);
         }
     }

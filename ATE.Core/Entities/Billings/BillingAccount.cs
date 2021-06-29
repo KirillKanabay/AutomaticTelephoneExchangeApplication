@@ -14,11 +14,12 @@ namespace ATE.Core.Entities.Billings
 
         public BillingAccount(IContract contract)
         {
-            if (Contract == null)
+            if (contract == null)
             {
                 throw new ArgumentException("Контракт не может быть равен Null");
             }
             Contract = contract;
+            Tariff = Contract.Tariff;
             User = Contract.User;
         }
         
@@ -33,9 +34,9 @@ namespace ATE.Core.Entities.Billings
 
         public void WriteOff(decimal money)
         {
-            if (money <= 0)
+            if (money < 0)
             {
-                throw new ArgumentException("Сумма списания счета не может быть меньше или равно нулю");
+                throw new ArgumentException("Сумма списания счета не может быть меньше нуля");
             }
             
             Balance -= money;

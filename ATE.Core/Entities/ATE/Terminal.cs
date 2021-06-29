@@ -2,6 +2,7 @@
 using ATE.Core.Args;
 using ATE.Core.Enums;
 using ATE.Core.Interfaces;
+using ATE.Core.Interfaces.ATE;
 
 namespace ATE.Core.Entities.ATE
 {
@@ -16,7 +17,6 @@ namespace ATE.Core.Entities.ATE
         public event EventHandler<CallArgs> CallAcceptedEvent;
         public event EventHandler<CallArgs> CallEndedEvent;
         public event EventHandler<CallArgs> CallRejectedEvent;
-        public event EventHandler<CallArgs> CallCancelledEvent;
         #endregion
 
         #region Props

@@ -1,11 +1,11 @@
 ﻿using System;
 using ATE.Core.Args;
 using ATE.Core.Enums;
-using ATE.Core.Interfaces;
+using ATE.Core.Interfaces.ATE;
 
 namespace ATE.Core.Entities.ATE
 {
-    public class Port : IPort
+    public class Port : IPort, ITerminalSubscriber
     {
         public int PortNumber { get; }
         public PortStatus Status { get; private set; }
@@ -25,10 +25,23 @@ namespace ATE.Core.Entities.ATE
             
             Terminal = terminal;
             Status = PortStatus.Connected;
-            
-            terminal.DisconnectedEvent += OnTerminalDisconnected;
+            SubscribeToTerminal(Terminal);
+        }
+        
+        public void SubscribeToTerminal(ITerminal terminal)
+        {
             terminal.CallEvent += OnTerminalCall;
             terminal.CallEndedEvent += OnTerminalCallEnded;
+            terminal.CallRejectedEvent += OnTerminalCallRejected;
+            terminal.DisconnectedEvent += OnTerminalDisconnected;
+        }
+
+        public void UnsubscribeFromTerminal(ITerminal terminal)
+        {
+            terminal.CallEvent -= OnTerminalCall;
+            terminal.CallEndedEvent -= OnTerminalCallEnded;
+            terminal.CallRejectedEvent -= OnTerminalCallRejected;
+            terminal.DisconnectedEvent -= OnTerminalDisconnected; 
         }
         
         private void OnTerminalCall(object sender, CallArgs e)
@@ -36,23 +49,19 @@ namespace ATE.Core.Entities.ATE
             Status = PortStatus.InCall;
         }
         
-        public void OnTerminalCallEnded(object sender, CallArgs e)
+        private void OnTerminalCallEnded(object sender, CallArgs e)
         {
             Status = PortStatus.Connected;
         }
 
-        public void OnTerminalCallRejected(object sender, CallArgs e)
+        private void OnTerminalCallRejected(object sender, CallArgs e)
         {
             Status = PortStatus.Connected;
         }
         
-        public void OnTerminalDisconnected(object sender, TerminalArgs e)
+        private void OnTerminalDisconnected(object sender, TerminalArgs e)
         {
-            Terminal.CallEvent -= OnTerminalCall;
-            Terminal.CallEndedEvent -= OnTerminalCallEnded;
-            Terminal.DisconnectedEvent -= OnTerminalDisconnected;
-            Terminal.CallRejectedEvent -= OnTerminalCallRejected; 
-            
+            UnsubscribeFromTerminal(Terminal);
             Terminal = null;
             Status = PortStatus.Disconnected;
         }

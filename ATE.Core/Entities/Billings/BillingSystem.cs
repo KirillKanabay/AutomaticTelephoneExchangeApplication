@@ -5,6 +5,7 @@ using ATE.Core.Args;
 using ATE.Core.Entities.ATE;
 using ATE.Core.Enums;
 using ATE.Core.Interfaces;
+using ATE.Core.Interfaces.ATE;
 using ATE.Core.Interfaces.Billings;
 
 namespace ATE.Core.Entities.Billings
@@ -12,8 +13,8 @@ namespace ATE.Core.Entities.Billings
     public class BillingSystem : IBillingSystem
     {
         private readonly ICollection<IBillingAccount> _billingAccounts;
-        public ICollection<CallInformation> Calls { get; }
         
+        public ICollection<CallInformation> Calls { get; }
         
         public BillingSystem()
         {

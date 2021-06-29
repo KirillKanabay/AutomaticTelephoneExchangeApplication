@@ -3,6 +3,7 @@ using ATE.Core.Entities.ATE;
 using ATE.Core.Entities.Billings;
 using ATE.Core.Factories;
 using ATE.Core.Interfaces;
+using ATE.Core.Interfaces.ATE;
 using ATE.Core.Interfaces.Billings;
 using ATE.Core.Interfaces.Builders;
 
