@@ -2,7 +2,7 @@
 {
     public interface ITerminalSubscriber
     {
-        void SubscribeToTerminal(ITerminal terminal);
-        void UnsubscribeFromTerminal(ITerminal terminal);
+        void SubscribeToTerminal(ITerminalObserver terminal);
+        void UnsubscribeFromTerminal(ITerminalObserver terminal);
     }
 }

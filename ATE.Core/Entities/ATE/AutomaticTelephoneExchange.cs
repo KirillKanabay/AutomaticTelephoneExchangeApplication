@@ -47,14 +47,14 @@ namespace ATE.Core.Entities.ATE
             }
         }
 
-        public void SubscribeToTerminal(ITerminal terminal)
+        public void SubscribeToTerminal(ITerminalObserver terminal)
         {
             terminal.CallEvent += OnTerminalCall;
             terminal.CallEndedEvent += OnTerminalCallEnded;
             terminal.DisconnectedEvent += OnTerminalDisconnected;
         }
 
-        public void UnsubscribeFromTerminal(ITerminal terminal)
+        public void UnsubscribeFromTerminal(ITerminalObserver terminal)
         {
             terminal.CallEvent -= OnTerminalCall;
             terminal.CallEndedEvent -= OnTerminalCallEnded;
@@ -68,7 +68,7 @@ namespace ATE.Core.Entities.ATE
         
         private void OnTerminalCall(object sender, CallArgs e)
         {
-            ITerminal targetTerminal = FindPort(e.TargetNumber)?.Terminal;
+            ITerminal targetTerminal = Port.FindByPhoneNumber(Ports, e.TargetNumber)?.Terminal;
 
             if (targetTerminal == null)
             {
@@ -91,23 +91,19 @@ namespace ATE.Core.Entities.ATE
 
         private void OnTerminalCallEnded(object sender, CallArgs e)
         {
-            IPort targetPort = FindPort(e.TargetNumber);
-            IPort fromPort = FindPort(e.FromNumber);
+            IPort targetPort = Port.FindByPhoneNumber(Ports, e.TargetNumber);
+            IPort fromPort = Port.FindByPhoneNumber(Ports, e.FromNumber);
             
             if (fromPort?.Status == PortStatus.InCall)
             {
                 fromPort?.Terminal.EndCall();
             }
+            
             if (targetPort?.Status == PortStatus.InCall)
             {
                 targetPort?.Terminal.EndCall();
             }
         }
-
-        public IPort FindPort(string phoneNumber)
-        {
-            //перенести в порты
-            return Ports.FirstOrDefault(t => t.Terminal?.Number == phoneNumber);
-        }
+        
     }
 }

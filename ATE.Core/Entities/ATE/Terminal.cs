@@ -106,7 +106,6 @@ namespace ATE.Core.Entities.ATE
         
         #endregion
         
-        
         #region RaiseEvents
 
         private void RaiseTerminalConnectedEvent()

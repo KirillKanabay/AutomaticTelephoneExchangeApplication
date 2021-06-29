@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using ATE.Core.Args;
 using ATE.Core.Enums;
 using ATE.Core.Interfaces.ATE;
@@ -28,7 +30,7 @@ namespace ATE.Core.Entities.ATE
             SubscribeToTerminal(Terminal);
         }
         
-        public void SubscribeToTerminal(ITerminal terminal)
+        public void SubscribeToTerminal(ITerminalObserver terminal)
         {
             terminal.CallEvent += OnTerminalCall;
             terminal.CallEndedEvent += OnTerminalCallEnded;
@@ -36,7 +38,7 @@ namespace ATE.Core.Entities.ATE
             terminal.DisconnectedEvent += OnTerminalDisconnected;
         }
 
-        public void UnsubscribeFromTerminal(ITerminal terminal)
+        public void UnsubscribeFromTerminal(ITerminalObserver terminal)
         {
             terminal.CallEvent -= OnTerminalCall;
             terminal.CallEndedEvent -= OnTerminalCallEnded;
@@ -64,6 +66,11 @@ namespace ATE.Core.Entities.ATE
             UnsubscribeFromTerminal(Terminal);
             Terminal = null;
             Status = PortStatus.Disconnected;
+        }
+
+        public static IPort FindByPhoneNumber(IEnumerable<IPort> ports, string phoneNumber)
+        {
+            return ports.FirstOrDefault(t => t.Terminal?.Number == phoneNumber);
         }
     }
 }
