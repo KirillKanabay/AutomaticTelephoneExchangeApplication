@@ -15,7 +15,7 @@ namespace ATE.Core.Interfaces.ATE
         void ResetCall();
         void HandleIncomingCall(Call call);
         void AcceptIncomingCall();
-        void RejectIncomingCall();
+        void RejectCall();
         void EndCall();
     }
 }

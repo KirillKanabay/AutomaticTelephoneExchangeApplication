@@ -45,16 +45,22 @@ namespace ATE
             
             #region Звонок 1
             subscriber1.Terminal.CallTo(subscriber2.Terminal.Number);
-            Thread.Sleep(5000);
-            subscriber1.Terminal.EndCall();
+            if (subscriber1.Terminal.CurrentCall != null)
+            {
+                Thread.Sleep(5000);
+                subscriber1.Terminal.EndCall();
+            }
             #endregion
 
             #region Звонок 2
 
             subscriber2.Terminal.CallTo(subscriber1.Terminal.Number);
-            Thread.Sleep(1000);
-            subscriber2.Terminal.EndCall();
-
+            if (subscriber1.Terminal.CurrentCall != null)
+            {
+                Thread.Sleep(3000);
+                subscriber2.Terminal.EndCall();
+            }
+            
             #endregion
             
             var presenter1 = new CallPresenter(new CallReporter(company.BillingSystem, subscriber1.BillingAccount));

@@ -10,7 +10,7 @@ namespace ATE.Core.Entities.ATE
 {
     public class AutomaticTelephoneExchange: IAutomaticTelephoneExchange, ITerminalSubscriber
     {
-        public ICollection<IPort> Ports { get; private set; }
+        public IEnumerable<IPort> Ports { get; private set; }
         
         public AutomaticTelephoneExchange(ICompany company, int portCount)
         {
@@ -18,7 +18,8 @@ namespace ATE.Core.Entities.ATE
             {
                 throw new ArgumentException("Количество портов станции не может быть меньше или равно нулю.");
             }
-            InitPorts(portCount);
+            
+            Ports = Port.GetPortsCollection(portCount);
         }
 
         public IPort Connect(ITerminal terminal)
@@ -36,21 +37,11 @@ namespace ATE.Core.Entities.ATE
             return port;
         }
         
-        private void InitPorts(int portCount)
-        {
-            //todo: перенести в порты
-            Ports = new List<IPort>();
-            for (var portNumber = 1; portNumber <= portCount; portNumber++)
-            {
-                var port = new Port(portNumber);
-                Ports.Add(port);
-            }
-        }
-
         public void SubscribeToTerminal(ITerminalObserver terminal)
         {
             terminal.CallEvent += OnTerminalCall;
             terminal.CallEndedEvent += OnTerminalCallEnded;
+            terminal.CallRejectedEvent += OnTerminalRejectedCall;
             terminal.DisconnectedEvent += OnTerminalDisconnected;
         }
 
@@ -58,6 +49,7 @@ namespace ATE.Core.Entities.ATE
         {
             terminal.CallEvent -= OnTerminalCall;
             terminal.CallEndedEvent -= OnTerminalCallEnded;
+            terminal.CallRejectedEvent -= OnTerminalRejectedCall;
             terminal.DisconnectedEvent -= OnTerminalDisconnected;
         }
         
@@ -85,8 +77,18 @@ namespace ATE.Core.Entities.ATE
 
         private void OnTerminalRejectedCall(object sender, CallArgs e)
         {
-            ITerminal fromTerminal = Ports.FirstOrDefault(t => t.Terminal?.Number == e.Call.FromNumber)?.Terminal;
-            fromTerminal?.ResetCall(); //todo: переработать
+            IPort targetPort = Port.FindByPhoneNumber(Ports, e.TargetNumber);
+            IPort fromPort = Port.FindByPhoneNumber(Ports, e.FromNumber);
+            
+            if (fromPort?.Status == PortStatus.InCall)
+            {
+                fromPort?.Terminal.RejectCall();
+            }
+            
+            if (targetPort?.Status == PortStatus.InCall)
+            {
+                targetPort?.Terminal.RejectCall();
+            }
         }
 
         private void OnTerminalCallEnded(object sender, CallArgs e)

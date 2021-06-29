@@ -49,7 +49,6 @@ namespace ATE.Core.Entities.Billings
             if (acc?.Balance < acc?.Tariff.PricePerMinuteCall)
             {
                 throw new ArgumentException("Недостаточно средств для совершения вызова");
-                //todo: прервать звонок
             }
             
         }

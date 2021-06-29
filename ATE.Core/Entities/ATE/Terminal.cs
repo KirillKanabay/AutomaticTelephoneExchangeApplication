@@ -92,16 +92,18 @@ namespace ATE.Core.Entities.ATE
             RaiseCallAcceptedEvent(CurrentCall);
         }
 
-        public void RejectIncomingCall()
+        public void RejectCall()
         {
             CurrentCall.Reject();
             RaiseCallRejectedEvent(CurrentCall);
+            ResetCall();
         }
         
         public void EndCall()
         {
             CurrentCall.End();
             RaiseCallEndedEvent(CurrentCall);
+            ResetCall();
         }
         
         #endregion

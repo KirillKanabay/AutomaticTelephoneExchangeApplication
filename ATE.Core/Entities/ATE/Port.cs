@@ -72,5 +72,17 @@ namespace ATE.Core.Entities.ATE
         {
             return ports.FirstOrDefault(t => t.Terminal?.Number == phoneNumber);
         }
+
+        public static IEnumerable<IPort> GetPortsCollection(int portsCount)
+        {
+            var ports = new List<IPort>();
+            for (var portNumber = 1; portNumber <= portsCount; portNumber++)
+            {
+                var port = new Port(portNumber);
+                ports.Add(port);
+            }
+
+            return ports;
+        }
     }
 }

@@ -38,7 +38,7 @@ namespace ATE
             }
             else
             {
-                _terminal.RejectIncomingCall();
+                _terminal.RejectCall();
             }
         }
 

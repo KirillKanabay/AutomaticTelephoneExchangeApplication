@@ -4,7 +4,7 @@ namespace ATE.Core.Interfaces.ATE
 {
     public interface IAutomaticTelephoneExchange
     {
-        ICollection<IPort> Ports { get; }
+        IEnumerable<IPort> Ports { get; }
         IPort Connect(ITerminal terminal);
     }
 }
