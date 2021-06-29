@@ -14,6 +14,6 @@ namespace ATE.Core.Builders
         }
         public ICompany Make() =>_builder.Tariff(new Tariff("Light", 0.05m))
             .NumberParams(new PhoneNumberParameters("375", "29"))
-            .BillingSystem(new BillingSystem()).Build();
+            .BillingSystem(new BillingSystem()).AddAte(16).Build();
     }
 }

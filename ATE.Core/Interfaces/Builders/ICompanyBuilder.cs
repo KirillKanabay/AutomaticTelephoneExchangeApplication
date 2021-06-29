@@ -8,7 +8,8 @@ namespace ATE.Core.Interfaces.Builders
         ICompanyBuilder Tariff(Tariff tariff);
         ICompanyBuilder BillingSystem(BillingSystem billingSystem);
         ICompanyBuilder NumberParams(PhoneNumberParameters phoneNumberParameters);
-
+        ICompanyBuilder AddAte(int portsCount);
+        
         Company Build();
     }
 }

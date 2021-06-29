@@ -15,12 +15,14 @@ namespace ATE.Core.Entities
         public BillingSystem BillingSystem { get; private set; }
         public PhoneNumberParameters NumberParams { get; private set; }
         public ICollection<IContract> Contracts { get; private set; }
+        public ICollection<IAutomaticTelephoneExchange> AteCollection { get; private set; }
         public Tariff Tariff { get; private set; }
 
         private Company(string companyName)
         {
             Name = companyName;
             Contracts = new List<IContract>();
+            AteCollection = new List<IAutomaticTelephoneExchange>();
         }
 
         public Company(string companyName, PhoneNumberParameters numberParams, BillingSystem billingSystem,
@@ -45,6 +47,11 @@ namespace ATE.Core.Entities
             return subscriber;
         }
 
+        public void AddAte(IAutomaticTelephoneExchange ate)
+        {
+            AteCollection.Add(ate);
+        }
+        
         public class Builder : ICompanyBuilder
         {
             private readonly Company _company;
@@ -72,6 +79,14 @@ namespace ATE.Core.Entities
                 return this;
             }
 
+            public ICompanyBuilder AddAte(int portsCount)
+            {
+                var ate = new AutomaticTelephoneExchange(_company, portsCount);
+                _company.AddAte(ate);
+
+                return this;
+            }
+            
             public Company Build() => _company;
         }
     }

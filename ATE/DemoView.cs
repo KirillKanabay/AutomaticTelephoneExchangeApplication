@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using ATE.Core.Builders;
 using ATE.Core.Entities;
@@ -28,7 +29,7 @@ namespace ATE
             TerminalView terminal1View = new TerminalView(subscriber1.Terminal);
             TerminalView terminal2View = new TerminalView(subscriber2.Terminal);
 
-            AutomaticTelephoneExchange ate = new AutomaticTelephoneExchange(company, 256);
+            var ate = company.AteCollection.FirstOrDefault();
             #endregion
 
             #region Депозит баланса

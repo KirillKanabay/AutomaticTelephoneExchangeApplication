@@ -39,7 +39,7 @@ namespace ATE.Core.Entities.ATE
 
         #region Methods
 
-        public void ConnectTo(AutomaticTelephoneExchange ate)
+        public void ConnectTo(IAutomaticTelephoneExchange ate)
         {
             if (Port != null)
             {

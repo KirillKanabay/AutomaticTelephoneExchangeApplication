@@ -9,7 +9,7 @@ namespace ATE.Core.Interfaces.ATE
         IContract Contract { get; }
         Call CurrentCall { get; }
         
-        void ConnectTo(AutomaticTelephoneExchange ate);
+        void ConnectTo(IAutomaticTelephoneExchange ate);
         void Disconnect();
         void CallTo(string targetNumber);
         void ResetCall();
