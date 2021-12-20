@@ -1,13 +1,15 @@
 ﻿using System.Collections.Generic;
-using ATE.Core.Entities.ATE;
-using ATE.Core.Entities.Billings;
-using ATE.Core.Factories;
+using ATE.Core.Entities;
 using ATE.Core.Interfaces;
 using ATE.Core.Interfaces.ATE;
 using ATE.Core.Interfaces.Billings;
 using ATE.Core.Interfaces.Builders;
+using ATE.Entities.ATE;
+using ATE.Entities.Billings;
+using ATE.Entities.Users;
+using ATE.Factories;
 
-namespace ATE.Core.Entities
+namespace ATE.Entities
 {
     public class Company : ICompany
     {

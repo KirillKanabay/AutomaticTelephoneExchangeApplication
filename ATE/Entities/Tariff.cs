@@ -1,4 +1,6 @@
-﻿namespace ATE.Core.Entities
+﻿using ATE.Core.Entities;
+
+namespace ATE.Entities
 {
     public class Tariff : ITariff
     {

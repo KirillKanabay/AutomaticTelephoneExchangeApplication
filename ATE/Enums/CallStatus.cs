@@ -1,4 +1,4 @@
-﻿namespace ATE.Core.Enums
+﻿namespace ATE.Enums
 {
     public enum CallStatus
     {

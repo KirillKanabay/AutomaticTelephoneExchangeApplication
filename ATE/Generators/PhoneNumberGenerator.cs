@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Linq;
-using ATE.Core.Entities;
 using ATE.Core.Interfaces;
 
-namespace ATE.Core.Generators
+namespace ATE.Generators
 {
     public class PhoneNumberGenerator : IPhoneNumberGenerator
     {

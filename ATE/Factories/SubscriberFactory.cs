@@ -1,12 +1,13 @@
 ﻿using ATE.Core.Entities;
-using ATE.Core.Entities.ATE;
-using ATE.Core.Entities.Users;
-using ATE.Core.Generators;
 using ATE.Core.Interfaces;
 using ATE.Core.Interfaces.ATE;
 using ATE.Core.Interfaces.Billings;
+using ATE.Entities;
+using ATE.Entities.ATE;
+using ATE.Entities.Users;
+using ATE.Generators;
 
-namespace ATE.Core.Factories
+namespace ATE.Factories
 {
     public class SubscriberFactory : AbstractSubscriberFactory
     {

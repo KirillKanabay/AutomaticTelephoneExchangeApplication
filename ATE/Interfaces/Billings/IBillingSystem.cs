@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
-using ATE.Core.Entities.Billings;
-using ATE.Core.Entities.Users;
+using ATE.Entities.Billings;
 
 namespace ATE.Core.Interfaces.Billings
 {

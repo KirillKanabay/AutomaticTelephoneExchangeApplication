@@ -1,4 +1,4 @@
-﻿using ATE.Core.Enums;
+﻿using ATE.Enums;
 
 namespace ATE.Core.Interfaces.ATE
 {

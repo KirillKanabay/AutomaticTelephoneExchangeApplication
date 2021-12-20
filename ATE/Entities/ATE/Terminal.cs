@@ -1,10 +1,10 @@
 ﻿using System;
-using ATE.Core.Args;
-using ATE.Core.Enums;
+using ATE.Args;
 using ATE.Core.Interfaces;
 using ATE.Core.Interfaces.ATE;
+using ATE.Enums;
 
-namespace ATE.Core.Entities.ATE
+namespace ATE.Entities.ATE
 {
     public class Terminal : ITerminal
     {

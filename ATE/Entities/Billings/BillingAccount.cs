@@ -1,9 +1,10 @@
 ﻿using System;
-using ATE.Core.Entities.Users;
+using ATE.Core.Entities;
 using ATE.Core.Interfaces;
 using ATE.Core.Interfaces.Billings;
+using ATE.Entities.Users;
 
-namespace ATE.Core.Entities.Billings
+namespace ATE.Entities.Billings
 {
     public class BillingAccount : IBillingAccount
     {

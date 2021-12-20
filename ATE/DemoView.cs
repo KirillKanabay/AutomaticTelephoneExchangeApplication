@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
-using ATE.Core.Builders;
+using ATE.Builders;
 using ATE.Core.Entities;
-using ATE.Core.Entities.ATE;
-using ATE.Core.Entities.Billings;
-using ATE.Core.Entities.Users;
-using ATE.Core.Factories;
 using ATE.Core.Interfaces;
 using ATE.Core.Interfaces.Builders;
+using ATE.Entities;
+using ATE.Entities.Billings;
+using ATE.Entities.Users;
+using ATE.Factories;
 
 namespace ATE
 {

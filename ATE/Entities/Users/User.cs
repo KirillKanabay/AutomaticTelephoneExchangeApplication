@@ -1,4 +1,4 @@
-﻿namespace ATE.Core.Entities.Users
+﻿namespace ATE.Entities.Users
 {
     public class User
     {

@@ -1,5 +1,5 @@
 ﻿using System;
-using ATE.Core.Args;
+using ATE.Args;
 
 namespace ATE.Core.Interfaces.ATE
 {

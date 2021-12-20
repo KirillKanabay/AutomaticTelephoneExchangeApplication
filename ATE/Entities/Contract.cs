@@ -1,7 +1,7 @@
-﻿using ATE.Core.Entities.Users;
-using ATE.Core.Interfaces;
+﻿using ATE.Core.Interfaces;
+using ATE.Entities.Users;
 
-namespace ATE.Core.Entities
+namespace ATE.Entities
 {
     public class Contract : IContract
     {

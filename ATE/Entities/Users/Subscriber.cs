@@ -1,9 +1,8 @@
-﻿using ATE.Core.Entities.ATE;
-using ATE.Core.Interfaces;
+﻿using ATE.Core.Interfaces;
 using ATE.Core.Interfaces.ATE;
 using ATE.Core.Interfaces.Billings;
 
-namespace ATE.Core.Entities
+namespace ATE.Entities.Users
 {
     public class Subscriber
     {

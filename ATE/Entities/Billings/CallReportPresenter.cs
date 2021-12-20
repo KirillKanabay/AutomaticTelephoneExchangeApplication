@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using ATE.Core.Enums;
 using ATE.Core.Interfaces.Billings;
+using ATE.Enums;
 
-namespace ATE.Core.Entities.Billings
+namespace ATE.Entities.Billings
 {
     public class CallReporter
     {

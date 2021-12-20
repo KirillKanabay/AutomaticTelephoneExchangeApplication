@@ -2,7 +2,7 @@
 using ATE.Core.Interfaces.ATE;
 using ATE.Core.Interfaces.Billings;
 
-namespace ATE.Core.Factories
+namespace ATE.Factories
 {
     public abstract class AbstractSubscriberFactory
     {

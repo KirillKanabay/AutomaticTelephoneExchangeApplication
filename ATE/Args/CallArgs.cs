@@ -1,8 +1,8 @@
 ﻿using System;
-using ATE.Core.Entities.ATE;
-using ATE.Core.Enums;
+using ATE.Entities.ATE;
+using ATE.Enums;
 
-namespace ATE.Core.Args
+namespace ATE.Args
 {
     public class CallArgs : EventArgs
     {

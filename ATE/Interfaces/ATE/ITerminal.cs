@@ -1,4 +1,4 @@
-﻿using ATE.Core.Entities.ATE;
+﻿using ATE.Entities.ATE;
 
 namespace ATE.Core.Interfaces.ATE
 {

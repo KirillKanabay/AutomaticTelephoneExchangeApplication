@@ -1,10 +1,8 @@
 ﻿using System;
-using ATE.Core.Args;
-using ATE.Core.Entities.ATE;
-using ATE.Core.Enums;
-using ATE.Core.Interfaces.Billings;
+using ATE.Entities.ATE;
+using ATE.Enums;
 
-namespace ATE.Core.Entities.Billings
+namespace ATE.Entities.Billings
 {
     public class CallInformation
     {

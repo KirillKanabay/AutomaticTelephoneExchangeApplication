@@ -1,7 +1,7 @@
 ﻿using System;
-using ATE.Core.Enums;
+using ATE.Enums;
 
-namespace ATE.Core.Entities.ATE
+namespace ATE.Entities.ATE
 {
     public class Call
     {

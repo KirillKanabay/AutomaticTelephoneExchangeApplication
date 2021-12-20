@@ -1,6 +1,6 @@
 ﻿using System;
-using ATE.Core.Entities.Billings;
-using ATE.Core.Enums;
+using ATE.Entities.Billings;
+using ATE.Enums;
 using ATE.Helpers;
 
 namespace ATE

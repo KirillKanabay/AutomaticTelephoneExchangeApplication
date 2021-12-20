@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ATE.Core.Args;
-using ATE.Core.Entities.ATE;
-using ATE.Core.Enums;
+using ATE.Args;
 using ATE.Core.Interfaces;
 using ATE.Core.Interfaces.ATE;
 using ATE.Core.Interfaces.Billings;
+using ATE.Enums;
 
-namespace ATE.Core.Entities.Billings
+namespace ATE.Entities.Billings
 {
     public class BillingSystem : IBillingSystem
     {

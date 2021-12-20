@@ -1,4 +1,4 @@
-﻿namespace ATE.Core.Entities
+﻿namespace ATE.Entities
 {
     public readonly struct PhoneNumberParameters
     {

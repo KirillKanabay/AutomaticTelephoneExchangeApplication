@@ -1,9 +1,9 @@
-﻿using ATE.Core.Entities;
-using ATE.Core.Entities.Billings;
-using ATE.Core.Interfaces;
+﻿using ATE.Core.Interfaces;
 using ATE.Core.Interfaces.Builders;
+using ATE.Entities;
+using ATE.Entities.Billings;
 
-namespace ATE.Core.Builders
+namespace ATE.Builders
 {
     public class DefaultCompanyDirector : ICompanyDirector
     {

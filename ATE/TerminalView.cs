@@ -1,6 +1,5 @@
 ﻿using System;
-using ATE.Core.Args;
-using ATE.Core.Entities.ATE;
+using ATE.Args;
 using ATE.Core.Interfaces;
 using ATE.Core.Interfaces.ATE;
 using ATE.Helpers;
