@@ -1,147 +1,112 @@
-﻿using System;
-using ATE.Args;
-using ATE.Core.Interfaces;
-using ATE.Entities.ATE;
-using ATE.Enums;
-using ATE.Interfaces.ATE;
+﻿using ATE.Entities.ATE;
 
 namespace ATE.Entities.Terminal
 {
     public class Terminal : BaseTerminal
     {
-        #region Props
-
-        public IPort Port { get; protected set; }
-        public IContract Contract { get; }
-        public string Number => Contract.PhoneNumber;
-        public Call CurrentCall { get; private set; }
-        
-        #endregion
-
-        #region Ctors
-
-        public Terminal(IContract contract)
+        public override void ConnectToStation(BaseStation station)
         {
-            Contract = contract ?? throw new ArgumentNullException(nameof(contract), "Договор не может быть null");
+            station.ConnectTerminal(this);
         }
 
-        #endregion
-
-        #region Methods
-
-        public void ConnectTo(IAutomaticTelephoneExchange ate)
-        {
-            if (Port != null)
-            {
-                throw new Exception("Терминал уже подключен к АТС");
-            }
-
-            Port = ate.Connect(this);
-            
-            RaiseTerminalConnectedEvent();
-        }
-
-        public void Disconnect()
-        {
-            if (Port == null)
-            {
-                throw new Exception("Терминал не подключен к АТС");
-            }
-            
-            RaiseTerminalDisconnectedEvent();
-
-            Port = null;
-            
-        }
-
-        public void CallTo(string targetNumber)
-        {
-            if (Port.Status == PortStatus.InCall)
-            {
-                throw new Exception("Терминал уже находится в состоянии вызова");
-            }
-
-            CurrentCall = new Call(Number, targetNumber);
-            RaiseCallEvent(CurrentCall);
-        }
-        
-        public void ResetCall()
-        {
-            CurrentCall = null;
-        }
-        
-        public void HandleIncomingCall(Call call)
-        {
-            CurrentCall = call;
-            RaiseIncomingCallEvent(CurrentCall);
-        }
-
-        public void AcceptIncomingCall()
-        {
-            CurrentCall.Accept();
-            RaiseCallAcceptedEvent(CurrentCall);
-        }
-
-        public void RejectCall()
-        {
-            CurrentCall.Reject();
-            RaiseCallRejectedEvent(CurrentCall);
-            ResetCall();
-        }
-        
-        public void EndCall()
-        {
-            CurrentCall.End();
-            RaiseCallEndedEvent(CurrentCall);
-            ResetCall();
-        }
-        
-        #endregion
-        
-        #region RaiseEvents
-
-        private void RaiseTerminalConnectedEvent()
-        {
-            var args = new TerminalArgs(this);
-            ConnectedEvent?.Invoke(this, args);
-        }
-
-        private void RaiseTerminalDisconnectedEvent()
-        {
-            var args = new TerminalArgs(this);
-            DisconnectedEvent?.Invoke(this, args);
-        }
-
-        private void RaiseCallEvent(Call call)
-        {
-            CallEvent?.Invoke(this, new CallArgs(call));
-        }
-
-        private void RaiseIncomingCallEvent(Call call)
-        {
-            IncomingCallEvent?.Invoke(this, new CallArgs(call));
-        }
-
-        private void RaiseCallEndedEvent(Call call)
-        {
-            CallEndedEvent?.Invoke(this, new CallArgs(call));
-        }
-
-        private void RaiseCallAcceptedEvent(Call call)
-        {
-            CallAcceptedEvent?.Invoke(this, new CallArgs(call));
-        }
-
-        private void RaiseCallRejectedEvent(Call call)
-        {
-            CallRejectedEvent?.Invoke(this, new CallArgs(call));
-        }
-        
-        #endregion
-
-        public override void ConnectToATE(Station ate)
-        {
-            throw new NotImplementedException();
-        }
+        // #region Props
+        //
+        // public IPort Port { get; protected set; }
+        // public IContract Contract { get; }
+        // public string Number => Contract.PhoneNumber;
+        // public Call CurrentCall { get; private set; }
+        //
+        // #endregion
+        //
+        // #region Ctors
+        //
+        // public Terminal(IContract contract)
+        // {
+        //     Contract = contract ?? throw new ArgumentNullException(nameof(contract), "Договор не может быть null");
+        // }
+        //
+        // #endregion
+        //
+        // #region Methods
+        //
+        // public void ConnectTo(IAutomaticTelephoneExchange ate)
+        // {
+        //     if (Port != null)
+        //     {
+        //         throw new Exception("Терминал уже подключен к АТС");
+        //     }
+        //
+        //     Port = ate.Connect(this);
+        //     
+        //     RaiseTerminalConnectedEvent();
+        // }
+        //
+        // public void Disconnect()
+        // {
+        //     if (Port == null)
+        //     {
+        //         throw new Exception("Терминал не подключен к АТС");
+        //     }
+        //     
+        //     RaiseTerminalDisconnectedEvent();
+        //
+        //     Port = null;
+        //     
+        // }
+        //
+        // public void CallTo(string targetNumber)
+        // {
+        //     if (Port.Status == PortStatus.InCall)
+        //     {
+        //         throw new Exception("Терминал уже находится в состоянии вызова");
+        //     }
+        //
+        //     CurrentCall = new Call(Number, targetNumber);
+        //     RaiseCallEvent(CurrentCall);
+        // }
+        //
+        // public void ResetCall()
+        // {
+        //     CurrentCall = null;
+        // }
+        //
+        // public void HandleIncomingCall(Call call)
+        // {
+        //     CurrentCall = call;
+        //     RaiseIncomingCallEvent(CurrentCall);
+        // }
+        //
+        // public void AcceptIncomingCall()
+        // {
+        //     CurrentCall.Accept();
+        //     RaiseCallAcceptedEvent(CurrentCall);
+        // }
+        //
+        // public void RejectCall()
+        // {
+        //     CurrentCall.Reject();
+        //     RaiseCallRejectedEvent(CurrentCall);
+        //     ResetCall();
+        // }
+        //
+        // public void EndCall()
+        // {
+        //     CurrentCall.End();
+        //     RaiseCallEndedEvent(CurrentCall);
+        //     ResetCall();
+        // }
+        //
+        // #endregion
+        //
+        // #region RaiseEvents
+        //
+        //
+        //
+        // #endregion
+        //
+        // public override void ConnectToStation(Station ate)
+        // {
+        //     throw new NotImplementedException();
+        // }
     }
 }

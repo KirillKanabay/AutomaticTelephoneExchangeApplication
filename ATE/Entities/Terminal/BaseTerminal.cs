@@ -16,7 +16,44 @@ namespace ATE.Entities.Terminal
 
         public string PhoneNumber { get; set; }
 
-        public abstract void ConnectToATE(Station ate);
+        public abstract void ConnectToStation(BaseStation station);
+
+        protected virtual void RaiseTerminalConnectedEvent()
+        {
+            var args = new TerminalArgs(this);
+            ConnectedEvent?.Invoke(this, args);
+        }
+
+        protected virtual void RaiseTerminalDisconnectedEvent()
+        {
+            var args = new TerminalArgs(this);
+            DisconnectedEvent?.Invoke(this, args);
+        }
+
+        protected virtual void RaiseCallEvent(Call call)
+        {
+            CallEvent?.Invoke(this, new CallArgs(call));
+        }
+
+        protected virtual void RaiseIncomingCallEvent(Call call)
+        {
+            IncomingCallEvent?.Invoke(this, new CallArgs(call));
+        }
+
+        protected virtual void RaiseCallEndedEvent(Call call)
+        {
+            CallEndedEvent?.Invoke(this, new CallArgs(call));
+        }
+
+        protected virtual void RaiseCallAcceptedEvent(Call call)
+        {
+            CallAcceptedEvent?.Invoke(this, new CallArgs(call));
+        }
+
+        protected virtual void RaiseCallRejectedEvent(Call call)
+        {
+            CallRejectedEvent?.Invoke(this, new CallArgs(call));
+        }
 
     }
 }

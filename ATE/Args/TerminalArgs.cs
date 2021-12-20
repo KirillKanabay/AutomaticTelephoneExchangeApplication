@@ -1,13 +1,14 @@
 ﻿using System;
 using ATE.Core.Interfaces.ATE;
+using ATE.Entities.Terminal;
 
 namespace ATE.Args
 {
     public class TerminalArgs : EventArgs
     {
-        public ITerminal Terminal { get; }
+        public BaseTerminal Terminal { get; }
 
-        public TerminalArgs(ITerminal terminal)
+        public TerminalArgs(BaseTerminal terminal)
         {
             Terminal = terminal;
         }

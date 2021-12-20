@@ -1,86 +1,127 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using ATE.Args;
-using ATE.Core.Interfaces.ATE;
+using ATE.Entities.Terminal;
 using ATE.Enums;
-using ATE.Interfaces.ATE;
 
 namespace ATE.Entities.Port
 {
-    public class Port : BasePort, ITerminalSubscriber
+    public class Port : BasePort
     {
-        public int PortNumber { get; }
-        public PortStatus Status { get; private set; }
-        public ITerminal Terminal { get; private set; }
-        public override void Connect(ITerminal terminal)
+        public EventHandler<CallArgs> OutgoingCall;
+        public EventHandler<CallArgs> IncomingCall;
+        public EventHandler<CallArgs> EndingCall;
+        public EventHandler<CallArgs> RejectingCall;
+
+        public override void Connect(BaseTerminal terminal)
         {
-            throw new NotImplementedException();
+            if (Status == PortStatus.Available)
+            {
+                CurrentTerminal = terminal;
+
+                CurrentTerminal.CallEvent += OnOutgoingCall;
+                CurrentTerminal.CallEndedEvent += OnCallEnding;
+                CurrentTerminal.CallRejectedEvent += OnCallRejecting;
+            }
+            else
+            {
+                throw new ArgumentException("Port isn't available");
+            }
+        }
+
+        public override void Disconnect(BaseTerminal terminal)
+        {
+            if (CurrentTerminal == terminal)
+            {
+                terminal.CallEvent -= OnOutgoingCall;
+                terminal.CallEndedEvent -= OnCallEnding;
+                terminal.CallRejectedEvent -= OnCallRejecting;
+            }
+            else
+            {
+                throw new ArgumentException("This port doesn't have this terminal");
+            }
         }
 
         public override void HandleIncomingCall()
         {
-            throw new NotImplementedException();
-        }
-
-        public Port(int portNumber)
-        {
-            PortNumber = portNumber;
-        }
-
-        public void ConnectTerminal(ITerminal terminal)
-        {
-            if (Terminal != null)
+            if (Status == PortStatus.Connected)
             {
-                throw new Exception("К данному порту уже подключен терминал");
             }
-            
-            Terminal = terminal;
-            Status = PortStatus.Connected;
-            SubscribeToTerminal(Terminal);
-        }
-        
-        public void SubscribeToTerminal(ITerminalObserver terminal)
-        {
-            terminal.CallEvent += OnTerminalCall;
-            terminal.CallEndedEvent += OnTerminalCallEnded;
-            terminal.CallRejectedEvent += OnTerminalCallRejected;
-            terminal.DisconnectedEvent += OnTerminalDisconnected;
         }
 
-        public void UnsubscribeFromTerminal(ITerminalObserver terminal)
-        {
-            terminal.CallEvent -= OnTerminalCall;
-            terminal.CallEndedEvent -= OnTerminalCallEnded;
-            terminal.CallRejectedEvent -= OnTerminalCallRejected;
-            terminal.DisconnectedEvent -= OnTerminalDisconnected; 
-        }
-        
-        private void OnTerminalCall(object sender, CallArgs e)
+        protected virtual void OnIncomingCall(object sender, CallArgs e)
         {
             Status = PortStatus.InCall;
-        }
-        
-        private void OnTerminalCallEnded(object sender, CallArgs e)
-        {
-            Status = PortStatus.Connected;
+            IncomingCall?.Invoke(sender, e);
         }
 
-        private void OnTerminalCallRejected(object sender, CallArgs e)
+        protected virtual void OnOutgoingCall(object sender, CallArgs e)
         {
-            Status = PortStatus.Connected;
-        }
-        
-        private void OnTerminalDisconnected(object sender, TerminalArgs e)
-        {
-            UnsubscribeFromTerminal(Terminal);
-            Terminal = null;
-            Status = PortStatus.Available;
+            Status = PortStatus.InCall;
+            OutgoingCall?.Invoke(sender, e);
         }
 
-        public static IPort FindByPhoneNumber(IEnumerable<IPort> ports, string phoneNumber)
+        protected virtual void OnCallEnding(object sender, CallArgs e)
         {
-            return ports.FirstOrDefault(t => t.Terminal?.Number == phoneNumber);
+            Status = PortStatus.Connected;
+            EndingCall?.Invoke(sender, e);
         }
+
+        protected virtual void OnCallRejecting(object sender, CallArgs e)
+        {
+            Status = PortStatus.Connected;
+            RejectingCall?.Invoke(sender, e);
+        }
+
+        // public int PortNumber { get; }
+        // public PortStatus Status { get; private set; }
+        // public ITerminal Terminal { get; private set; }
+        // public override void Connect(ITerminal terminal)
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public override void HandleIncomingCall()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public Port(int portNumber)
+        // {
+        //     PortNumber = portNumber;
+        // }
+        //
+        // public void ConnectTerminal(ITerminal terminal)
+        // {
+        //     if (Terminal != null)
+        //     {
+        //         throw new Exception("К данному порту уже подключен терминал");
+        //     }
+        //     
+        //     Terminal = terminal;
+        //     Status = PortStatus.Connected;
+        //     SubscribeToTerminal(Terminal);
+        // }
+        //
+        // public void SubscribeToTerminal(ITerminalObserver terminal)
+        // {
+        //     
+        // }
+        //
+        // public void UnsubscribeFromTerminal(ITerminalObserver terminal)
+        // {
+        //     terminal.CallEvent -= OnTerminalCall;
+        //     terminal.CallEndedEvent -= OnTerminalCallEnded;
+        //     terminal.CallRejectedEvent -= OnTerminalCallRejected;
+        //     terminal.DisconnectedEvent -= OnTerminalDisconnected; 
+        // }
+        //
+
+        //
+        // public static IPort FindByPhoneNumber(IEnumerable<IPort> ports, string phoneNumber)
+        // {
+        //     return ports.FirstOrDefault(t => t.Terminal?.Number == phoneNumber);
+        // }
+
     }
 }
