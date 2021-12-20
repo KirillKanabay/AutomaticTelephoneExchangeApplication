@@ -4,6 +4,7 @@ using ATE.Core.Interfaces.ATE;
 using ATE.Core.Interfaces.Billings;
 using ATE.Entities;
 using ATE.Entities.ATE;
+using ATE.Entities.Terminal;
 using ATE.Entities.Users;
 using ATE.Generators;
 

@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using ATE.Core.Interfaces.ATE;
+using ATE.Entities.Port;
 
-namespace ATE.Core.Interfaces.ATE
+namespace ATE.Interfaces.ATE
 {
     public interface IAutomaticTelephoneExchange
     {
-        IEnumerable<IPort> Ports { get; }
-        IPort Connect(ITerminal terminal);
+        BasePort Connect(ITerminal terminal);
     }
 }

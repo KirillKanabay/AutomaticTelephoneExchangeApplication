@@ -2,8 +2,8 @@
 {
     public enum PortStatus
     {
-        Disconnected = 0,
-        Connected = 1,
-        InCall = 2,
+        Available,
+        Connected,
+        InCall,
     }
 }

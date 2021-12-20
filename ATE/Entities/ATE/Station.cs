@@ -1,33 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using ATE.Args;
-using ATE.Core.Interfaces;
 using ATE.Core.Interfaces.ATE;
+using ATE.Entities.Port;
 using ATE.Enums;
+using ATE.Interfaces.ATE;
 
 namespace ATE.Entities.ATE
 {
-    public class AutomaticTelephoneExchange: IAutomaticTelephoneExchange, ITerminalSubscriber
+    public class Station: IAutomaticTelephoneExchange, ITerminalSubscriber
     {
-        public IEnumerable<IPort> Ports { get; private set; }
-        
-        public AutomaticTelephoneExchange(ICompany company, int portCount)
+        private readonly IPortController _portController;
+        public Station(IPortController portController)
         {
-            if (portCount <= 0)
-            {
-                throw new ArgumentException("Количество портов станции не может быть меньше или равно нулю.");
-            }
-            
-            Ports = Port.GetPortsCollection(portCount);
+            _portController = portController;
         }
 
-        public IPort Connect(ITerminal terminal)
+        public BasePort Connect(ITerminal terminal)
         {
-            var port =  Ports.FirstOrDefault(p => p.Terminal == null);
+            var port = _portController.GetAvailablePort();
+            
             if (port != null)
             {
-                port.ConnectTerminal(terminal);
+                port.Connect(terminal);
                 SubscribeToTerminal(terminal);
             }
             else
@@ -60,25 +54,25 @@ namespace ATE.Entities.ATE
         
         private void OnTerminalCall(object sender, CallArgs e)
         {
-            ITerminal targetTerminal = Port.FindByPhoneNumber(Ports, e.TargetNumber)?.Terminal;
+            BasePort targetPort = _portController.GetByPhoneNumber(e.TargetNumber);
 
-            if (targetTerminal == null)
+            if (targetPort == null)
             {
                 throw new Exception("Неправильно набран номер");
             }
 
-            if (targetTerminal.Port.Status == PortStatus.InCall)
+            if (targetPort.Status == PortStatus.InCall)
             {
                 throw new Exception("Абонент занят. Перезвоните позже.");
             }
             
-            targetTerminal.HandleIncomingCall(e.Call);
+            targetPort.HandleIncomingCall();
         }
 
         private void OnTerminalRejectedCall(object sender, CallArgs e)
         {
-            IPort targetPort = Port.FindByPhoneNumber(Ports, e.TargetNumber);
-            IPort fromPort = Port.FindByPhoneNumber(Ports, e.FromNumber);
+            IPort targetPort = Port.Port.FindByPhoneNumber(Ports, e.TargetNumber);
+            IPort fromPort = Port.Port.FindByPhoneNumber(Ports, e.FromNumber);
             
             if (fromPort?.Status == PortStatus.InCall)
             {
@@ -93,8 +87,8 @@ namespace ATE.Entities.ATE
 
         private void OnTerminalCallEnded(object sender, CallArgs e)
         {
-            IPort targetPort = Port.FindByPhoneNumber(Ports, e.TargetNumber);
-            IPort fromPort = Port.FindByPhoneNumber(Ports, e.FromNumber);
+            IPort targetPort = Port.Port.FindByPhoneNumber(Ports, e.TargetNumber);
+            IPort fromPort = Port.Port.FindByPhoneNumber(Ports, e.FromNumber);
             
             if (fromPort?.Status == PortStatus.InCall)
             {

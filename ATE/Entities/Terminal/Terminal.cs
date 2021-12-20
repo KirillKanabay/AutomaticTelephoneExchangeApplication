@@ -1,24 +1,14 @@
 ﻿using System;
 using ATE.Args;
 using ATE.Core.Interfaces;
-using ATE.Core.Interfaces.ATE;
+using ATE.Entities.ATE;
 using ATE.Enums;
+using ATE.Interfaces.ATE;
 
-namespace ATE.Entities.ATE
+namespace ATE.Entities.Terminal
 {
-    public class Terminal : ITerminal
+    public class Terminal : BaseTerminal
     {
-        #region Events
-
-        public event EventHandler<TerminalArgs> ConnectedEvent;
-        public event EventHandler<TerminalArgs> DisconnectedEvent;
-        public event EventHandler<CallArgs> CallEvent;
-        public event EventHandler<CallArgs> IncomingCallEvent;
-        public event EventHandler<CallArgs> CallAcceptedEvent;
-        public event EventHandler<CallArgs> CallEndedEvent;
-        public event EventHandler<CallArgs> CallRejectedEvent;
-        #endregion
-
         #region Props
 
         public IPort Port { get; protected set; }
@@ -148,5 +138,10 @@ namespace ATE.Entities.ATE
         }
         
         #endregion
+
+        public override void ConnectToATE(Station ate)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

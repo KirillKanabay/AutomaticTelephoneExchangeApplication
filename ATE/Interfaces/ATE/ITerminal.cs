@@ -1,4 +1,5 @@
 ﻿using ATE.Entities.ATE;
+using ATE.Interfaces.ATE;
 
 namespace ATE.Core.Interfaces.ATE
 {

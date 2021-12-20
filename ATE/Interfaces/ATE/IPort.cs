@@ -1,6 +1,7 @@
-﻿using ATE.Enums;
+﻿using ATE.Core.Interfaces.ATE;
+using ATE.Enums;
 
-namespace ATE.Core.Interfaces.ATE
+namespace ATE.Interfaces.ATE
 {
     public interface IPort
     {

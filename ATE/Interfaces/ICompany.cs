@@ -5,6 +5,7 @@ using ATE.Entities;
 using ATE.Entities.Billings;
 using ATE.Entities.Users;
 using ATE.Factories;
+using ATE.Interfaces.ATE;
 
 namespace ATE.Core.Interfaces
 {

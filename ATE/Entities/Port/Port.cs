@@ -4,15 +4,25 @@ using System.Linq;
 using ATE.Args;
 using ATE.Core.Interfaces.ATE;
 using ATE.Enums;
+using ATE.Interfaces.ATE;
 
-namespace ATE.Entities.ATE
+namespace ATE.Entities.Port
 {
-    public class Port : IPort, ITerminalSubscriber
+    public class Port : BasePort, ITerminalSubscriber
     {
         public int PortNumber { get; }
         public PortStatus Status { get; private set; }
         public ITerminal Terminal { get; private set; }
-        
+        public override void Connect(ITerminal terminal)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void HandleIncomingCall()
+        {
+            throw new NotImplementedException();
+        }
+
         public Port(int portNumber)
         {
             PortNumber = portNumber;
@@ -65,24 +75,12 @@ namespace ATE.Entities.ATE
         {
             UnsubscribeFromTerminal(Terminal);
             Terminal = null;
-            Status = PortStatus.Disconnected;
+            Status = PortStatus.Available;
         }
 
         public static IPort FindByPhoneNumber(IEnumerable<IPort> ports, string phoneNumber)
         {
             return ports.FirstOrDefault(t => t.Terminal?.Number == phoneNumber);
-        }
-
-        public static IEnumerable<IPort> GetPortsCollection(int portsCount)
-        {
-            var ports = new List<IPort>();
-            for (var portNumber = 1; portNumber <= portsCount; portNumber++)
-            {
-                var port = new Port(portNumber);
-                ports.Add(port);
-            }
-
-            return ports;
         }
     }
 }
