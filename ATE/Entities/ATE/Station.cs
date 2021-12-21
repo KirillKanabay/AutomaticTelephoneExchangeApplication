@@ -31,7 +31,6 @@ namespace ATE.Entities.ATE
             }
             return port;
         }
-
         public override void OnTerminalStartingCall(object sender, CallArgs e)
         {
             Console.Write("Station->");
@@ -43,19 +42,21 @@ namespace ATE.Entities.ATE
 
             port.HandleIncomingCall(sender, e);
         }
-
         public override void OnTerminalAcceptingCall(object sender, CallArgs e)
         {
             Console.Write("Station->");
             var port = _portController.GetByPhoneNumber(e.FromNumber);
             port.HandleOutgoingAcceptedCall(this, e);
         }
-
         public override void OnTerminalRejectingCall(object sender, CallArgs e)
         {
-            throw new NotImplementedException();
+            Console.Write("Station->");
+            var port = _portController.GetByPhoneNumber(e.FromNumber);
+            if (port != null)
+            {
+                port.HandleOutgoingAcceptedCall(sender, e);
+            }
         }
-
         public override void OnTerminalEndingCall(object sender, CallArgs e)
         {
             throw new NotImplementedException();

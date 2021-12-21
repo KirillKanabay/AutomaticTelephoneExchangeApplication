@@ -31,7 +31,6 @@ namespace ATE.Entities.Terminal
                 CurrentCall = e.Call;
                 RaiseIncomingCallEvent(this, e);
             }
-            //todo: throw ex
         }
 
         public override void HandleOutgoingAcceptedCall(object sender, CallArgs e)
@@ -44,6 +43,15 @@ namespace ATE.Entities.Terminal
             }
         }
 
+        public override void HandleOutgoingRejectedCall(object sender, CallArgs e)
+        {
+            Console.Write($"Terminal[{Number}]");
+            if (e.Status == CallStatus.Rejected)
+            {
+                CurrentCall = null;
+                RaiseOutgoingRejectedCallEvent(sender, e);
+            }
+        }
         public override void AcceptCall()
         {
             Console.Write($"Terminal[{Number}]->");
@@ -60,14 +68,14 @@ namespace ATE.Entities.Terminal
             if (CurrentCall.Status == CallStatus.Await)
             {
                 CurrentCall.Reject();
-                RaiseCallRejectedEvent(this, new CallArgs(){Call = CurrentCall});
+                RaiseIncomingRejectedCallEvent(this, new CallArgs(){Call = CurrentCall});
             }
         }
 
         private void ConnectToPort(BasePort port)
         {
-            port.IncomingCall += HandleIncomingCall;
-            port.AcceptedOutgoingCall += HandleOutgoingAcceptedCall;
+            port.IncomingCallEvent += HandleIncomingCall;
+            port.AcceptedOutgoingCallEvent += HandleOutgoingAcceptedCall;
         }
 
         // #region Props

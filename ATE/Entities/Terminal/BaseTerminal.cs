@@ -10,11 +10,12 @@ namespace ATE.Entities.Terminal
         public event EventHandler<TerminalArgs> ConnectedEvent;
         public event EventHandler<TerminalArgs> DisconnectedEvent;
         
-        public event EventHandler<CallArgs> StartCallEvent;
+        public event EventHandler<CallArgs> OutgoingCallEvent;
         public event EventHandler<CallArgs> IncomingCallEvent;
         public event EventHandler<CallArgs> CallAcceptedEvent;
         public event EventHandler<CallArgs> CallEndedEvent;
-        public event EventHandler<CallArgs> CallRejectedEvent;
+        public event EventHandler<CallArgs> IncomingRejectedCallEvent;
+        public event EventHandler<CallArgs> OutgoingRejectedCallEvent;
         public event EventHandler<CallArgs> OutgoingCallAcceptedEvent;
         
         public Call CurrentCall { get; set; }
@@ -25,12 +26,13 @@ namespace ATE.Entities.Terminal
         public abstract void Call(string phoneNumber);
         public abstract void HandleIncomingCall(object sender, CallArgs e);
         public abstract void HandleOutgoingAcceptedCall(object sender, CallArgs e);
+        public abstract void HandleOutgoingRejectedCall(object sender, CallArgs e);
         public abstract void AcceptCall();
         public abstract void RejectCall();
 
         protected virtual void RaiseStartCallEvent(object sender, CallArgs e)
         {
-            StartCallEvent?.Invoke(sender, e);
+            OutgoingCallEvent?.Invoke(sender, e);
         }
         protected virtual void RaiseIncomingCallEvent(object sender, CallArgs e)
         {
@@ -40,9 +42,13 @@ namespace ATE.Entities.Terminal
         {
             CallAcceptedEvent?.Invoke(sender, e);
         }
-        protected virtual void RaiseCallRejectedEvent(object sender, CallArgs e)
+        protected virtual void RaiseIncomingRejectedCallEvent(object sender, CallArgs e)
         {
-            CallRejectedEvent?.Invoke(sender, e);
+            IncomingRejectedCallEvent?.Invoke(sender, e);
+        }
+        protected virtual void RaiseOutgoingRejectedCallEvent(object sender, CallArgs e)
+        {
+            OutgoingRejectedCallEvent?.Invoke(sender, e);
         }
         protected virtual void RaiseOutgoingCallAcceptedEvent(object sender, CallArgs e)
         {

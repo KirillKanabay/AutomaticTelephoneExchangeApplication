@@ -36,8 +36,8 @@ namespace ATE
             Console.WriteLine("Call:");
             terminal1.Call("2");
 
-            Console.WriteLine("\nAccept call:");
-            terminal2.AcceptCall();
+            //Console.WriteLine("\nAccept call:");
+            //terminal2.AcceptCall();
 
             Console.WriteLine("\nReject call:");
             terminal2.RejectCall();

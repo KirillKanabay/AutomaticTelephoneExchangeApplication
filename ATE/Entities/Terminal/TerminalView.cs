@@ -18,10 +18,10 @@ namespace ATE.Entities.Terminal
         public void SubscribeToTerminal()
         {
             _terminal.ConnectedEvent += OnTerminalConnected;
-            _terminal.StartCallEvent += OnCall;
+            _terminal.OutgoingCallEvent += OnCall;
             _terminal.IncomingCallEvent += OnIncomingCall;
             _terminal.CallAcceptedEvent += OnCallAccepted;
-            _terminal.CallRejectedEvent += OnCallRejected;
+            _terminal.IncomingRejectedCallEvent += OnCallRejected;
             _terminal.CallEndedEvent += OnCallEnded;
             _terminal.DisconnectedEvent += OnTerminalDisconnected;
         }
@@ -29,10 +29,10 @@ namespace ATE.Entities.Terminal
         public void UnsubscribeFromTerminal()
         {
             _terminal.ConnectedEvent -= OnTerminalConnected;
-            _terminal.StartCallEvent -= OnCall;
+            _terminal.OutgoingCallEvent -= OnCall;
             _terminal.IncomingCallEvent -= OnIncomingCall;
             _terminal.CallAcceptedEvent -= OnCallAccepted;
-            _terminal.CallRejectedEvent -= OnCallRejected;
+            _terminal.IncomingRejectedCallEvent -= OnCallRejected;
             _terminal.CallEndedEvent -= OnCallEnded;
             _terminal.DisconnectedEvent -= OnTerminalDisconnected;
         }
