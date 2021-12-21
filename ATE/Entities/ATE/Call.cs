@@ -19,7 +19,8 @@ namespace ATE.Entities.ATE
         {
             FromNumber = fromNumber;
             TargetNumber = targetNumber;
-            
+
+            Status = CallStatus.Await;
             Date = DateTime.Now;
         }
 

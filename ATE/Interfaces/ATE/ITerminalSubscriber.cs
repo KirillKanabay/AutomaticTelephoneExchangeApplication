@@ -1,8 +1,10 @@
-﻿namespace ATE.Core.Interfaces.ATE
+﻿using ATE.Entities.Terminal;
+
+namespace ATE.Interfaces.ATE
 {
     public interface ITerminalSubscriber
     {
-        void SubscribeToTerminal(ITerminalObserver terminal);
-        void UnsubscribeFromTerminal(ITerminalObserver terminal);
+        void SubscribeToTerminal(BaseTerminal terminal);
+        void UnsubscribeFromTerminal(BaseTerminal terminal);
     }
 }

@@ -1,10 +1,7 @@
 ﻿using System;
 using ATE.Args;
-using ATE.Core.Interfaces.ATE;
 using ATE.Entities.Port;
 using ATE.Entities.Terminal;
-using ATE.Enums;
-using ATE.Interfaces.ATE;
 
 namespace ATE.Entities.ATE
 {
@@ -23,6 +20,7 @@ namespace ATE.Entities.ATE
             if (port != null)
             {
                 port.Connect(terminal);
+                port.OutgoingCall += OnTerminalStartingCall;
             }
             else
             {
@@ -31,6 +29,21 @@ namespace ATE.Entities.ATE
             return port;
         }
 
+        public override void OnTerminalStartingCall(object sender, CallArgs e)
+        {
+            var port = _portController.GetByPhoneNumber(e.TargetNumber);
+            if (port == null)
+            {
+                throw new ArgumentException("Неправильно набран номер");
+            }
+
+            port.HandleIncomingCall(sender, e);
+        }
+
+        public override void OnTerminalAcceptedCall(object sender, CallArgs e)
+        {
+
+        }
         //
         // public void SubscribeToTerminal(ITerminalObserver terminal)
         // {

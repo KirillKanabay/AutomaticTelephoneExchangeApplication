@@ -21,7 +21,7 @@ namespace ATE.Entities.Port
 
         public BasePort GetByPhoneNumber(string phoneNumber)
         {
-            return _ports.FirstOrDefault(p => p.Terminal.Number == phoneNumber);
+            return _ports.FirstOrDefault(p => p.CurrentTerminal.Number == phoneNumber);
         }
 
         private IEnumerable<BasePort> InitPorts(int portsCount)

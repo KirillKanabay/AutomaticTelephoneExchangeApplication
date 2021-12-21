@@ -1,4 +1,5 @@
-﻿using ATE.Core.Entities;
+﻿using System;
+using ATE.Core.Entities;
 using ATE.Core.Interfaces;
 using ATE.Core.Interfaces.ATE;
 using ATE.Core.Interfaces.Billings;
@@ -43,8 +44,10 @@ namespace ATE.Factories
 
         public override ITerminal CreateTerminal(IContract contract)
         {
-            var terminal = new Terminal(contract);
-            return terminal;
+            // var terminal = new Terminal(contract);
+            // return terminal;
+
+            throw new NotImplementedException();
         }
     }
 }

@@ -7,10 +7,9 @@ namespace ATE.Entities.Port
 {
     public class Port : BasePort
     {
-        public EventHandler<CallArgs> OutgoingCall;
-        public EventHandler<CallArgs> IncomingCall;
-        public EventHandler<CallArgs> EndingCall;
-        public EventHandler<CallArgs> RejectingCall;
+        public Port(int id) : base(id)
+        {
+        }
 
         public override void Connect(BaseTerminal terminal)
         {
@@ -18,9 +17,13 @@ namespace ATE.Entities.Port
             {
                 CurrentTerminal = terminal;
 
-                CurrentTerminal.CallEvent += OnOutgoingCall;
+                CurrentTerminal.StartCallEvent += OnOutgoingCall;
                 CurrentTerminal.CallEndedEvent += OnCallEnding;
                 CurrentTerminal.CallRejectedEvent += OnCallRejecting;
+
+                IncomingCall += CurrentTerminal.HandleIncomingCall;
+
+                Status = PortStatus.Connected;
             }
             else
             {
@@ -32,45 +35,22 @@ namespace ATE.Entities.Port
         {
             if (CurrentTerminal == terminal)
             {
-                terminal.CallEvent -= OnOutgoingCall;
+                terminal.StartCallEvent -= OnOutgoingCall;
                 terminal.CallEndedEvent -= OnCallEnding;
                 terminal.CallRejectedEvent -= OnCallRejecting;
             }
             else
             {
-                throw new ArgumentException("This port doesn't have this terminal");
+                throw new ArgumentException("This terminal doesn't have connection with this port");
             }
         }
 
-        public override void HandleIncomingCall()
+        public override void HandleIncomingCall(object sender, CallArgs e)
         {
             if (Status == PortStatus.Connected)
             {
+                OnIncomingCall(sender, e);
             }
-        }
-
-        protected virtual void OnIncomingCall(object sender, CallArgs e)
-        {
-            Status = PortStatus.InCall;
-            IncomingCall?.Invoke(sender, e);
-        }
-
-        protected virtual void OnOutgoingCall(object sender, CallArgs e)
-        {
-            Status = PortStatus.InCall;
-            OutgoingCall?.Invoke(sender, e);
-        }
-
-        protected virtual void OnCallEnding(object sender, CallArgs e)
-        {
-            Status = PortStatus.Connected;
-            EndingCall?.Invoke(sender, e);
-        }
-
-        protected virtual void OnCallRejecting(object sender, CallArgs e)
-        {
-            Status = PortStatus.Connected;
-            RejectingCall?.Invoke(sender, e);
         }
 
         // public int PortNumber { get; }
@@ -122,6 +102,5 @@ namespace ATE.Entities.Port
         // {
         //     return ports.FirstOrDefault(t => t.Terminal?.Number == phoneNumber);
         // }
-
     }
 }

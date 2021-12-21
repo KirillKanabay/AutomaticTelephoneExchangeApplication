@@ -6,7 +6,7 @@ namespace ATE.Args
 {
     public class CallArgs : EventArgs
     {
-        public Call Call { get; }
+        public Call Call { get; set; }
         
         public string TargetNumber => Call.TargetNumber;
         public string FromNumber => Call.FromNumber;
@@ -17,10 +17,5 @@ namespace ATE.Args
         public DateTime? EndDate => Call.EndDate;
 
         public double DurationInMinutes => Call.DurationInMinutes;
-
-        public CallArgs(Call call)
-        {
-            Call = call;
-        }
     }
 }

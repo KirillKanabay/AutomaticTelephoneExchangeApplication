@@ -84,8 +84,8 @@ namespace ATE.Entities
 
             public ICompanyBuilder AddAte(int portsCount)
             {
-                var ate = new AutomaticTelephoneExchange(_company, portsCount);
-                _company.AddAte(ate);
+               // var ate = new AutomaticTelephoneExchange(_company, portsCount);
+              //  _company.AddAte(ate);
 
                 return this;
             }

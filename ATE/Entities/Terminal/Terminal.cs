@@ -1,4 +1,6 @@
-﻿using ATE.Entities.ATE;
+﻿using ATE.Args;
+using ATE.Entities.ATE;
+using ATE.Enums;
 
 namespace ATE.Entities.Terminal
 {
@@ -6,7 +8,40 @@ namespace ATE.Entities.Terminal
     {
         public override void ConnectToStation(BaseStation station)
         {
-            station.ConnectTerminal(this);
+            CurrentPort = station.ConnectTerminal(this);
+        }
+
+        public override void Call(string targetNumber)
+        {
+            RaiseStartCallEvent(this, new CallArgs() {Call = new Call(Number, targetNumber)});
+        }
+
+        public override void HandleIncomingCall(object sender, CallArgs e)
+        {
+            if (e.Status == CallStatus.Await)
+            {
+                CurrentCall = e.Call;
+                RaiseIncomingCallEvent(this, e);
+            }
+            //todo: throw ex
+        }
+
+        public override void AcceptCall()
+        {
+            if (CurrentCall.Status == CallStatus.Await)
+            {
+                CurrentCall.Accept();
+                RaiseCallAcceptedEvent(this, new CallArgs(){ Call = CurrentCall });
+            }
+        }
+
+        public override void RejectCall()
+        {
+            if (CurrentCall.Status == CallStatus.Await)
+            {
+                CurrentCall.Reject();
+                RaiseCallRejectedEvent(this, new CallArgs(){Call = CurrentCall});
+            }
         }
 
         // #region Props
