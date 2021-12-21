@@ -20,7 +20,10 @@ namespace ATE.Entities.ATE
             if (port != null)
             {
                 port.Connect(terminal);
+
+                //todo: в controller
                 port.OutgoingCall += OnTerminalStartingCall;
+                port.AcceptedIncomingCall += OnTerminalAcceptingCall;
             }
             else
             {
@@ -31,6 +34,7 @@ namespace ATE.Entities.ATE
 
         public override void OnTerminalStartingCall(object sender, CallArgs e)
         {
+            Console.Write("Station->");
             var port = _portController.GetByPhoneNumber(e.TargetNumber);
             if (port == null)
             {
@@ -40,10 +44,24 @@ namespace ATE.Entities.ATE
             port.HandleIncomingCall(sender, e);
         }
 
-        public override void OnTerminalAcceptedCall(object sender, CallArgs e)
+        public override void OnTerminalAcceptingCall(object sender, CallArgs e)
         {
-
+            Console.Write("Station->");
+            var port = _portController.GetByPhoneNumber(e.FromNumber);
+            port.HandleOutgoingAcceptedCall(this, e);
         }
+
+        public override void OnTerminalRejectingCall(object sender, CallArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void OnTerminalEndingCall(object sender, CallArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+
         //
         // public void SubscribeToTerminal(ITerminalObserver terminal)
         // {

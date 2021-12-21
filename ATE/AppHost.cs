@@ -24,8 +24,8 @@ namespace ATE
             terminal1.Number = "1";
             terminal2.Number = "2";
 
-            var terminalView1 = new TerminalView(terminal1);
-            var terminalView2 = new TerminalView(terminal2);
+            //var terminalView1 = new TerminalView(terminal1);
+            //var terminalView2 = new TerminalView(terminal2);
 
             IPortController portController = new PortController(16);
             Station station = new Station(portController);
@@ -33,8 +33,14 @@ namespace ATE
             terminal1.ConnectToStation(station);
             terminal2.ConnectToStation(station);
 
+            Console.WriteLine("Call:");
             terminal1.Call("2");
 
+            Console.WriteLine("\nAccept call:");
+            terminal2.AcceptCall();
+
+            Console.WriteLine("\nReject call:");
+            terminal2.RejectCall();
             // User user1 = new User("Kirill", "Kanabay");
             // User user2 = new User("Ivan", "Ivanov");
             //

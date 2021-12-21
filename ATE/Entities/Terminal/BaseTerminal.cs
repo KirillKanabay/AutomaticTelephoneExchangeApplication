@@ -15,6 +15,7 @@ namespace ATE.Entities.Terminal
         public event EventHandler<CallArgs> CallAcceptedEvent;
         public event EventHandler<CallArgs> CallEndedEvent;
         public event EventHandler<CallArgs> CallRejectedEvent;
+        public event EventHandler<CallArgs> OutgoingCallAcceptedEvent;
         
         public Call CurrentCall { get; set; }
         public BasePort CurrentPort { get; set; }
@@ -23,6 +24,7 @@ namespace ATE.Entities.Terminal
         public abstract void ConnectToStation(BaseStation station);
         public abstract void Call(string phoneNumber);
         public abstract void HandleIncomingCall(object sender, CallArgs e);
+        public abstract void HandleOutgoingAcceptedCall(object sender, CallArgs e);
         public abstract void AcceptCall();
         public abstract void RejectCall();
 
@@ -42,19 +44,14 @@ namespace ATE.Entities.Terminal
         {
             CallRejectedEvent?.Invoke(sender, e);
         }
-        protected virtual void RaiseTerminalConnectedEvent()
+        protected virtual void RaiseOutgoingCallAcceptedEvent(object sender, CallArgs e)
         {
-            var args = new TerminalArgs(this);
-            ConnectedEvent?.Invoke(this, args);
+            OutgoingCallAcceptedEvent?.Invoke(sender, e);
         }
         protected virtual void RaiseTerminalDisconnectedEvent()
         {
             var args = new TerminalArgs(this);
             DisconnectedEvent?.Invoke(this, args);
-        }
-        protected virtual void RaiseCallEvent(Call call)
-        {
-            StartCallEvent?.Invoke(this, new CallArgs());
         }
         protected virtual void RaiseCallEndedEvent(Call call)
         {

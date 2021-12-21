@@ -1,5 +1,7 @@
-﻿using ATE.Args;
+﻿using System;
+using ATE.Args;
 using ATE.Entities.ATE;
+using ATE.Entities.Port;
 using ATE.Enums;
 
 namespace ATE.Entities.Terminal
@@ -8,16 +10,22 @@ namespace ATE.Entities.Terminal
     {
         public override void ConnectToStation(BaseStation station)
         {
-            CurrentPort = station.ConnectTerminal(this);
+            var stationPort = station.ConnectTerminal(this);
+            if (stationPort != null)
+            {
+                ConnectToPort(stationPort);
+            }
         }
 
         public override void Call(string targetNumber)
         {
+            Console.Write($"Terminal[{Number}]->");
             RaiseStartCallEvent(this, new CallArgs() {Call = new Call(Number, targetNumber)});
         }
 
         public override void HandleIncomingCall(object sender, CallArgs e)
         {
+            Console.Write($"Terminal[{Number}]");
             if (e.Status == CallStatus.Await)
             {
                 CurrentCall = e.Call;
@@ -26,9 +34,20 @@ namespace ATE.Entities.Terminal
             //todo: throw ex
         }
 
+        public override void HandleOutgoingAcceptedCall(object sender, CallArgs e)
+        {
+            Console.Write($"Terminal[{Number}]");
+            if (e.Status == CallStatus.Accepted)
+            {
+                CurrentCall = e.Call;
+                RaiseOutgoingCallAcceptedEvent(this, e);
+            }
+        }
+
         public override void AcceptCall()
         {
-            if (CurrentCall.Status == CallStatus.Await)
+            Console.Write($"Terminal[{Number}]->");
+            if (CurrentCall is {Status: CallStatus.Await})
             {
                 CurrentCall.Accept();
                 RaiseCallAcceptedEvent(this, new CallArgs(){ Call = CurrentCall });
@@ -37,11 +56,18 @@ namespace ATE.Entities.Terminal
 
         public override void RejectCall()
         {
+            Console.Write($"Terminal[{Number}]->");
             if (CurrentCall.Status == CallStatus.Await)
             {
                 CurrentCall.Reject();
                 RaiseCallRejectedEvent(this, new CallArgs(){Call = CurrentCall});
             }
+        }
+
+        private void ConnectToPort(BasePort port)
+        {
+            port.IncomingCall += HandleIncomingCall;
+            port.AcceptedOutgoingCall += HandleOutgoingAcceptedCall;
         }
 
         // #region Props
