@@ -1,5 +1,6 @@
 ﻿using System;
 using ATE.Args;
+using ATE.Entities.ATE;
 using ATE.Entities.Terminal;
 using ATE.Enums;
 
@@ -17,6 +18,7 @@ namespace ATE.Entities.Port
 
         public int Id { get; protected set; }
         public PortStatus Status { get; protected set; }
+        public bool IsConnectedToStation { get; protected set; }
         public BaseTerminal CurrentTerminal { get; protected set; }
 
         protected BasePort(int id)
@@ -24,7 +26,8 @@ namespace ATE.Entities.Port
             Id = id;
         }
 
-        public abstract void Connect(BaseTerminal terminal);
+        public abstract void ConnectToTerminal(BaseTerminal terminal);
+        public abstract void ConnectToStation(BaseStation station);
         public abstract void Disconnect(BaseTerminal terminal);
         public abstract void HandleIncomingCall(object sender, CallArgs e);
         public abstract void HandleIncomingAcceptedCall(object sender, CallArgs e);

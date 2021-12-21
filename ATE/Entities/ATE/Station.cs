@@ -19,11 +19,11 @@ namespace ATE.Entities.ATE
 
             if (port != null)
             {
-                port.Connect(terminal);
-
-                //todo: в controller
-                port.OutgoingCall += OnTerminalStartingCall;
-                port.AcceptedIncomingCall += OnTerminalAcceptingCall;
+                if (!port.IsConnectedToStation)
+                {
+                    port.ConnectToStation(this);
+                }
+                port.ConnectToTerminal(terminal);
             }
             else
             {

@@ -1,5 +1,6 @@
 ﻿using System;
 using ATE.Args;
+using ATE.Entities.ATE;
 using ATE.Entities.Terminal;
 using ATE.Enums;
 
@@ -11,7 +12,7 @@ namespace ATE.Entities.Port
         {
         }
 
-        public override void Connect(BaseTerminal terminal)
+        public override void ConnectToTerminal(BaseTerminal terminal)
         {
             if (Status == PortStatus.Available)
             {
@@ -28,6 +29,14 @@ namespace ATE.Entities.Port
             {
                 throw new ArgumentException("Port isn't available");
             }
+        }
+
+        public override void ConnectToStation(BaseStation station)
+        {
+            OutgoingCall += station.OnTerminalStartingCall;
+            AcceptedIncomingCall += station.OnTerminalAcceptingCall;
+
+            IsConnectedToStation = true;
         }
 
         public override void Disconnect(BaseTerminal terminal)
