@@ -27,8 +27,10 @@ namespace ATE.Entities.Terminal
         public abstract void HandleIncomingCall(object sender, CallArgs e);
         public abstract void HandleOutgoingAcceptedCall(object sender, CallArgs e);
         public abstract void HandleOutgoingRejectedCall(object sender, CallArgs e);
+        public abstract void HandleEndCall(object sender, CallArgs e);
         public abstract void AcceptCall();
         public abstract void RejectCall();
+        public abstract void EndCall();
 
         protected virtual void RaiseStartCallEvent(object sender, CallArgs e)
         {
@@ -59,7 +61,7 @@ namespace ATE.Entities.Terminal
             var args = new TerminalArgs(this);
             DisconnectedEvent?.Invoke(this, args);
         }
-        protected virtual void RaiseCallEndedEvent(Call call)
+        protected virtual void RaiseCallEndedEvent(object sender, CallArgs e)
         {
             CallEndedEvent?.Invoke(this, new CallArgs());
         }

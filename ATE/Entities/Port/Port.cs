@@ -22,6 +22,7 @@ namespace ATE.Entities.Port
                 CurrentTerminal.CallEndedEvent += RaiseEndedCall;
                 CurrentTerminal.IncomingRejectedCallEvent += RaiseRejectedCall;
                 CurrentTerminal.CallAcceptedEvent += RaiseAcceptedIncomingCall;
+                CurrentTerminal.CallEndedEvent += RaiseEndedCall;
 
                 Status = PortStatus.Connected;
             }
@@ -35,6 +36,7 @@ namespace ATE.Entities.Port
             OutgoingCallEvent += station.OnTerminalStartingCall;
             AcceptedIncomingCallEvent += station.OnTerminalAcceptingCall;
             IncomingRejectedCallEvent += station.OnTerminalRejectingCall;
+            EndedCallEvent += station.OnTerminalRejectingCall;
 
             IsConnectedToStation = true;
         }

@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
-using ATE.Core.Entities;
 using ATE.Core.Interfaces;
 using ATE.Core.Interfaces.ATE;
 using ATE.Core.Interfaces.Billings;
 using ATE.Core.Interfaces.Builders;
-using ATE.Entities.ATE;
 using ATE.Entities.Billings;
 using ATE.Entities.Users;
 using ATE.Factories;

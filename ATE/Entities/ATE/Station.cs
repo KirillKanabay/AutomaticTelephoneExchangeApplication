@@ -33,7 +33,6 @@ namespace ATE.Entities.ATE
         }
         public override void OnTerminalStartingCall(object sender, CallArgs e)
         {
-            Console.Write("Station->");
             var port = _portController.GetByPhoneNumber(e.TargetNumber);
             if (port == null)
             {
@@ -44,13 +43,11 @@ namespace ATE.Entities.ATE
         }
         public override void OnTerminalAcceptingCall(object sender, CallArgs e)
         {
-            Console.Write("Station->");
             var port = _portController.GetByPhoneNumber(e.FromNumber);
             port.HandleOutgoingAcceptedCall(this, e);
         }
         public override void OnTerminalRejectingCall(object sender, CallArgs e)
         {
-            Console.Write("Station->");
             var port = _portController.GetByPhoneNumber(e.FromNumber);
             if (port != null)
             {
@@ -59,7 +56,21 @@ namespace ATE.Entities.ATE
         }
         public override void OnTerminalEndingCall(object sender, CallArgs e)
         {
-            throw new NotImplementedException();
+            if (sender is BaseTerminal terminal)
+            {
+                BasePort port = null;
+
+                if (terminal.Number == e.FromNumber)
+                {
+                    port = _portController.GetByPhoneNumber(e.TargetNumber);
+                }
+                else
+                {
+                    port = _portController.GetByPhoneNumber(e.FromNumber);
+                }
+
+                port.HandleEndedCall(sender, e);
+            }
         }
 
 

@@ -39,23 +39,19 @@ namespace ATE.Entities.Port
         
         protected virtual void RaiseIncomingCall(object sender, CallArgs e)
         {
-            Console.Write($"Port[{CurrentTerminal.Number}]->");
             IncomingCallEvent?.Invoke(sender, e);
         }
         protected virtual void RaiseOutgoingCall(object sender, CallArgs e)
         {
-            Console.Write($"Port[{CurrentTerminal.Number}]->");
             Status = PortStatus.InCall;
             OutgoingCallEvent?.Invoke(sender, e);
         }
         protected virtual void RaiseAcceptedIncomingCall(object sender, CallArgs e)
         {
-            Console.Write($"Port[{CurrentTerminal.Number}]->");
             AcceptedIncomingCallEvent?.Invoke(sender, e);
         }
         protected virtual void RaiseAcceptedOutgoingCall(object sender, CallArgs e)
         {
-            Console.Write($"Port[{CurrentTerminal.Number}]->");
             AcceptedOutgoingCallEvent?.Invoke(sender, e);
         }
         protected virtual void RaiseIncomingRejectedCall(object sender, CallArgs e)
@@ -68,12 +64,10 @@ namespace ATE.Entities.Port
         }
         protected virtual void RaiseEndedCall(object sender, CallArgs e)
         {
-            Console.Write($"Port[{CurrentTerminal.Number}]->");
             EndingCallEvent?.Invoke(sender, e);
         }
         protected virtual void RaiseRejectedCall(object sender, CallArgs e)
         {
-            Console.Write($"Port[{CurrentTerminal.Number}]->");
             IncomingRejectedCallEvent?.Invoke(sender, e);
         }
     }

@@ -16,66 +16,72 @@ namespace ATE.Entities.Terminal
                 ConnectToPort(stationPort);
             }
         }
-
         public override void Call(string targetNumber)
         {
-            Console.Write($"Terminal[{Number}]->");
             RaiseStartCallEvent(this, new CallArgs() {Call = new Call(Number, targetNumber)});
         }
-
         public override void HandleIncomingCall(object sender, CallArgs e)
         {
-            Console.Write($"Terminal[{Number}]");
             if (e.Status == CallStatus.Await)
             {
                 CurrentCall = e.Call;
                 RaiseIncomingCallEvent(this, e);
             }
         }
-
         public override void HandleOutgoingAcceptedCall(object sender, CallArgs e)
         {
-            Console.Write($"Terminal[{Number}]");
             if (e.Status == CallStatus.Accepted)
             {
                 CurrentCall = e.Call;
                 RaiseOutgoingCallAcceptedEvent(this, e);
             }
         }
-
         public override void HandleOutgoingRejectedCall(object sender, CallArgs e)
         {
-            Console.Write($"Terminal[{Number}]");
             if (e.Status == CallStatus.Rejected)
             {
                 CurrentCall = null;
                 RaiseOutgoingRejectedCallEvent(sender, e);
             }
         }
+        public override void HandleEndCall(object sender, CallArgs e)
+        {
+            if (CurrentCall is { Status: CallStatus.Ended})
+            {
+                CurrentCall = null;
+                RaiseCallEndedEvent(this, new CallArgs() { Call = CurrentCall });
+            }
+        }
         public override void AcceptCall()
         {
-            Console.Write($"Terminal[{Number}]->");
             if (CurrentCall is {Status: CallStatus.Await})
             {
                 CurrentCall.Accept();
                 RaiseCallAcceptedEvent(this, new CallArgs(){ Call = CurrentCall });
             }
         }
-
         public override void RejectCall()
         {
-            Console.Write($"Terminal[{Number}]->");
             if (CurrentCall.Status == CallStatus.Await)
             {
                 CurrentCall.Reject();
                 RaiseIncomingRejectedCallEvent(this, new CallArgs(){Call = CurrentCall});
             }
         }
-
+        public override void EndCall()
+        {
+            if (CurrentCall is {Status: CallStatus.Accepted})
+            {
+                CurrentCall.End();
+                RaiseCallEndedEvent(this, new CallArgs(){Call = CurrentCall});
+                CurrentCall = null;
+            }
+        }
         private void ConnectToPort(BasePort port)
         {
             port.IncomingCallEvent += HandleIncomingCall;
             port.AcceptedOutgoingCallEvent += HandleOutgoingAcceptedCall;
+            port.EndedCallEvent += RaiseCallEndedEvent;
         }
 
         // #region Props

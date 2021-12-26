@@ -2,18 +2,12 @@
 {
     public class User
     {
-        public string FirstName { get; }
-        public string SecondName { get; }
-        
-        public User(string firstName, string secondName)
-        {
-            FirstName = firstName;
-            SecondName = secondName;
-        }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
         
         public override string ToString()
         {
-            return $"#{FirstName} {SecondName}";
+            return $"#{FirstName} {LastName}";
         }
     }
 }

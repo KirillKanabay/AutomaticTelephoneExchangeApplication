@@ -32,17 +32,13 @@ namespace ATE.Entities.ATE
 
         public void End()
         {
+            Status = CallStatus.Ended;
             EndDate = DateTime.Now;
         }
         
         public void Reject()
         {
             Status = CallStatus.Rejected;
-        }
-
-        public void Cancel()
-        {
-            Status = CallStatus.Cancelled;
         }
     }
 }

@@ -8,8 +8,8 @@ namespace ATE.Args
     {
         public Call Call { get; set; }
         
-        public string TargetNumber => Call.TargetNumber;
-        public string FromNumber => Call.FromNumber;
+        public string TargetNumber => Call?.TargetNumber;
+        public string FromNumber => Call?.FromNumber;
         public CallStatus Status => Call.Status;
 
         public DateTime Date => Call.Date;

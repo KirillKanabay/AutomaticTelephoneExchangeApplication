@@ -2,9 +2,9 @@
 {
     public enum CallStatus
     {
-        Cancelled,
         Await,
         Accepted,
         Rejected,
+        Ended,
     }
 }
