@@ -1,9 +1,6 @@
-﻿using System;
-using ATE.Builders;
-using ATE.Core.Interfaces;
-using ATE.Core.Interfaces.Builders;
-using ATE.Entities;
-using ATE.Entities.ATE;
+﻿using ATE.Entities.ATE;
+using ATE.Entities.Company;
+using ATE.Entities.Company.Creators;
 using ATE.Entities.Port;
 using ATE.Entities.Terminal;
 using ATE.Entities.Users;
@@ -12,6 +9,13 @@ namespace ATE
 {
     internal class AppHost
     {
+        private readonly AbstractCompanyCreator _companyCreator;
+
+        public AppHost(AbstractCompanyCreator companyCreator)
+        {
+            _companyCreator = companyCreator;
+        }
+
         public void Run()
         {
             var terminal1 = new Terminal();
@@ -48,9 +52,8 @@ namespace ATE
                 LastName = "Ivanov"
             };
 
-            
-            ICompanyBuilder builder = new Company.Builder("MTC");
-            ICompany company = new DefaultCompanyDirector(builder).Make();
+
+            BaseCompany company = _companyCreator.Create();
 
             //
             // Subscriber subscriber1 = company.Subscribe(new SubscriberFactory(user1));

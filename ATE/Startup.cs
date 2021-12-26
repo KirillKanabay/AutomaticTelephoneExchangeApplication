@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using ATE.Entities.Company.Creators;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ATE
 {
@@ -9,6 +10,7 @@ namespace ATE
             var services = new ServiceCollection();
 
             services.AddScoped<AppHost>();
+            services.AddScoped<AbstractCompanyCreator, MtsCompanyCreator>();
 
             return services;
         }
