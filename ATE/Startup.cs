@@ -1,4 +1,7 @@
-﻿using ATE.Entities.Company.Creators;
+﻿using ATE.Abstractions.Factories;
+using ATE.Factories;
+using ATE.Generators;
+using ATE.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ATE
@@ -10,8 +13,12 @@ namespace ATE
             var services = new ServiceCollection();
 
             services.AddScoped<AppHost>();
-            services.AddScoped<AbstractCompanyCreator, MtsCompanyCreator>();
-
+            services.AddTransient<AbstractCompanyFactory, DefaultCompanyFactory>();
+            services.AddTransient<IPhoneNumberGenerator, PhoneNumberGenerator>();
+            services.AddTransient<AbstractTerminalFactory, TerminalFactory>();
+            services.AddTransient<AbstractContractFactory, DefaultContractFactory>();
+            services.AddTransient<AbstractClientFactory, ClientFactory>();
+            
             return services;
         }
     }

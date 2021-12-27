@@ -1,33 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
-using ATE.Core.Interfaces;
+﻿using System.Collections.Generic;
+using System.Linq;
 using ATE.Entities.ATE;
 using ATE.Entities.Billings;
-using ATE.Entities.Company.Tariff;
 using ATE.Entities.Users;
+using ATE.Factories;
 
 namespace ATE.Entities.Company
 {
     public class Company : BaseCompany
     {
-        public Company(string companyName, BillingSystem billingSystem, PhoneNumberParameters numberParameters)
-        {
-            Name = companyName;
-            BillingSystem = billingSystem;
-            NumberParams = numberParameters;
+        private readonly AbstractClientFactory _clientFactory;
 
-            Contracts = new List<IContract>();
+        public Company(BillingSystem billingSystem,
+            AbstractClientFactory clientFactory)
+        {
+            BillingSystem = billingSystem;
+            _clientFactory = clientFactory;
+
+            Clients = new List<Client>();
             Stations = new List<BaseStation>();
         }
         
-        public override Client RegisterClient(User user, BaseTariff tariff)
+        public override Client RegisterClient(User user)
         {
-            throw new NotImplementedException();
-        }
+            var client = _clientFactory.CreateClient(user, this);
+            Clients.Add(client);
 
+            return client;
+        }
+        
         public override void AddStation(BaseStation station)
         {
             Stations.Add(station);
+        }
+
+        public override bool PhoneNumberExists(string phoneNumber)
+        {
+            return Clients.Any(c => c.Contract.PhoneNumber.Equals(phoneNumber));
         }
     }
 }

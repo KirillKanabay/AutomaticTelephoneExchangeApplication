@@ -1,23 +1,27 @@
 ﻿using System;
-using System.Linq;
-using ATE.Core.Interfaces;
+using ATE.Entities.Company;
+using ATE.Interfaces;
 
 namespace ATE.Generators
 {
     public class PhoneNumberGenerator : IPhoneNumberGenerator
     {
-        public string Generate(ICompany company)
+        public string Generate(BaseCompany company)
         {
+            var options = company.PhoneNumberOptions;
+            
             string phoneNumber;
             
             do
             {
                 int userNumber = new Random().Next(1, 10000000);
-                phoneNumber = $"+{company.NumberParams.CountryCode}{company.NumberParams.CompanyCode}{userNumber:D7}";
-                if (company.Contracts.Any(c => c.PhoneNumber == phoneNumber))
+                phoneNumber = $"+{options.CountryCode}{options.CompanyCode}{userNumber:D7}";
+                
+                if (company.PhoneNumberExists(phoneNumber))
                 {
                     phoneNumber = String.Empty;
                 }
+
             } while (phoneNumber == String.Empty);
             
             return phoneNumber;

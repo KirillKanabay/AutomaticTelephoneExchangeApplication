@@ -79,9 +79,11 @@ namespace ATE.Entities.Terminal
         }
         private void ConnectToPort(BasePort port)
         {
-            port.IncomingCallEvent += HandleIncomingCall;
-            port.AcceptedOutgoingCallEvent += HandleOutgoingAcceptedCall;
-            port.EndedCallEvent += RaiseCallEndedEvent;
+            CurrentPort = port;
+
+            CurrentPort.IncomingCallEvent += HandleIncomingCall;
+            CurrentPort.AcceptedOutgoingCallEvent += HandleOutgoingAcceptedCall;
+            CurrentPort.EndedCallEvent += RaiseCallEndedEvent;
         }
 
         // #region Props

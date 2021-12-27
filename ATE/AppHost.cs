@@ -1,46 +1,23 @@
-﻿using ATE.Entities.ATE;
+﻿using ATE.Abstractions.Factories;
+using ATE.Entities.ATE;
 using ATE.Entities.Company;
-using ATE.Entities.Company.Creators;
-using ATE.Entities.Company.Tariff;
 using ATE.Entities.Port;
 using ATE.Entities.Terminal;
 using ATE.Entities.Users;
+using ATE.Factories;
 
 namespace ATE
 {
     internal class AppHost
     {
-        private readonly AbstractCompanyCreator _companyCreator;
-
-        public AppHost(AbstractCompanyCreator companyCreator)
+        private readonly AbstractCompanyFactory _companyFactory;
+        public AppHost(AbstractCompanyFactory companyFactory)
         {
-            _companyCreator = companyCreator;
+            _companyFactory = companyFactory;
         }
 
         public void Run()
         {
-            var terminal1 = new Terminal();
-            var terminal2 = new Terminal();
-
-            terminal1.Number = "1";
-            terminal2.Number = "2";
-
-            var terminalView1 = new TerminalView(terminal1);
-            var terminalView2 = new TerminalView(terminal2);
-
-            IPortController portController = new PortController(16);
-            Station station = new Station(portController);
-
-            terminal1.ConnectToStation(station);
-            terminal2.ConnectToStation(station);
-
-            terminal1.Call("2");
-
-            if (terminal2.CurrentCall != null)
-            {
-                terminal2.EndCall();
-            }
-
             User user1 = new User()
             {
                 FirstName = "Kirill", 
@@ -54,11 +31,29 @@ namespace ATE
             };
 
 
-            BaseCompany company = _companyCreator.Create();
+            BaseCompany company = _companyFactory.CreateCompany();
 
-            Client client1 = company.RegisterClient(user1, new EasySayTariff());
-            Client client2 = company.RegisterClient(user2, new EasySayTariff());
+            Client client1 = company.RegisterClient(user1);
+            Client client2 = company.RegisterClient(user2);
 
+            var terminal1 = client1.Terminal;
+            var terminal2 = client2.Terminal;
+            
+            var terminalView1 = new TerminalView(terminal1);
+            var terminalView2 = new TerminalView(terminal2);
+
+            IPortController portController = new PortController(16);
+            Station station = new Station(portController);
+
+            terminal1.ConnectToStation(station);
+            terminal2.ConnectToStation(station);
+
+            terminal1.Call(client2.PhoneNumber);
+
+            if (terminal2.CurrentCall != null)
+            {
+                terminal2.EndCall();
+            }
 
             //
             // Subscriber subscriber1 = company.Subscribe(new SubscriberFactory(user1));

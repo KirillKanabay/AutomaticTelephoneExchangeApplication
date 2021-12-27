@@ -1,11 +1,11 @@
 ﻿namespace ATE.Entities
 {
-    public readonly struct PhoneNumberParameters
+    public class PhoneNumberOptions
     {
         public readonly string CountryCode;
         public readonly string CompanyCode; 
 
-        public PhoneNumberParameters(string countryCode, string companyCode)
+        public PhoneNumberOptions(string countryCode, string companyCode)
         {
             CountryCode = countryCode;
             CompanyCode = companyCode;

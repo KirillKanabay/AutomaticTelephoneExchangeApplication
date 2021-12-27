@@ -24,10 +24,7 @@ namespace ATE.Entities.Billings
         
         public IBillingAccount Register(IContract contract)
         {
-            var billingAccount = new Client(contract);
-            _billingAccounts.Add(billingAccount);
-
-            return billingAccount;
+            throw new NotImplementedException();
         }
         
         public void SubscribeToTerminal(ITerminal terminal)
