@@ -1,6 +1,7 @@
 ﻿using ATE.Entities.ATE;
 using ATE.Entities.Company;
 using ATE.Entities.Company.Creators;
+using ATE.Entities.Company.Tariff;
 using ATE.Entities.Port;
 using ATE.Entities.Terminal;
 using ATE.Entities.Users;
@@ -54,6 +55,10 @@ namespace ATE
 
 
             BaseCompany company = _companyCreator.Create();
+
+            Client client1 = company.RegisterClient(user1, new EasySayTariff());
+            Client client2 = company.RegisterClient(user2, new EasySayTariff());
+
 
             //
             // Subscriber subscriber1 = company.Subscribe(new SubscriberFactory(user1));

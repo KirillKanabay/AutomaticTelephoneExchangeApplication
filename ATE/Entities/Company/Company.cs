@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ATE.Core.Interfaces;
-using ATE.Core.Interfaces.ATE;
-using ATE.Core.Interfaces.Billings;
-using ATE.Core.Interfaces.Builders;
 using ATE.Entities.ATE;
 using ATE.Entities.Billings;
+using ATE.Entities.Company.Tariff;
 using ATE.Entities.Users;
-using ATE.Factories;
 
 namespace ATE.Entities.Company
 {
@@ -22,18 +20,9 @@ namespace ATE.Entities.Company
             Stations = new List<BaseStation>();
         }
         
-        public override Subscriber Subscribe(AbstractSubscriberFactory factory)
+        public override Client RegisterClient(User user, BaseTariff tariff)
         {
-            IContract contract = factory.CreateContract(this);
-            IBillingAccount account = factory.CreateBillingAccount(this, contract);
-            ITerminal terminal = factory.CreateTerminal(contract);
-            
-            var subscriber = new Subscriber(terminal, contract, account);
-            BillingSystem.SubscribeToTerminal(terminal);
-            
-            Contracts.Add(contract);
-            
-            return subscriber;
+            throw new NotImplementedException();
         }
 
         public override void AddStation(BaseStation station)

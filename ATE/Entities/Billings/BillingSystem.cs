@@ -5,6 +5,7 @@ using ATE.Args;
 using ATE.Core.Interfaces;
 using ATE.Core.Interfaces.ATE;
 using ATE.Core.Interfaces.Billings;
+using ATE.Entities.Company;
 using ATE.Enums;
 
 namespace ATE.Entities.Billings
@@ -23,7 +24,7 @@ namespace ATE.Entities.Billings
         
         public IBillingAccount Register(IContract contract)
         {
-            var billingAccount = new BillingAccount(contract);
+            var billingAccount = new Client(contract);
             _billingAccounts.Add(billingAccount);
 
             return billingAccount;
@@ -71,7 +72,32 @@ namespace ATE.Entities.Billings
             fromAcc.WriteOff(callFromNumber.Price);
             fromAcc.WriteOff(callTargetNumber.Price);
         }
-        
+
+        public void Deposit(Client client, decimal money)
+        {
+            if (client == null)
+            {
+                throw new ArgumentNullException(nameof(client));
+            }
+            
+            if (money <= 0)
+            {
+                throw new ArgumentException("Сумма пополнения счета не может быть меньше или равно нулю");
+            }
+
+            client.Balance += money;
+        }
+
+        public void WriteOff(Client client, decimal money)
+        {
+            if (money < 0)
+            {
+                throw new ArgumentException("Сумма списания счета не может быть меньше нуля");
+            }
+            
+            client.Balance -= money;
+        }
+
         private IBillingAccount FindBillingAccount(string phoneNumber)
         {
             return _billingAccounts.FirstOrDefault(a => a.Contract.PhoneNumber == phoneNumber);
