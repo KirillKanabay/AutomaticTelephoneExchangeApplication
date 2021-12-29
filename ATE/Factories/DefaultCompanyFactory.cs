@@ -17,12 +17,21 @@ namespace ATE.Factories
 
         public override BaseCompany CreateCompany()
         {
-            return new Company(new BillingSystem(), _clientFactory)
+            var company = new Company(_clientFactory)
             {
                 Name = DataConstants.DefaultCompanyName,
                 PhoneNumberOptions = new PhoneNumberOptions(DataConstants.DefaultPhoneOptionsCountryCode,
                     DataConstants.DefaultPhoneOptionsCompanyCode),
             };
+
+            var billingSystem = new BillingSystem()
+            {
+                Company = company,
+            };
+
+            company.BillingSystem = billingSystem;
+
+            return company;
         }
     }
 }

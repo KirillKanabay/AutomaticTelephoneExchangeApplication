@@ -18,7 +18,7 @@ namespace ATE
             services.AddTransient<AbstractTerminalFactory, TerminalFactory>();
             services.AddTransient<AbstractContractFactory, DefaultContractFactory>();
             services.AddTransient<AbstractClientFactory, ClientFactory>();
-            
+            services.AddTransient<AbstractStationFactory, StationFactory>();
             return services;
         }
     }

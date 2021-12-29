@@ -11,10 +11,8 @@ namespace ATE.Entities.Company
     {
         private readonly AbstractClientFactory _clientFactory;
 
-        public Company(BillingSystem billingSystem,
-            AbstractClientFactory clientFactory)
+        public Company(AbstractClientFactory clientFactory)
         {
-            BillingSystem = billingSystem;
             _clientFactory = clientFactory;
 
             Clients = new List<Client>();
@@ -37,6 +35,11 @@ namespace ATE.Entities.Company
         public override bool PhoneNumberExists(string phoneNumber)
         {
             return Clients.Any(c => c.Contract.PhoneNumber.Equals(phoneNumber));
+        }
+
+        public override Client GetClientByPhoneNumber(string phoneNumber)
+        {
+            return Clients.FirstOrDefault(c => c.PhoneNumber == phoneNumber);
         }
     }
 }

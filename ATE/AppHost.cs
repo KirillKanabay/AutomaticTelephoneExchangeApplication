@@ -1,19 +1,20 @@
-﻿using ATE.Abstractions.Factories;
-using ATE.Entities.ATE;
+﻿using System.Threading;
+using ATE.Abstractions.Factories;
 using ATE.Entities.Company;
-using ATE.Entities.Port;
 using ATE.Entities.Terminal;
 using ATE.Entities.Users;
-using ATE.Factories;
 
 namespace ATE
 {
     internal class AppHost
     {
         private readonly AbstractCompanyFactory _companyFactory;
-        public AppHost(AbstractCompanyFactory companyFactory)
+        private readonly AbstractStationFactory _stationFactory;
+        public AppHost(AbstractCompanyFactory companyFactory, 
+            AbstractStationFactory stationFactory)
         {
             _companyFactory = companyFactory;
+            _stationFactory = stationFactory;
         }
 
         public void Run()
@@ -42,8 +43,9 @@ namespace ATE
             var terminalView1 = new TerminalView(terminal1);
             var terminalView2 = new TerminalView(terminal2);
 
-            IPortController portController = new PortController(16);
-            Station station = new Station(portController);
+            var station = _stationFactory.CreateStation();
+
+            company.AddStation(station);
 
             terminal1.ConnectToStation(station);
             terminal2.ConnectToStation(station);
@@ -52,8 +54,10 @@ namespace ATE
 
             if (terminal2.CurrentCall != null)
             {
+                Thread.Sleep(5000);
                 terminal2.EndCall();
             }
+
 
             //
             // Subscriber subscriber1 = company.Subscribe(new SubscriberFactory(user1));

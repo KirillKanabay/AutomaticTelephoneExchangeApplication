@@ -63,7 +63,7 @@ namespace ATE.Entities.Terminal
         }
         protected virtual void RaiseCallEndedEvent(object sender, CallArgs e)
         {
-            CallEndedEvent?.Invoke(this, new CallArgs());
+            CallEndedEvent?.Invoke(this, e);
         }
     }
 }

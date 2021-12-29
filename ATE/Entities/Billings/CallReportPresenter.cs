@@ -11,14 +11,14 @@ namespace ATE.Entities.Billings
 
         public CallReporter(IBillingSystem bs, IBillingAccount acc)
         {
-            Calls = bs.Calls.Where(c => c.ClientPhoneNumber == acc.Contract.PhoneNumber);
+            // Calls = bs.Calls.Where(c => c.ClientPhoneNumber == acc.Contract.PhoneNumber);
         }
 
         public IEnumerable<CallInformation> Render(CallSort callSort) => callSort switch
         {
             CallSort.Date => Calls.OrderBy(c => c.CallDate),
             CallSort.Price => Calls.OrderBy(c => c.Price),
-            CallSort.Subscriber => Calls.OrderBy(c => c.DestinationPhoneNumber)
+            // CallSort.Subscriber => Calls.OrderBy(c => c.DestinationPhoneNumber)
         };
     }
 }

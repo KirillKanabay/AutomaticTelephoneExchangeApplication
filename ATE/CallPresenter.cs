@@ -19,9 +19,9 @@ namespace ATE
             {
                 string typeOfCall = call.CallType == CallType.Incoming ? "Входящий" : "Исходящий";
                 ConsoleColor consoleColor = call.CallType == CallType.Incoming ? ConsoleColor.Blue : ConsoleColor.Green;
-                
-                ConsoleEx.WriteLineWithColor($"Дата: {call.CallDate:g}; Продолжительность: {call.Duration:F2} m.; Стоимость: {call.Price:C2}; " +
-                                             $"Абонент: {call.DestinationPhoneNumber}; Тип звонка: {typeOfCall}", consoleColor);
+                //
+                // ConsoleEx.WriteLineWithColor($"Дата: {call.CallDate:g}; Продолжительность: {call.Duration:F2} m.; Стоимость: {call.Price:C2}; " +
+                //                              $"Абонент: {call.DestinationPhoneNumber}; Тип звонка: {typeOfCall}", consoleColor);
             }
         }
     }

@@ -33,7 +33,7 @@ namespace ATE.Entities.ATE
         }
         public override void OnTerminalStartingCall(object sender, CallArgs e)
         {
-            var port = _portController.GetByPhoneNumber(e.TargetNumber);
+            var port = _portController.GetByPhoneNumber(e.Call?.TargetNumber);
             if (port == null)
             {
                 throw new ArgumentException("Неправильно набран номер");
@@ -43,12 +43,12 @@ namespace ATE.Entities.ATE
         }
         public override void OnTerminalAcceptingCall(object sender, CallArgs e)
         {
-            var port = _portController.GetByPhoneNumber(e.FromNumber);
+            var port = _portController.GetByPhoneNumber(e?.Call?.FromNumber);
             port.HandleOutgoingAcceptedCall(this, e);
         }
         public override void OnTerminalRejectingCall(object sender, CallArgs e)
         {
-            var port = _portController.GetByPhoneNumber(e.FromNumber);
+            var port = _portController.GetByPhoneNumber(e?.Call?.FromNumber);
             if (port != null)
             {
                 port.HandleOutgoingAcceptedCall(sender, e);
@@ -60,13 +60,13 @@ namespace ATE.Entities.ATE
             {
                 BasePort port = null;
 
-                if (terminal.Number == e.FromNumber)
+                if (terminal.Number == e?.Call?.FromNumber)
                 {
-                    port = _portController.GetByPhoneNumber(e.TargetNumber);
+                    port = _portController.GetByPhoneNumber(e?.Call?.TargetNumber);
                 }
                 else
                 {
-                    port = _portController.GetByPhoneNumber(e.FromNumber);
+                    port = _portController.GetByPhoneNumber(e?.Call?.FromNumber);
                 }
 
                 port.HandleEndedCall(sender, e);
