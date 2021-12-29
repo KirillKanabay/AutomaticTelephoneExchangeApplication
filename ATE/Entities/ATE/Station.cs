@@ -1,5 +1,6 @@
 ﻿using System;
 using ATE.Args;
+using ATE.Entities.Billings;
 using ATE.Entities.Port;
 using ATE.Entities.Terminal;
 
@@ -31,16 +32,18 @@ namespace ATE.Entities.ATE
             }
             return port;
         }
+
+        public override void SubscribeToBillingSystem(BaseBillingSystem billingSystem)
+        {
+            billingSystem.CallAllowedEvent += OnCallAllowed;
+            billingSystem.CallCanceledEvent += OnCallCanceled;
+        }
+
         public override void OnTerminalStartingCall(object sender, CallArgs e)
         {
-            var port = _portController.GetByPhoneNumber(e.Call?.TargetNumber);
-            if (port == null)
-            {
-                throw new ArgumentException("Неправильно набран номер");
-            }
-
-            port.HandleIncomingCall(sender, e);
+            OnCallStartedEvent(sender, e);
         }
+
         public override void OnTerminalAcceptingCall(object sender, CallArgs e)
         {
             var port = _portController.GetByPhoneNumber(e?.Call?.FromNumber);
@@ -72,7 +75,23 @@ namespace ATE.Entities.ATE
                 port.HandleEndedCall(sender, e);
             }
         }
+        public override void OnCallAllowed(object sender, CallArgs e)
+        {
+            var port = _portController.GetByPhoneNumber(e.Call?.TargetNumber);
+            if (port == null)
+            {
+                throw new ArgumentException("Неправильно набран номер");
+            }
 
+            port.HandleIncomingCall(sender, e);
+
+        }
+        public override void OnCallCanceled(object sender, CallCanceledArgs e)
+        {
+            var port = _portController.GetByPhoneNumber(e?.SourcePhoneNumber);
+
+            
+        }
 
         //
         // public void SubscribeToTerminal(ITerminalObserver terminal)

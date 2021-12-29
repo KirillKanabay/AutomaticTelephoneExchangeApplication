@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using ATE.Entities.ATE;
 using ATE.Entities.Billings;
@@ -29,7 +30,14 @@ namespace ATE.Entities.Company
         
         public override void AddStation(BaseStation station)
         {
+            if (station == null)
+            {
+                throw new ArgumentNullException(nameof(station), "Station cannot be null");
+            }
+
             Stations.Add(station);
+            BillingSystem.SubscribeToStation(station);
+            station.SubscribeToBillingSystem(BillingSystem);
         }
 
         public override bool PhoneNumberExists(string phoneNumber)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ATE.Args;
+using ATE.Constants;
 using ATE.Entities.ATE;
 using ATE.Entities.Company;
 using ATE.Entities.Company.Tariff;
@@ -18,17 +19,27 @@ namespace ATE.Entities.Billings
         
         public override void SubscribeToStation(BaseStation station)
         {
+            station.CallStartedEvent += OnTerminalCall;
             station.CallEndedEvent += OnCallEnded;
         }
         
         private void OnTerminalCall(object sender, CallArgs e)
         {
-            // var acc = _billingAccounts.FirstOrDefault(a => a.Contract.PhoneNumber == e.FromNumber);
-            // if (acc?.Balance < acc?.Tariff.PricePerMinuteCall)
-            // {
-            //     throw new ArgumentException("Недостаточно средств для совершения вызова");
-            // }
-            
+            var sourceClient = Company.GetClientByPhoneNumber(e?.Call?.FromNumber);
+            var callCostInOneMinute = CalculateCallCost(DataConstants.OneMinute, sourceClient.Contract.Tariff);
+
+            if (sourceClient.Balance < callCostInOneMinute)
+            {
+                OnCallCanceledEvent(this, new CallCanceledArgs()
+                {
+                    Message = DataConstants.InsufficientFundsError,
+                    SourcePhoneNumber = sourceClient.PhoneNumber,
+                });
+            }
+            else
+            {
+                OnCallAllowedEvent(sender, e);
+            }
         }
         
         private void OnCallEnded(object sender, CallArgs e)
@@ -38,7 +49,7 @@ namespace ATE.Entities.Billings
 
             Calls.Add(e.Call);
 
-            decimal callCost = CalculateCallCost(call, sourceClient.Contract.Tariff);
+            decimal callCost = CalculateCallCost(call.DurationInMinutes, sourceClient.Contract.Tariff);
             WriteOff(sourceClient, callCost);
         }
         
@@ -74,9 +85,9 @@ namespace ATE.Entities.Billings
             client.Balance -= money;
         }
 
-        protected override decimal CalculateCallCost(Call call, BaseTariff tariff)
+        protected override decimal CalculateCallCost(double duration, BaseTariff tariff)
         {
-            return Convert.ToDecimal(call.DurationInMinutes) * tariff.PricePerMinuteCall;
+            return Convert.ToDecimal(duration) * tariff.PricePerMinuteCall;
         }
     }
 }
