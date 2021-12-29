@@ -21,11 +21,54 @@ namespace ATE.Entities.Billings
             station.CallStartedEvent += OnTerminalCall;
             station.CallEndedEvent += OnCallEnded;
         }
-        
+        public override IEnumerable<Call> GetClientCalls(Client client)
+        {
+            string clientPhoneNumber = client.PhoneNumber;
+
+            return Calls.Where(c => c.FromNumber == clientPhoneNumber || c.TargetNumber == clientPhoneNumber);
+        }
+        public override void Deposit(Client client, decimal money)
+        {
+            if (client == null)
+            {
+                throw new ArgumentNullException(nameof(client));
+            }
+            
+            if (money <= 0)
+            {
+                throw new ArgumentException("Сумма пополнения счета не может быть меньше или равно нулю");
+            }
+
+            client.Balance += money;
+        }
+        protected override void WriteOff(Client client, decimal money)
+        {
+            if (money < 0)
+            {
+                throw new ArgumentException("Сумма списания счета не может быть меньше нуля");
+            }
+            
+            client.Balance -= money;
+        }
+        protected override decimal CalculateCallPrice(double duration, BaseTariff tariff)
+        {
+            decimal price = 0;
+
+            if (duration <= 1)
+            {
+                price = tariff.PricePerMinuteCall;
+            }
+            else
+            {
+                price = Convert.ToDecimal(duration) * tariff.PricePerMinuteCall;
+            }
+
+            return price;
+        }
         private void OnTerminalCall(object sender, CallArgs e)
         {
             var sourceClient = Company.GetClientByPhoneNumber(e.FromNumber);
-            var callCostInOneMinute = CalculateCallCost(DataConstants.OneMinute, sourceClient.Contract.Tariff);
+            var callCostInOneMinute = CalculateCallPrice(DataConstants.OneMinute, sourceClient.Contract.Tariff);
 
             if (sourceClient.Balance < callCostInOneMinute)
             {
@@ -40,7 +83,6 @@ namespace ATE.Entities.Billings
                 OnCallAllowedEvent(sender, e);
             }
         }
-        
         private void OnCallEnded(object sender, CallArgs e)
         {
             var call = new Call()
@@ -56,45 +98,8 @@ namespace ATE.Entities.Billings
 
             Calls.Add(call);
 
-            decimal callCost = CalculateCallCost(call.DurationInMinutes, sourceClient.Contract.Tariff);
+            decimal callCost = CalculateCallPrice(call.DurationInMinutes, sourceClient.Contract.Tariff);
             WriteOff(sourceClient, callCost);
-        }
-        
-        public override IEnumerable<Call> GetClientCalls(Client client)
-        {
-            string clientPhoneNumber = client.PhoneNumber;
-
-            return Calls.Where(c => c.FromNumber == clientPhoneNumber || c.TargetNumber == clientPhoneNumber);
-        }
-
-        public override void Deposit(Client client, decimal money)
-        {
-            if (client == null)
-            {
-                throw new ArgumentNullException(nameof(client));
-            }
-            
-            if (money <= 0)
-            {
-                throw new ArgumentException("Сумма пополнения счета не может быть меньше или равно нулю");
-            }
-
-            client.Balance += money;
-        }
-
-        protected override void WriteOff(Client client, decimal money)
-        {
-            if (money < 0)
-            {
-                throw new ArgumentException("Сумма списания счета не может быть меньше нуля");
-            }
-            
-            client.Balance -= money;
-        }
-
-        protected override decimal CalculateCallCost(double duration, BaseTariff tariff)
-        {
-            return Convert.ToDecimal(duration) * tariff.PricePerMinuteCall;
         }
     }
 }

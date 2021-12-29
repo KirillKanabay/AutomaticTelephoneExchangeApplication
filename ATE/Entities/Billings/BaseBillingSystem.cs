@@ -17,7 +17,7 @@ namespace ATE.Entities.Billings
         public abstract IEnumerable<Call> GetClientCalls(Client client);
         public abstract void Deposit(Client client, decimal money);
         protected abstract void WriteOff(Client client, decimal money);
-        protected abstract decimal CalculateCallCost(double duration, BaseTariff tariff);
+        protected abstract decimal CalculateCallPrice(double duration, BaseTariff tariff);
 
         protected virtual void OnCallAllowedEvent(object sender, CallArgs e)
         {

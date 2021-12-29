@@ -59,20 +59,20 @@ namespace ATE
             {
                 terminal2.EndCall();
             }
-            
-            terminal2.Call(client1.PhoneNumber);
 
+            terminal2.Call(client1.PhoneNumber);
+            
             if (terminal2.CurrentCall != null)
             {
                 terminal1.EndCall();
             }
 
-            var callPresenter = new CallPresenter(new CallReporter(company.BillingSystem, subscriber1.BillingAccount));
-            
-            presenter1.Present();
-            Console.WriteLine(new string('=', 80));
-            presenter2.Present();
-            
+            // var callPresenter = new CallPresenter(new CallReporter(company.BillingSystem, subscriber1.BillingAccount));
+            //
+            // presenter1.Present();
+            // Console.WriteLine(new string('=', 80));
+            // presenter2.Present();
+            //
         }
     }
 }
