@@ -6,7 +6,6 @@ using ATE.Constants;
 using ATE.Entities.ATE;
 using ATE.Entities.Company;
 using ATE.Entities.Company.Tariff;
-using ATE.Enums;
 
 namespace ATE.Entities.Billings
 {

@@ -17,6 +17,7 @@ namespace ATE.Entities.Terminal
         public event EventHandler<CallArgs> IncomingRejectedCallEvent;
         public event EventHandler<CallArgs> OutgoingRejectedCallEvent;
         public event EventHandler<CallArgs> OutgoingCallAcceptedEvent;
+        public event EventHandler<CallCanceledArgs> CallCanceledEvent;
         
         public Call CurrentCall { get; set; }
         public BasePort CurrentPort { get; set; }
@@ -28,6 +29,7 @@ namespace ATE.Entities.Terminal
         public abstract void HandleOutgoingAcceptedCall(object sender, CallArgs e);
         public abstract void HandleOutgoingRejectedCall(object sender, CallArgs e);
         public abstract void HandleEndCall(object sender, CallArgs e);
+        public abstract void HandleCanceledCall(object sender, CallCanceledArgs e);
         public abstract void AcceptCall();
         public abstract void RejectCall();
         public abstract void EndCall();
@@ -64,6 +66,10 @@ namespace ATE.Entities.Terminal
         protected virtual void RaiseCallEndedEvent(object sender, CallArgs e)
         {
             CallEndedEvent?.Invoke(this, e);
+        }
+        protected virtual void OnCallCanceledEvent(object sender, CallCanceledArgs e)
+        {
+            CallCanceledEvent?.Invoke(sender, e);
         }
     }
 }

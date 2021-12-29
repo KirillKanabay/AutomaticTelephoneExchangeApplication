@@ -3,6 +3,7 @@ using ATE.Args;
 using ATE.Entities.Billings;
 using ATE.Entities.Port;
 using ATE.Entities.Terminal;
+using ATE.Enums;
 
 namespace ATE.Entities.ATE
 {
@@ -38,12 +39,10 @@ namespace ATE.Entities.ATE
             billingSystem.CallAllowedEvent += OnCallAllowed;
             billingSystem.CallCanceledEvent += OnCallCanceled;
         }
-
         public override void OnTerminalStartingCall(object sender, CallArgs e)
         {
             OnCallStartedEvent(sender, e);
         }
-
         public override void OnTerminalAcceptingCall(object sender, CallArgs e)
         {
             var port = _portController.GetByPhoneNumber(e?.Call?.FromNumber);
@@ -59,7 +58,7 @@ namespace ATE.Entities.ATE
         }
         public override void OnTerminalEndingCall(object sender, CallArgs e)
         {
-            if (sender is BaseTerminal terminal)
+            if (sender is BaseTerminal terminal && e?.Call?.Status == CallStatus.Accepted)
             {
                 BasePort port = null;
 
@@ -72,7 +71,11 @@ namespace ATE.Entities.ATE
                     port = _portController.GetByPhoneNumber(e?.Call?.FromNumber);
                 }
 
+                e?.Call?.End();
+
                 port.HandleEndedCall(sender, e);
+
+                OnCallEndedEvent(sender, e);
             }
         }
         public override void OnCallAllowed(object sender, CallArgs e)
@@ -90,78 +93,8 @@ namespace ATE.Entities.ATE
         {
             var port = _portController.GetByPhoneNumber(e?.SourcePhoneNumber);
 
-            
+            port.HandleCanceledCall(sender, e);
         }
 
-        //
-        // public void SubscribeToTerminal(ITerminalObserver terminal)
-        // {
-        //     terminal.CallEvent += OnTerminalCall;
-        //     terminal.CallEndedEvent += OnTerminalCallEnded;
-        //     terminal.CallRejectedEvent += OnTerminalRejectedCall;
-        //     terminal.DisconnectedEvent += OnTerminalDisconnected;
-        // }
-        //
-        // public void UnsubscribeFromTerminal(ITerminalObserver terminal)
-        // {
-        //     terminal.CallEvent -= OnTerminalCall;
-        //     terminal.CallEndedEvent -= OnTerminalCallEnded;
-        //     terminal.CallRejectedEvent -= OnTerminalRejectedCall;
-        //     terminal.DisconnectedEvent -= OnTerminalDisconnected;
-        // }
-        //
-        // private void OnTerminalDisconnected(object sender, TerminalArgs e)
-        // {
-        //     UnsubscribeFromTerminal(e.Terminal);
-        // }
-        //
-        // private void OnTerminalCall(object sender, CallArgs e)
-        // {
-        //     BasePort targetPort = _portController.GetByPhoneNumber(e.TargetNumber);
-        //
-        //     if (targetPort == null)
-        //     {
-        //         throw new Exception("Неправильно набран номер");
-        //     }
-        //
-        //     if (targetPort.Status == PortStatus.InCall)
-        //     {
-        //         throw new Exception("Абонент занят. Перезвоните позже.");
-        //     }
-        //     
-        //     targetPort.HandleIncomingCall();
-        // }
-        //
-        // private void OnTerminalRejectedCall(object sender, CallArgs e)
-        // {
-        //     IPort targetPort = Port.Port.FindByPhoneNumber(Ports, e.TargetNumber);
-        //     IPort fromPort = Port.Port.FindByPhoneNumber(Ports, e.FromNumber);
-        //     
-        //     if (fromPort?.Status == PortStatus.InCall)
-        //     {
-        //         fromPort?.Terminal.RejectCall();
-        //     }
-        //     
-        //     if (targetPort?.Status == PortStatus.InCall)
-        //     {
-        //         targetPort?.Terminal.RejectCall();
-        //     }
-        // }
-        //
-        // private void OnTerminalCallEnded(object sender, CallArgs e)
-        // {
-        //     IPort targetPort = Port.Port.FindByPhoneNumber(Ports, e.TargetNumber);
-        //     IPort fromPort = Port.Port.FindByPhoneNumber(Ports, e.FromNumber);
-        //     
-        //     if (fromPort?.Status == PortStatus.InCall)
-        //     {
-        //         fromPort?.Terminal.EndCall();
-        //     }
-        //     
-        //     if (targetPort?.Status == PortStatus.InCall)
-        //     {
-        //         targetPort?.Terminal.EndCall();
-        //     }
-        // }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using ATE.Abstractions.Factories;
 using ATE.Entities.Company;
 using ATE.Entities.Terminal;
@@ -24,13 +25,11 @@ namespace ATE
                 FirstName = "Kirill", 
                 LastName = "Kanabay"
             };
-
             User user2 = new User()
             {
                 FirstName = "Ivan",
                 LastName = "Ivanov"
             };
-
 
             BaseCompany company = _companyFactory.CreateCompany();
 
@@ -47,6 +46,9 @@ namespace ATE
 
             company.AddStation(station);
 
+            company.BillingSystem.Deposit(client1, 5.0m);
+            company.BillingSystem.Deposit(client2, 5.0m);
+
             terminal1.ConnectToStation(station);
             terminal2.ConnectToStation(station);
 
@@ -57,8 +59,7 @@ namespace ATE
                 Thread.Sleep(5000);
                 terminal2.EndCall();
             }
-
-
+            
             //
             // Subscriber subscriber1 = company.Subscribe(new SubscriberFactory(user1));
             // Subscriber subscriber2 = company.Subscribe(new SubscriberFactory(user2));

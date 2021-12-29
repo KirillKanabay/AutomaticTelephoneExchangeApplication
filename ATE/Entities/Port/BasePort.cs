@@ -8,14 +8,14 @@ namespace ATE.Entities.Port
 {
     public abstract class BasePort
     {
-        public EventHandler<CallArgs> OutgoingCallEvent;
-        public EventHandler<CallArgs> IncomingCallEvent;
-        public EventHandler<CallArgs> EndingCallEvent;
-        public EventHandler<CallArgs> IncomingRejectedCallEvent;
-        public EventHandler<CallArgs> OutgoingRejectedCallEvent;
-        public EventHandler<CallArgs> AcceptedIncomingCallEvent;
-        public EventHandler<CallArgs> AcceptedOutgoingCallEvent;
-        public EventHandler<CallArgs> EndedCallEvent;
+        public event EventHandler<CallArgs> OutgoingCallEvent;
+        public event EventHandler<CallArgs> IncomingCallEvent;
+        public event EventHandler<CallArgs> IncomingRejectedCallEvent;
+        public event EventHandler<CallArgs> OutgoingRejectedCallEvent;
+        public event EventHandler<CallArgs> AcceptedIncomingCallEvent;
+        public event EventHandler<CallArgs> AcceptedOutgoingCallEvent;
+        public event EventHandler<CallArgs> EndedCallEvent;
+        public event EventHandler<CallCanceledArgs> CallCanceledEvent;
 
         public int Id { get; protected set; }
         public PortStatus Status { get; protected set; }
@@ -36,7 +36,8 @@ namespace ATE.Entities.Port
         public abstract void HandleIncomingRejectedCall(object sender, CallArgs e);
         public abstract void HandleOutgoingRejectedCall(object sender, CallArgs e);
         public abstract void HandleEndedCall(object sender, CallArgs e);
-        
+        public abstract void HandleCanceledCall(object sender, CallCanceledArgs e);
+
         protected virtual void RaiseIncomingCall(object sender, CallArgs e)
         {
             IncomingCallEvent?.Invoke(sender, e);
@@ -64,11 +65,19 @@ namespace ATE.Entities.Port
         }
         protected virtual void RaiseEndedCall(object sender, CallArgs e)
         {
-            EndingCallEvent?.Invoke(sender, e);
+            if (Status == PortStatus.InCall)
+            {
+                Status = PortStatus.Connected;
+                EndedCallEvent?.Invoke(sender, e);
+            }
         }
         protected virtual void RaiseRejectedCall(object sender, CallArgs e)
         {
             IncomingRejectedCallEvent?.Invoke(sender, e);
+        }
+        protected virtual void OnCallCanceledEvent(object sender, CallCanceledArgs e)
+        {
+            CallCanceledEvent?.Invoke(sender, e);
         }
     }
 }

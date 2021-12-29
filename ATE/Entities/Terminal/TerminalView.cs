@@ -1,7 +1,6 @@
 ﻿using System;
 using ATE.Args;
 using ATE.Helpers;
-using ATE.Interfaces.ATE;
 
 namespace ATE.Entities.Terminal
 {
@@ -24,6 +23,7 @@ namespace ATE.Entities.Terminal
             _terminal.IncomingRejectedCallEvent += OnCallRejected;
             _terminal.CallEndedEvent += OnCallEnded;
             _terminal.DisconnectedEvent += OnTerminalDisconnected;
+            _terminal.CallCanceledEvent += OnCallCanceled;
         }
 
         public void UnsubscribeFromTerminal()
@@ -42,7 +42,6 @@ namespace ATE.Entities.Terminal
             ConsoleEx.WriteLineWithColor($"[{_terminal.Number}]: Происходит вызов номера: {e?.Call?.TargetNumber}",
                 ConsoleColor.Green);
         }
-
         protected virtual void OnIncomingCall(object sender, CallArgs e)
         {
             ConsoleEx.WriteLineWithColor($"[{_terminal.Number}]: Входящий вызов от {e?.Call?.FromNumber}",
@@ -56,13 +55,11 @@ namespace ATE.Entities.Terminal
                 _terminal.RejectCall();
             }
         }
-
         protected virtual void OnCallAccepted(object sender, CallArgs e)
         {
             ConsoleEx.WriteLineWithColor($"[{_terminal.Number}] Звонок от {e?.Call?.FromNumber} был принят",
                 ConsoleColor.Green);
         }
-
         protected virtual void OnCallRejected(object sender, CallArgs e)
         {
             if (_terminal.Number == e?.Call?.TargetNumber)
@@ -76,21 +73,35 @@ namespace ATE.Entities.Terminal
                     ConsoleColor.Red);
             }
         }
-
         protected virtual void OnCallEnded(object sender, CallArgs e)
         {
-            ConsoleEx.WriteLineWithColor($"[{_terminal.Number}] Звонок с {e?.Call?.TargetNumber} был завершен",
+            var targetNumber = String.Empty;
+
+            if (_terminal.Number == e?.Call?.FromNumber)
+            {
+                targetNumber = e?.Call?.TargetNumber;
+            }
+            else
+            {
+                targetNumber = e?.Call?.FromNumber;
+            }
+
+
+            ConsoleEx.WriteLineWithColor($"[{_terminal.Number}] Звонок с {targetNumber} был завершен",
                 ConsoleColor.DarkGreen);
         }
-
         protected virtual void OnTerminalConnected(object sender, TerminalArgs e)
         {
             ConsoleEx.WriteLineWithColor($"[{_terminal.Number}] Был подключен к АТС", ConsoleColor.DarkMagenta);
         }
-
         protected virtual void OnTerminalDisconnected(object sender, TerminalArgs e)
         {
             ConsoleEx.WriteLineWithColor($"[{_terminal.Number}] отключен от станции АТС", ConsoleColor.DarkMagenta);
+        }
+
+        protected virtual void OnCallCanceled(object sender, CallCanceledArgs e)
+        {
+            ConsoleEx.WriteLineError($"[{_terminal.Number}] Call error: {e.Message}");
         }
     }
 }
