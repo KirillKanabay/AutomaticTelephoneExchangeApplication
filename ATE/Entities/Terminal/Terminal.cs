@@ -3,6 +3,7 @@ using ATE.Args;
 using ATE.Entities.ATE;
 using ATE.Entities.Port;
 using ATE.Enums;
+using ATE.Mapper;
 
 namespace ATE.Entities.Terminal
 {
@@ -18,27 +19,34 @@ namespace ATE.Entities.Terminal
         }
         public override void Call(string targetNumber)
         {
-            RaiseStartCallEvent(this, new CallArgs(new Call(Number, targetNumber)));
+            var callArgs = new CallArgs()
+            {
+                Date = DateTime.Now,
+                FromNumber = Number,
+                TargetNumber = targetNumber
+            };
+
+            RaiseStartCallEvent(this, callArgs);
         }
         public override void HandleIncomingCall(object sender, CallArgs e)
         {
-            if (e?.Call?.Status == CallStatus.Await)
+            if (e.Status == CallStatus.Await)
             {
-                CurrentCall = e.Call;
+                CurrentCall = CallMapper.MapToCall(e);
                 RaiseIncomingCallEvent(this, e);
             }
         }
         public override void HandleOutgoingAcceptedCall(object sender, CallArgs e)
         {
-            if (e?.Call?.Status == CallStatus.Accepted)
+            if (e.Status == CallStatus.Accepted)
             {
-                CurrentCall = e.Call;
+                CurrentCall = CallMapper.MapToCall(e);
                 RaiseOutgoingCallAcceptedEvent(this, e);
             }
         }
         public override void HandleOutgoingRejectedCall(object sender, CallArgs e)
         {
-            if (e?.Call?.Status == CallStatus.Rejected)
+            if (e.Status == CallStatus.Rejected)
             {
                 CurrentCall = null;
                 RaiseOutgoingRejectedCallEvent(sender, e);
@@ -46,10 +54,10 @@ namespace ATE.Entities.Terminal
         }
         public override void HandleEndCall(object sender, CallArgs e)
         {
-            if (CurrentCall is { Status: CallStatus.Ended})
+            if (e.Status == CallStatus.Ended && CurrentCall != null)
             {
-                RaiseCallEndedEvent(this, new CallArgs(CurrentCall));
                 CurrentCall = null;
+                RaiseCallEndedEvent(sender, e);
             }
         }
         public override void HandleCanceledCall(object sender, CallCanceledArgs e)
@@ -62,7 +70,8 @@ namespace ATE.Entities.Terminal
             if (CurrentCall is {Status: CallStatus.Await})
             {
                 CurrentCall.Accept();
-                RaiseCallAcceptedEvent(this, new CallArgs(CurrentCall));
+
+                RaiseCallAcceptedEvent(this, CallMapper.MapToArgs(CurrentCall));
             }
         }
         public override void RejectCall()
@@ -70,18 +79,22 @@ namespace ATE.Entities.Terminal
             if (CurrentCall.Status == CallStatus.Await)
             {
                 CurrentCall.Reject();
-                RaiseIncomingRejectedCallEvent(this, new CallArgs(CurrentCall));
+                var args = CallMapper.MapToArgs(CurrentCall);
+
+                CurrentCall = null;
+
+                RaiseIncomingRejectedCallEvent(this, args);
             }
         }
         public override void EndCall()
         {
             if (CurrentCall is {Status: CallStatus.Accepted})
             {
-                var tempCall = CurrentCall;
+                var args = CallMapper.MapToArgs(CurrentCall);
                 
                 CurrentCall = null;
                 
-                RaiseCallEndedEvent(this, new CallArgs(tempCall));
+                RaiseCallEndedEvent(this, args);
             }
         }
 

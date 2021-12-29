@@ -5,25 +5,16 @@ namespace ATE.Entities.ATE
 {
     public class Call
     {
-        public string FromNumber { get; }
-        public string TargetNumber { get; }
-        public CallStatus Status { get; private set; }
+        public string FromNumber { get; set; }
+        public string TargetNumber { get; set; }
+        public CallStatus Status { get; set; }
         
-        public DateTime Date { get; }
-        public DateTime? StartDate { get; private set; }
-        public DateTime? EndDate { get; private set; }
+        public DateTime Date { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
 
         public double DurationInMinutes => (EndDate - StartDate)?.TotalMinutes ?? 0;
         
-        public Call(string fromNumber, string targetNumber)
-        {
-            FromNumber = fromNumber;
-            TargetNumber = targetNumber;
-
-            Status = CallStatus.Await;
-            Date = DateTime.Now;
-        }
-
         public void Accept()
         {
             Status = CallStatus.Accepted;

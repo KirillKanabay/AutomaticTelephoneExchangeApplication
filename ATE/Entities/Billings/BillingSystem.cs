@@ -24,7 +24,7 @@ namespace ATE.Entities.Billings
         
         private void OnTerminalCall(object sender, CallArgs e)
         {
-            var sourceClient = Company.GetClientByPhoneNumber(e?.Call?.FromNumber);
+            var sourceClient = Company.GetClientByPhoneNumber(e.FromNumber);
             var callCostInOneMinute = CalculateCallCost(DataConstants.OneMinute, sourceClient.Contract.Tariff);
 
             if (sourceClient.Balance < callCostInOneMinute)
@@ -43,10 +43,18 @@ namespace ATE.Entities.Billings
         
         private void OnCallEnded(object sender, CallArgs e)
         {
-            var call = e.Call;
+            var call = new Call()
+            {
+                FromNumber = e.FromNumber,
+                TargetNumber = e.TargetNumber,
+                Date = e.Date,
+                StartDate = e.StartDate,
+                EndDate = e.EndDate,
+            };
+
             var sourceClient = Company.GetClientByPhoneNumber(call.FromNumber);
 
-            Calls.Add(e.Call);
+            Calls.Add(call);
 
             decimal callCost = CalculateCallCost(call.DurationInMinutes, sourceClient.Contract.Tariff);
             WriteOff(sourceClient, callCost);

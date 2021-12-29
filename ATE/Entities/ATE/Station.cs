@@ -45,12 +45,12 @@ namespace ATE.Entities.ATE
         }
         public override void OnTerminalAcceptingCall(object sender, CallArgs e)
         {
-            var port = _portController.GetByPhoneNumber(e?.Call?.FromNumber);
+            var port = _portController.GetByPhoneNumber(e.FromNumber);
             port.HandleOutgoingAcceptedCall(this, e);
         }
         public override void OnTerminalRejectingCall(object sender, CallArgs e)
         {
-            var port = _portController.GetByPhoneNumber(e?.Call?.FromNumber);
+            var port = _portController.GetByPhoneNumber(e.FromNumber);
             if (port != null)
             {
                 port.HandleOutgoingAcceptedCall(sender, e);
@@ -58,20 +58,20 @@ namespace ATE.Entities.ATE
         }
         public override void OnTerminalEndingCall(object sender, CallArgs e)
         {
-            if (sender is BaseTerminal terminal && e?.Call?.Status == CallStatus.Accepted)
+            if (sender is BaseTerminal terminal && e.Status == CallStatus.Accepted)
             {
                 BasePort port = null;
 
-                if (terminal.Number == e?.Call?.FromNumber)
+                if (terminal.Number == e.FromNumber)
                 {
-                    port = _portController.GetByPhoneNumber(e?.Call?.TargetNumber);
+                    port = _portController.GetByPhoneNumber(e.TargetNumber);
                 }
                 else
                 {
-                    port = _portController.GetByPhoneNumber(e?.Call?.FromNumber);
+                    port = _portController.GetByPhoneNumber(e.FromNumber);
                 }
 
-                e?.Call?.End();
+                e.Status = CallStatus.Ended;
 
                 port.HandleEndedCall(sender, e);
 
@@ -80,7 +80,7 @@ namespace ATE.Entities.ATE
         }
         public override void OnCallAllowed(object sender, CallArgs e)
         {
-            var port = _portController.GetByPhoneNumber(e.Call?.TargetNumber);
+            var port = _portController.GetByPhoneNumber(e.TargetNumber);
             if (port == null)
             {
                 throw new ArgumentException("Неправильно набран номер");

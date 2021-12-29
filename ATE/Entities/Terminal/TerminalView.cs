@@ -39,12 +39,12 @@ namespace ATE.Entities.Terminal
 
         protected virtual void OnCall(object sender, CallArgs e)
         {
-            ConsoleEx.WriteLineWithColor($"[{_terminal.Number}]: Происходит вызов номера: {e?.Call?.TargetNumber}",
+            ConsoleEx.WriteLineWithColor($"[{_terminal.Number}]: Происходит вызов номера: {e.TargetNumber}",
                 ConsoleColor.Green);
         }
         protected virtual void OnIncomingCall(object sender, CallArgs e)
         {
-            ConsoleEx.WriteLineWithColor($"[{_terminal.Number}]: Входящий вызов от {e?.Call?.FromNumber}",
+            ConsoleEx.WriteLineWithColor($"[{_terminal.Number}]: Входящий вызов от {e.FromNumber}",
                 ConsoleColor.Green);
             if (ConsoleEx.CheckContinue("Принять вызов?([Y]es/[N]o):"))
             {
@@ -57,19 +57,19 @@ namespace ATE.Entities.Terminal
         }
         protected virtual void OnCallAccepted(object sender, CallArgs e)
         {
-            ConsoleEx.WriteLineWithColor($"[{_terminal.Number}] Звонок от {e?.Call?.FromNumber} был принят",
+            ConsoleEx.WriteLineWithColor($"[{_terminal.Number}] Звонок от {e.FromNumber} был принят",
                 ConsoleColor.Green);
         }
         protected virtual void OnCallRejected(object sender, CallArgs e)
         {
-            if (_terminal.Number == e?.Call?.TargetNumber)
+            if (_terminal.Number == e.TargetNumber)
             {
-                ConsoleEx.WriteLineWithColor($"[{_terminal.Number}] Звонок с {e?.Call?.FromNumber} был отклонен",
+                ConsoleEx.WriteLineWithColor($"[{_terminal.Number}] Звонок с {e.FromNumber} был отклонен",
                     ConsoleColor.Red);
             }
             else
             {
-                ConsoleEx.WriteLineWithColor($"[{_terminal.Number}] Звонок с {e?.Call?.TargetNumber} был отклонен",
+                ConsoleEx.WriteLineWithColor($"[{_terminal.Number}] Звонок с {e.TargetNumber} был отклонен",
                     ConsoleColor.Red);
             }
         }
@@ -77,13 +77,13 @@ namespace ATE.Entities.Terminal
         {
             var targetNumber = String.Empty;
 
-            if (_terminal.Number == e?.Call?.FromNumber)
+            if (_terminal.Number == e.FromNumber)
             {
-                targetNumber = e?.Call?.TargetNumber;
+                targetNumber = e.TargetNumber;
             }
             else
             {
-                targetNumber = e?.Call?.FromNumber;
+                targetNumber = e.FromNumber;
             }
 
 
