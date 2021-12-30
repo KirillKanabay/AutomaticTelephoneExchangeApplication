@@ -97,8 +97,7 @@ namespace ATE.Entities.Terminal
                 RaiseCallEndedEvent(this, args);
             }
         }
-
-        private void ConnectToPort(BasePort port)
+        protected override void ConnectToPort(BasePort port)
         {
             CurrentPort = port;
 

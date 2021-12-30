@@ -34,7 +34,7 @@ namespace ATE.Entities.Terminal
         public abstract void AcceptCall();
         public abstract void RejectCall();
         public abstract void EndCall();
-
+        protected abstract void ConnectToPort(BasePort port);
         protected virtual void RaiseStartCallEvent(object sender, CallArgs e)
         {
             OutgoingCallEvent?.Invoke(sender, e);
