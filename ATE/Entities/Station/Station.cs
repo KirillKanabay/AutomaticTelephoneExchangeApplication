@@ -33,7 +33,6 @@ namespace ATE.Entities.Station
             }
             return port;
         }
-
         public override void SubscribeToBillingSystem(BaseBillingSystem billingSystem)
         {
             billingSystem.CallAllowedEvent += OnCallAllowed;
@@ -49,6 +48,17 @@ namespace ATE.Entities.Station
                 {
                     Message = "Wrong number",
                     SourcePhoneNumber = e.SourceNumber
+                });
+
+                return;
+            }
+
+            if (port.Status == PortStatus.InCall || port.Status == PortStatus.AwaitConfirmCall)
+            {
+                OnCallCanceled(this, new CallCanceledArgs()
+                {
+                    Message = "Terminal is busy",
+                    SourcePhoneNumber = e.SourceNumber,
                 });
 
                 return;

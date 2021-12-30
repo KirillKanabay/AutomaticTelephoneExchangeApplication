@@ -57,11 +57,11 @@ namespace ATE
             terminal1.ConnectToStation(station);
             terminal2.ConnectToStation(station);
 
-            terminal1.Call(client2.PhoneNumber);
+            terminal1.Call(client1.PhoneNumber);
 
-            if (terminal2.CurrentCall != null)
+            if (terminal1.CurrentCall != null)
             {
-                terminal2.EndCall();
+                terminal1.EndCall();
             }
             
             _callPresenter.Present(company.BillingSystem, client1);
