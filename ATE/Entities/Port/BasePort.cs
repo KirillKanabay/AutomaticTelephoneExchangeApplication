@@ -50,19 +50,11 @@ namespace ATE.Entities.Port
         }
         protected virtual void OnRejectedCallEvent(object sender, CallArgs e)
         {
-            if (Status == PortStatus.InCall)
-            {
-                Status = PortStatus.Connected;
-                CallRejectedEvent?.Invoke(sender, e);
-            }
+            CallRejectedEvent?.Invoke(sender, e);
         }
         protected virtual void OnEndedCallEvent(object sender, CallArgs e)
         {
-            if (Status == PortStatus.InCall)
-            {
-                Status = PortStatus.Connected;
-                CallEndedEvent?.Invoke(sender, e);
-            }
+            CallEndedEvent?.Invoke(sender, e);
         }
         protected virtual void OnCallCanceledEvent(object sender, CallCanceledArgs e)
         {
