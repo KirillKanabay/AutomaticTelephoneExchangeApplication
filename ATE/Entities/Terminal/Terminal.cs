@@ -46,10 +46,10 @@ namespace ATE.Entities.Terminal
         }
         public override void HandleRejectedCall(object sender, CallArgs e)
         {
-            if (e.Status == CallStatus.Rejected && CurrentCall != null)
+            if (e.Status == CallStatus.Rejected)
             {
-                CurrentCall = null;
                 OnRejectedCallEvent(sender, e);
+                CurrentCall = null;
             }
         }
         public override void HandleEndedCall(object sender, CallArgs e)
@@ -77,12 +77,8 @@ namespace ATE.Entities.Terminal
         {
             if (CurrentCall.Status == CallStatus.Await)
             {
-                CurrentCall.Reject();
-                var args = CallMapper.MapToArgs(CurrentCall);
-
+                OnRejectedCallEvent(this, CallMapper.MapToArgs(CurrentCall));
                 CurrentCall = null;
-
-                OnRejectedCallEvent(this, args);
             }
         }
         public override void EndCall()

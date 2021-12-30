@@ -63,9 +63,7 @@ namespace ATE.Entities.Station
                 StartDate = e.StartDate,
                 Status = CallStatus.Await,
             };
-
-            port.HandleIncomingCall(sender, args);
-
+            
             OnCallStartedEvent(sender, args);
         }
         public override void OnTerminalAcceptedCall(object sender, CallArgs e)
@@ -98,29 +96,32 @@ namespace ATE.Entities.Station
         }
         public override void OnTerminalRejectedCall(object sender, CallArgs e)
         {
-            var targetPort = _portController.GetByPhoneNumber(e.SourceNumber);
-
-            if (targetPort == null)
+            if (e.Status == CallStatus.Await)
             {
-                OnCallCanceled(this, new CallCanceledArgs()
+                var targetPort = _portController.GetByPhoneNumber(e.SourceNumber);
+
+                if (targetPort == null)
                 {
-                    Message = "Can't reject call",
-                    SourcePhoneNumber = e.TargetNumber
+                    OnCallCanceled(this, new CallCanceledArgs()
+                    {
+                        Message = "Can't reject call",
+                        SourcePhoneNumber = e.TargetNumber
+                    });
+
+                    return;
+                }
+
+
+                targetPort.HandleRejectedCall(this, new CallArgs()
+                {
+                    Date = e.Date,
+                    EndDate = e.EndDate,
+                    SourceNumber = e.SourceNumber,
+                    TargetNumber = e.TargetNumber,
+                    StartDate = e.StartDate,
+                    Status = CallStatus.Rejected,
                 });
-
-                return;
             }
-
-
-            targetPort.HandleRejectedCall(this, new CallArgs()
-            {
-                Date = e.Date,
-                EndDate = e.EndDate,
-                SourceNumber = e.SourceNumber,
-                TargetNumber = e.TargetNumber,
-                StartDate = e.StartDate,
-                Status = CallStatus.Rejected,
-            });
         }
         public override void OnTerminalEndedCall(object sender, CallArgs e)
         {

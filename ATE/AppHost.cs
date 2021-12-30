@@ -51,7 +51,7 @@ namespace ATE
 
             company.AddStation(station);
 
-            company.BillingSystem.Deposit(client1, 5.0m);
+            company.BillingSystem.Deposit(client1, 0.5m);
             company.BillingSystem.Deposit(client2, 5.0m);
 
             terminal1.ConnectToStation(station);

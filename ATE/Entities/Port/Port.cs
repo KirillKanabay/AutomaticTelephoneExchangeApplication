@@ -34,6 +34,7 @@ namespace ATE.Entities.Port
         {
             OutgoingCallEvent += station.OnTerminalStartedCall;
             CallAcceptedEvent += station.OnTerminalAcceptedCall;
+            CallRejectedEvent += station.OnTerminalRejectedCall;
             CallEndedEvent += station.OnTerminalEndedCall;
 
             IsConnectedToStation = true;

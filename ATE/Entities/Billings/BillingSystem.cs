@@ -7,6 +7,7 @@ using ATE.Entities.ATE;
 using ATE.Entities.Calls;
 using ATE.Entities.Company.Tariff;
 using ATE.Entities.Users;
+using ATE.Enums;
 using ATE.Mapper;
 
 namespace ATE.Entities.Billings
@@ -71,6 +72,8 @@ namespace ATE.Entities.Billings
 
             if (sourceClient.Balance < callCostInOneMinute)
             {
+                e.Status = CallStatus.Cancelled;
+
                 OnCallCanceledEvent(this, new CallCanceledArgs()
                 {
                     Message = DataConstants.InsufficientFundsError,

@@ -6,5 +6,6 @@
         Accepted,
         Rejected,
         Ended,
+        Cancelled,
     }
 }
