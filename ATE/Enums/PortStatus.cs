@@ -4,6 +4,7 @@
     {
         Available,
         Connected,
+        AwaitConfirmCall,
         InCall,
     }
 }

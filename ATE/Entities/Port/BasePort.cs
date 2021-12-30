@@ -28,6 +28,7 @@ namespace ATE.Entities.Port
         public abstract void ConnectToTerminal(BaseTerminal terminal);
         public abstract void ConnectToStation(BaseStation station);
         public abstract void Disconnect(BaseTerminal terminal);
+
         public abstract void HandleIncomingCall(object sender, CallArgs e);
         public abstract void HandleOutgoingCall(object sender, CallArgs e);
         public abstract void HandleRejectedCall(object sender, CallArgs e);
@@ -41,7 +42,6 @@ namespace ATE.Entities.Port
         }
         protected virtual void OnOutgoingCallEvent(object sender, CallArgs e)
         {
-            Status = PortStatus.InCall;
             OutgoingCallEvent?.Invoke(sender, e);
         }
         protected virtual void OnAcceptedCallEvent(object sender, CallArgs e)
@@ -50,7 +50,11 @@ namespace ATE.Entities.Port
         }
         protected virtual void OnRejectedCallEvent(object sender, CallArgs e)
         {
-            IncomingRejectedCallEvent?.Invoke(sender, e);
+            if (Status == PortStatus.InCall)
+            {
+                Status = PortStatus.Connected;
+                CallRejectedEvent?.Invoke(sender, e);
+            }
         }
         protected virtual void OnEndedCallEvent(object sender, CallArgs e)
         {

@@ -14,7 +14,6 @@ namespace ATE.Entities.ATE
         {
             _portController = portController;
         }
-
         public override BasePort ConnectTerminal(BaseTerminal terminal)
         {
             var port = _portController.GetAvailablePort();
@@ -33,6 +32,7 @@ namespace ATE.Entities.ATE
             }
             return port;
         }
+
         public override void SubscribeToBillingSystem(BaseBillingSystem billingSystem)
         {
             billingSystem.CallAllowedEvent += OnCallAllowed;

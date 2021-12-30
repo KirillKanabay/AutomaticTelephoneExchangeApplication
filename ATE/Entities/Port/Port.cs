@@ -18,11 +18,10 @@ namespace ATE.Entities.Port
             {
                 CurrentTerminal = terminal;
 
-                CurrentTerminal.OutgoingCallEvent += OnOutgoingCall;
-                CurrentTerminal.CallEndedEvent += OnEndedCall;
-                CurrentTerminal.CallRejectedEvent += RaiseRejectedCall;
-                CurrentTerminal.CallAcceptedEvent += OnAcceptedCall;
-                CurrentTerminal.CallEndedEvent += OnEndedCall;
+                CurrentTerminal.OutgoingCallEvent += HandleOutgoingCall;
+                CurrentTerminal.CallEndedEvent += HandleEndedCall;
+                CurrentTerminal.CallRejectedEvent += HandleRejectedCall;
+                CurrentTerminal.CallAcceptedEvent += HandleAcceptedCall;
 
                 Status = PortStatus.Connected;
             }
@@ -34,9 +33,9 @@ namespace ATE.Entities.Port
         public override void ConnectToStation(BaseStation station)
         {
             OutgoingCallEvent += station.OnTerminalStartedCall;
-            CallAcceptedEvent += station.OnTerminalAcceptingCall;
-            IncomingRejectedCallEvent += station.OnTerminalRejectingCall;
-            CallEndedEvent += station.OnTerminalEndingCall;
+            CallAcceptedEvent += station.OnTerminalAcceptedCall;
+            IncomingCallEvent += station.OnTerminalRejectedCall;
+            CallEndedEvent += station.OnTerminalEndedCall;
 
             IsConnectedToStation = true;
         }
@@ -53,50 +52,50 @@ namespace ATE.Entities.Port
                 throw new ArgumentException("This terminal doesn't have connection with this port");
             }
         }
+
         public override void HandleIncomingCall(object sender, CallArgs e)
         {
             if (Status == PortStatus.Connected)
             {
-                Status = PortStatus.InCall;
-                RaiseIncomingCall(sender, e);
-            }
-        }
-        public override void HandleIncomingAcceptedCall(object sender, CallArgs e)
-        {
-            if (Status == PortStatus.InCall)
-            {
-                OnAcceptedCall(sender, e);
+                Status = PortStatus.AwaitConfirmCall;
+                OnIncomingCallEvent(sender, e);
             }
         }
         public override void HandleOutgoingCall(object sender, CallArgs e)
         {
-            if (Status == PortStatus.InCall)
+            if (Status == PortStatus.Connected)
             {
-                RaiseAcceptedOutgoingCall(sender, e);
+                Status = PortStatus.AwaitConfirmCall;
+                OnOutgoingCallEvent(sender, e);
             }
         }
         public override void HandleRejectedCall(object sender, CallArgs e)
         {
-            if (Status == PortStatus.InCall)
+            if (Status == PortStatus.AwaitConfirmCall)
             {
                 Status = PortStatus.Connected;
-                OnRejectedCall(sender, e);
+                OnRejectedCallEvent(sender, e);
             }
         }
-        public override void HandleOutgoingRejectedCall(object sender, CallArgs e)
+        public override void HandleAcceptedCall(object sender, CallArgs e)
         {
-            if (Status == PortStatus.InCall)
+            if (Status == PortStatus.AwaitConfirmCall)
             {
-                Status = PortStatus.Connected;
-                RaiseOutgoingRejectedCall(sender, e);
+                Status |= PortStatus.InCall;
+                OnAcceptedCallEvent(sender, e);
             }
         }
         public override void HandleEndedCall(object sender, CallArgs e)
         {
-            OnEndedCall(sender, e);
+            if (Status == PortStatus.InCall)
+            {
+                Status = PortStatus.Connected;
+                OnEndedCallEvent(sender, e);
+            }
         }
         public override void HandleCanceledCall(object sender, CallCanceledArgs e)
         {
+            Status = PortStatus.Connected;
             OnCallCanceledEvent(sender, e);
         }
     }
