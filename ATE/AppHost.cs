@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Threading;
 using ATE.Abstractions.Factories;
-using ATE.Entities.Billings;
+using ATE.Entities.Calls;
 using ATE.Entities.Company;
 using ATE.Entities.Terminal;
 using ATE.Entities.Users;
+using ATE.Enums;
 
 namespace ATE
 {
@@ -12,11 +12,15 @@ namespace ATE
     {
         private readonly AbstractCompanyFactory _companyFactory;
         private readonly AbstractStationFactory _stationFactory;
+        private readonly ICallPresenter _callPresenter;
+        
         public AppHost(AbstractCompanyFactory companyFactory, 
-            AbstractStationFactory stationFactory)
+            AbstractStationFactory stationFactory,
+            ICallPresenter callPresenter)
         {
             _companyFactory = companyFactory;
             _stationFactory = stationFactory;
+            _callPresenter = callPresenter;
         }
 
         public void Run()
@@ -67,12 +71,10 @@ namespace ATE
                 terminal1.EndCall();
             }
 
-            // var callPresenter = new CallPresenter(new CallReporter(company.BillingSystem, subscriber1.BillingAccount));
-            //
-            // presenter1.Present();
-            // Console.WriteLine(new string('=', 80));
-            // presenter2.Present();
-            //
+            
+            _callPresenter.Present(company.BillingSystem, client1);
+            Console.WriteLine(new string('=', 80));
+            _callPresenter.Present(company.BillingSystem, client2, CallSortType.Price);
         }
     }
 }

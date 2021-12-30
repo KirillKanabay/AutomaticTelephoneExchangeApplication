@@ -1,5 +1,8 @@
 ﻿using ATE.Args;
-using ATE.Entities.ATE;
+using ATE.Entities.Calls;
+using ATE.Entities.Company;
+using ATE.Entities.Users;
+using ATE.Enums;
 
 namespace ATE.Mapper
 {
@@ -29,6 +32,23 @@ namespace ATE.Mapper
                 Status = call.Status,
                 TargetNumber = call.TargetNumber
             };
+        }
+
+        public static CallInformation MapToCallInformation(CallArgs callArgs, Client client)
+        {
+            CallType callType = client.PhoneNumber == callArgs.FromNumber ? CallType.Outgoing : CallType.Incoming;
+
+            CallInformation callInformation = new CallInformation()
+            {
+                Client = client,
+                DestinationPhoneNumber = callType == CallType.Incoming ? callArgs.FromNumber : callArgs.TargetNumber,
+                Date = callArgs.Date,
+                StartDate = callArgs.StartDate,
+                EndDate = callArgs.EndDate,
+                Type = callType,
+            };
+
+            return callInformation;
         }
     }
 }

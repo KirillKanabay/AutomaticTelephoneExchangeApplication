@@ -1,9 +1,9 @@
 ﻿namespace ATE.Enums
 {
-    public enum CallSort
+    public enum CallSortType
     {
         Date,
+        Duration,
         Price,
-        Subscriber
     }
 }

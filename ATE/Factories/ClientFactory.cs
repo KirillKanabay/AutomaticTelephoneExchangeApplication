@@ -1,4 +1,5 @@
-﻿using ATE.Constants;
+﻿using System;
+using ATE.Constants;
 using ATE.Entities.Company;
 using ATE.Entities.Users;
 
@@ -22,6 +23,7 @@ namespace ATE.Factories
             
             return new Client()
             {
+                Id = Guid.NewGuid(),
                 User = user,
                 Balance = DataConstants.DefaultClientBalance,
                 Contract = contract,

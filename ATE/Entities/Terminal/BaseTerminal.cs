@@ -1,6 +1,7 @@
 ﻿using System;
 using ATE.Args;
 using ATE.Entities.ATE;
+using ATE.Entities.Calls;
 using ATE.Entities.Port;
 
 namespace ATE.Entities.Terminal

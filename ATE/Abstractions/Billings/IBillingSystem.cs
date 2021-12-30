@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using ATE.Entities.Billings;
+using ATE.Entities.Calls;
 
 namespace ATE.Core.Interfaces.Billings
 {

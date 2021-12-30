@@ -4,8 +4,10 @@ using System.Linq;
 using ATE.Args;
 using ATE.Constants;
 using ATE.Entities.ATE;
-using ATE.Entities.Company;
+using ATE.Entities.Calls;
 using ATE.Entities.Company.Tariff;
+using ATE.Entities.Users;
+using ATE.Mapper;
 
 namespace ATE.Entities.Billings
 {
@@ -13,19 +15,16 @@ namespace ATE.Entities.Billings
     {
         public BillingSystem()
         {
-            Calls = new List<Call>();
+            Calls = new List<CallInformation>();
         }
-        
         public override void SubscribeToStation(BaseStation station)
         {
             station.CallStartedEvent += OnTerminalCall;
             station.CallEndedEvent += OnCallEnded;
         }
-        public override IEnumerable<Call> GetClientCalls(Client client)
+        public override IEnumerable<CallInformation> GetClientCalls(Client client)
         {
-            string clientPhoneNumber = client.PhoneNumber;
-
-            return Calls.Where(c => c.FromNumber == clientPhoneNumber || c.TargetNumber == clientPhoneNumber);
+           return Calls.Where(c => c.Client.Equals(client));
         }
         public override void Deposit(Client client, decimal money)
         {
@@ -85,21 +84,23 @@ namespace ATE.Entities.Billings
         }
         private void OnCallEnded(object sender, CallArgs e)
         {
-            var call = new Call()
-            {
-                FromNumber = e.FromNumber,
-                TargetNumber = e.TargetNumber,
-                Date = e.Date,
-                StartDate = e.StartDate,
-                EndDate = e.EndDate,
-            };
+            HandleCall(e);
+        }
+        protected void HandleCall(CallArgs e)
+        {
+            var sourceClient = Company.GetClientByPhoneNumber(e.FromNumber);
+            var targetClient = Company.GetClientByPhoneNumber(e.TargetNumber);
 
-            var sourceClient = Company.GetClientByPhoneNumber(call.FromNumber);
+            var sourceClientCallInformation = CallMapper.MapToCallInformation(e, sourceClient);
+            var targetClientCallInformation = CallMapper.MapToCallInformation(e, targetClient);
+            
+            decimal sourceClientCallCost = CalculateCallPrice(sourceClientCallInformation.DurationInMinutes,
+                sourceClient.Contract.Tariff);
+            
+            sourceClientCallInformation.Price = sourceClientCallCost;
 
-            Calls.Add(call);
-
-            decimal callCost = CalculateCallPrice(call.DurationInMinutes, sourceClient.Contract.Tariff);
-            WriteOff(sourceClient, callCost);
+            Calls.Add(sourceClientCallInformation);
+            Calls.Add(targetClientCallInformation);
         }
     }
 }
