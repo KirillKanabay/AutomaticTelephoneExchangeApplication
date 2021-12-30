@@ -34,7 +34,6 @@ namespace ATE.Entities.Port
         {
             OutgoingCallEvent += station.OnTerminalStartedCall;
             CallAcceptedEvent += station.OnTerminalAcceptedCall;
-            IncomingCallEvent += station.OnTerminalRejectedCall;
             CallEndedEvent += station.OnTerminalEndedCall;
 
             IsConnectedToStation = true;
@@ -82,7 +81,7 @@ namespace ATE.Entities.Port
         {
             if (Status == PortStatus.AwaitConfirmCall)
             {
-                Status |= PortStatus.InCall;
+                Status = PortStatus.InCall;
                 OnAcceptedCallEvent(sender, e);
             }
         }

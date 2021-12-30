@@ -1,11 +1,12 @@
 ﻿using System;
 using ATE.Args;
+using ATE.Entities.ATE;
 using ATE.Entities.Billings;
 using ATE.Entities.Port;
 using ATE.Entities.Terminal;
 using ATE.Enums;
 
-namespace ATE.Entities.ATE
+namespace ATE.Entities.Station
 {
     public class Station: BaseStation
     {
@@ -53,32 +54,47 @@ namespace ATE.Entities.ATE
                 return;
             }
 
-            e.Status = CallStatus.Await;
-            e.Date = DateTime.Now;
+            var args = new CallArgs()
+            {
+                Date = DateTime.Now,
+                EndDate = e.EndDate,
+                SourceNumber = e.SourceNumber,
+                TargetNumber = e.TargetNumber,
+                StartDate = e.StartDate,
+                Status = CallStatus.Await,
+            };
 
-            port.HandleIncomingCall(sender, e);
+            port.HandleIncomingCall(sender, args);
 
-            OnCallStartedEvent(sender, e);
+            OnCallStartedEvent(sender, args);
         }
         public override void OnTerminalAcceptedCall(object sender, CallArgs e)
         {
-            var targetPort = _portController.GetByPhoneNumber(e.SourceNumber);
-
-            if (targetPort == null)
+            if (e.Status == CallStatus.Await)
             {
-                OnCallCanceled(this, new CallCanceledArgs()
+                var targetPort = _portController.GetByPhoneNumber(e.SourceNumber);
+
+                if (targetPort == null)
                 {
-                    Message = "Can't accept call",
-                    SourcePhoneNumber = e.TargetNumber
+                    OnCallCanceled(this, new CallCanceledArgs()
+                    {
+                        Message = "Can't accept call",
+                        SourcePhoneNumber = e.TargetNumber
+                    });
+
+                    return;
+                }
+
+                targetPort.HandleAcceptedCall(this, new CallArgs()
+                {
+                    Date = DateTime.Now,
+                    EndDate = e.EndDate,
+                    SourceNumber = e.SourceNumber,
+                    TargetNumber = e.TargetNumber,
+                    StartDate = e.StartDate,
+                    Status = CallStatus.Accepted,
                 });
-                
-                return;
             }
-
-            e.Status = CallStatus.Accepted;
-            e.StartDate = DateTime.Now;
-
-            targetPort.HandleAcceptedCall(this, e);
         }
         public override void OnTerminalRejectedCall(object sender, CallArgs e)
         {
@@ -95,9 +111,16 @@ namespace ATE.Entities.ATE
                 return;
             }
 
-            e.Status = CallStatus.Rejected;
 
-            targetPort.HandleRejectedCall(this, e);
+            targetPort.HandleRejectedCall(this, new CallArgs()
+            {
+                Date = e.Date,
+                EndDate = e.EndDate,
+                SourceNumber = e.SourceNumber,
+                TargetNumber = e.TargetNumber,
+                StartDate = e.StartDate,
+                Status = CallStatus.Rejected,
+            });
         }
         public override void OnTerminalEndedCall(object sender, CallArgs e)
         {
@@ -114,11 +137,19 @@ namespace ATE.Entities.ATE
                     port = _portController.GetByPhoneNumber(e.SourceNumber);
                 }
 
-                e.Status = CallStatus.Ended;
+                var args = new CallArgs()
+                {
+                    Date = e.Date,
+                    EndDate = DateTime.Now,
+                    SourceNumber = e.SourceNumber,
+                    TargetNumber = e.TargetNumber,
+                    StartDate = e.StartDate,
+                    Status = CallStatus.Ended,
+                };
 
-                port.HandleEndedCall(sender, e);
+                port.HandleEndedCall(sender, args);
 
-                OnCallEndedEvent(sender, e);
+                OnCallEndedEvent(sender, args);
             }
         }
         public override void OnCallAllowed(object sender, CallArgs e)

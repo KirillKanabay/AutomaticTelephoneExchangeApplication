@@ -62,8 +62,16 @@ namespace ATE.Entities.Terminal
         protected virtual void OnCallAccepted(object sender, CallArgs e)
         {
             WriteTerminalNumber();
-            ConsoleEx.WriteLineWithColor($"Call with {e.SourceNumber} accepted\n",
-                ConsoleColor.Green);
+            if (_terminal.Number == e.TargetNumber)
+            {
+                ConsoleEx.WriteLineWithColor($"Call with {e.SourceNumber} accepted\n",
+                    ConsoleColor.Green);
+            }
+            else
+            {
+                ConsoleEx.WriteLineWithColor($"Call with {e.TargetNumber} accepted\n",
+                    ConsoleColor.Green);
+            }
         }
         protected virtual void OnCallRejected(object sender, CallArgs e)
         {
@@ -105,7 +113,7 @@ namespace ATE.Entities.Terminal
 
         private void WriteTerminalNumber()
         {
-            ConsoleEx.WriteWithColor($"[{_terminal.Number}]:", ConsoleColor.White, ConsoleColor.Blue);
+            ConsoleEx.WriteWithColor($"[{_terminal.Number}]:", ConsoleColor.White, ConsoleColor.DarkBlue);
             Console.Write(" ");
         }
     }

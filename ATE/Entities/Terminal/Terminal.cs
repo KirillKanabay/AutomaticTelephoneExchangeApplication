@@ -41,7 +41,7 @@ namespace ATE.Entities.Terminal
             if (e.Status == CallStatus.Accepted)
             {
                 CurrentCall = CallMapper.MapToCall(e);
-                OnOutgoingCallAcceptedEvent(this, e);
+                OnCallAcceptedEvent(this, e);
             }
         }
         public override void HandleRejectedCall(object sender, CallArgs e)
@@ -49,7 +49,7 @@ namespace ATE.Entities.Terminal
             if (e.Status == CallStatus.Rejected && CurrentCall != null)
             {
                 CurrentCall = null;
-                OnOutgoingRejectedCallEvent(sender, e);
+                OnRejectedCallEvent(sender, e);
             }
         }
         public override void HandleEndedCall(object sender, CallArgs e)
@@ -69,8 +69,6 @@ namespace ATE.Entities.Terminal
         {
             if (CurrentCall is {Status: CallStatus.Await})
             {
-                CurrentCall.Accept();
-
                 OnCallAcceptedEvent(this, CallMapper.MapToArgs(CurrentCall));
             }
         }

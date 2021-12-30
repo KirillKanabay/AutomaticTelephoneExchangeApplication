@@ -63,14 +63,6 @@ namespace ATE
             {
                 terminal2.EndCall();
             }
-
-            terminal2.Call(client1.PhoneNumber);
-            
-            if (terminal2.CurrentCall != null)
-            {
-                terminal1.EndCall();
-            }
-
             
             _callPresenter.Present(company.BillingSystem, client1);
             Console.WriteLine(new string('=', 80));
