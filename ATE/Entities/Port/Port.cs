@@ -43,9 +43,10 @@ namespace ATE.Entities.Port
         {
             if (CurrentTerminal == terminal)
             {
-                terminal.OutgoingCallEvent -= OnOutgoingCall;
-                terminal.CallEndedEvent -= OnEndedCall;
-                terminal.CallRejectedEvent -= RaiseRejectedCall;
+                CurrentTerminal.OutgoingCallEvent -= HandleOutgoingCall;
+                CurrentTerminal.CallEndedEvent -= HandleEndedCall;
+                CurrentTerminal.CallRejectedEvent -= HandleRejectedCall;
+                CurrentTerminal.CallAcceptedEvent -= HandleAcceptedCall;
             }
             else
             {
