@@ -20,7 +20,7 @@ namespace ATE.Entities.Terminal
             _terminal.OutgoingCallEvent += OnCall;
             _terminal.IncomingCallEvent += OnIncomingCall;
             _terminal.CallAcceptedEvent += OnCallAccepted;
-            _terminal.IncomingRejectedCallEvent += OnCallRejected;
+            _terminal.CallRejectedEvent += OnCallRejected;
             _terminal.CallEndedEvent += OnCallEnded;
             _terminal.DisconnectedEvent += OnTerminalDisconnected;
             _terminal.CallCanceledEvent += OnCallCanceled;
@@ -32,7 +32,7 @@ namespace ATE.Entities.Terminal
             _terminal.OutgoingCallEvent -= OnCall;
             _terminal.IncomingCallEvent -= OnIncomingCall;
             _terminal.CallAcceptedEvent -= OnCallAccepted;
-            _terminal.IncomingRejectedCallEvent -= OnCallRejected;
+            _terminal.CallRejectedEvent -= OnCallRejected;
             _terminal.CallEndedEvent -= OnCallEnded;
             _terminal.DisconnectedEvent -= OnTerminalDisconnected;
         }
@@ -46,7 +46,7 @@ namespace ATE.Entities.Terminal
         protected virtual void OnIncomingCall(object sender, CallArgs e)
         {
             WriteTerminalNumber();
-            ConsoleEx.WriteLineWithColor($"Incoming call from {e.FromNumber}\n",
+            ConsoleEx.WriteLineWithColor($"Incoming call from {e.SourceNumber}\n",
                 ConsoleColor.Green);
             if (ConsoleEx.CheckContinue("Accept call?([Y]es/[N]o):"))
             {
@@ -62,7 +62,7 @@ namespace ATE.Entities.Terminal
         protected virtual void OnCallAccepted(object sender, CallArgs e)
         {
             WriteTerminalNumber();
-            ConsoleEx.WriteLineWithColor($"Call with {e.FromNumber} accepted\n",
+            ConsoleEx.WriteLineWithColor($"Call with {e.SourceNumber} accepted\n",
                 ConsoleColor.Green);
         }
         protected virtual void OnCallRejected(object sender, CallArgs e)
@@ -70,7 +70,7 @@ namespace ATE.Entities.Terminal
             WriteTerminalNumber();
             if (_terminal.Number == e.TargetNumber)
             {
-                ConsoleEx.WriteLineWithColor($"Call with {e.FromNumber} rejected\n",
+                ConsoleEx.WriteLineWithColor($"Call with {e.SourceNumber} rejected\n",
                     ConsoleColor.Red);
             }
             else
@@ -81,7 +81,7 @@ namespace ATE.Entities.Terminal
         }
         protected virtual void OnCallEnded(object sender, CallArgs e)
         {
-            string targetNumber = _terminal.Number == e.FromNumber ? e.TargetNumber : e.FromNumber;
+            string targetNumber = _terminal.Number == e.SourceNumber ? e.TargetNumber : e.SourceNumber;
 
             WriteTerminalNumber();
             ConsoleEx.WriteLineWithColor($"Call with {targetNumber} ended\n",

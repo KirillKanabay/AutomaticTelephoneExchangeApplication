@@ -12,10 +12,10 @@ namespace ATE.Entities.ATE
         public event EventHandler<CallArgs> CallEndedEvent;
         public abstract BasePort ConnectTerminal(BaseTerminal terminal);
         public abstract void SubscribeToBillingSystem(BaseBillingSystem billingSystem);
-        public abstract void OnTerminalStartingCall(object sender, CallArgs e);
-        public abstract void OnTerminalAcceptingCall(object sender, CallArgs e);
-        public abstract void OnTerminalRejectingCall(object sender, CallArgs e);
-        public abstract void OnTerminalEndingCall(object sender, CallArgs e);
+        public abstract void OnTerminalStartedCall(object sender, CallArgs e);
+        public abstract void OnTerminalAcceptedCall(object sender, CallArgs e);
+        public abstract void OnTerminalRejectedCall(object sender, CallArgs e);
+        public abstract void OnTerminalEndedCall(object sender, CallArgs e);
         public abstract void OnCallAllowed(object sender, CallArgs e);
         public abstract void OnCallCanceled(object sender, CallCanceledArgs e);
 

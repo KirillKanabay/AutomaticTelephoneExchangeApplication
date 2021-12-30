@@ -18,11 +18,11 @@ namespace ATE.Entities.Port
             {
                 CurrentTerminal = terminal;
 
-                CurrentTerminal.OutgoingCallEvent += RaiseOutgoingCall;
-                CurrentTerminal.CallEndedEvent += RaiseEndedCall;
-                CurrentTerminal.IncomingRejectedCallEvent += RaiseRejectedCall;
-                CurrentTerminal.CallAcceptedEvent += RaiseAcceptedIncomingCall;
-                CurrentTerminal.CallEndedEvent += RaiseEndedCall;
+                CurrentTerminal.OutgoingCallEvent += OnOutgoingCall;
+                CurrentTerminal.CallEndedEvent += OnEndedCall;
+                CurrentTerminal.CallRejectedEvent += RaiseRejectedCall;
+                CurrentTerminal.CallAcceptedEvent += OnAcceptedCall;
+                CurrentTerminal.CallEndedEvent += OnEndedCall;
 
                 Status = PortStatus.Connected;
             }
@@ -33,10 +33,10 @@ namespace ATE.Entities.Port
         }
         public override void ConnectToStation(BaseStation station)
         {
-            OutgoingCallEvent += station.OnTerminalStartingCall;
-            AcceptedIncomingCallEvent += station.OnTerminalAcceptingCall;
+            OutgoingCallEvent += station.OnTerminalStartedCall;
+            CallAcceptedEvent += station.OnTerminalAcceptingCall;
             IncomingRejectedCallEvent += station.OnTerminalRejectingCall;
-            EndedCallEvent += station.OnTerminalEndingCall;
+            CallEndedEvent += station.OnTerminalEndingCall;
 
             IsConnectedToStation = true;
         }
@@ -44,9 +44,9 @@ namespace ATE.Entities.Port
         {
             if (CurrentTerminal == terminal)
             {
-                terminal.OutgoingCallEvent -= RaiseOutgoingCall;
-                terminal.CallEndedEvent -= RaiseEndedCall;
-                terminal.IncomingRejectedCallEvent -= RaiseRejectedCall;
+                terminal.OutgoingCallEvent -= OnOutgoingCall;
+                terminal.CallEndedEvent -= OnEndedCall;
+                terminal.CallRejectedEvent -= RaiseRejectedCall;
             }
             else
             {
@@ -65,22 +65,22 @@ namespace ATE.Entities.Port
         {
             if (Status == PortStatus.InCall)
             {
-                RaiseAcceptedIncomingCall(sender, e);
+                OnAcceptedCall(sender, e);
             }
         }
-        public override void HandleOutgoingAcceptedCall(object sender, CallArgs e)
+        public override void HandleOutgoingCall(object sender, CallArgs e)
         {
             if (Status == PortStatus.InCall)
             {
                 RaiseAcceptedOutgoingCall(sender, e);
             }
         }
-        public override void HandleIncomingRejectedCall(object sender, CallArgs e)
+        public override void HandleRejectedCall(object sender, CallArgs e)
         {
             if (Status == PortStatus.InCall)
             {
                 Status = PortStatus.Connected;
-                RaiseIncomingRejectedCall(sender, e);
+                OnRejectedCall(sender, e);
             }
         }
         public override void HandleOutgoingRejectedCall(object sender, CallArgs e)
@@ -93,7 +93,7 @@ namespace ATE.Entities.Port
         }
         public override void HandleEndedCall(object sender, CallArgs e)
         {
-            RaiseEndedCall(sender, e);
+            OnEndedCall(sender, e);
         }
         public override void HandleCanceledCall(object sender, CallCanceledArgs e)
         {

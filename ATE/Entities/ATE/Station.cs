@@ -33,42 +33,85 @@ namespace ATE.Entities.ATE
             }
             return port;
         }
-
         public override void SubscribeToBillingSystem(BaseBillingSystem billingSystem)
         {
             billingSystem.CallAllowedEvent += OnCallAllowed;
             billingSystem.CallCanceledEvent += OnCallCanceled;
         }
-        public override void OnTerminalStartingCall(object sender, CallArgs e)
+        public override void OnTerminalStartedCall(object sender, CallArgs e)
         {
+            BasePort port = _portController.GetByPhoneNumber(e.TargetNumber);
+
+            if (port == null)
+            {
+                OnCallCanceled(this, new CallCanceledArgs()
+                {
+                    Message = "Wrong number",
+                    SourcePhoneNumber = e.SourceNumber
+                });
+
+                return;
+            }
+
+            e.Status = CallStatus.Await;
+            e.Date = DateTime.Now;
+
+            port.HandleIncomingCall(sender, e);
+
             OnCallStartedEvent(sender, e);
         }
-        public override void OnTerminalAcceptingCall(object sender, CallArgs e)
+        public override void OnTerminalAcceptedCall(object sender, CallArgs e)
         {
-            var port = _portController.GetByPhoneNumber(e.FromNumber);
-            port.HandleOutgoingAcceptedCall(this, e);
-        }
-        public override void OnTerminalRejectingCall(object sender, CallArgs e)
-        {
-            var port = _portController.GetByPhoneNumber(e.FromNumber);
-            if (port != null)
+            var targetPort = _portController.GetByPhoneNumber(e.SourceNumber);
+
+            if (targetPort == null)
             {
-                port.HandleOutgoingAcceptedCall(sender, e);
+                OnCallCanceled(this, new CallCanceledArgs()
+                {
+                    Message = "Can't accept call",
+                    SourcePhoneNumber = e.TargetNumber
+                });
+                
+                return;
             }
+
+            e.Status = CallStatus.Accepted;
+            e.StartDate = DateTime.Now;
+
+            targetPort.HandleAcceptedCall(this, e);
         }
-        public override void OnTerminalEndingCall(object sender, CallArgs e)
+        public override void OnTerminalRejectedCall(object sender, CallArgs e)
+        {
+            var targetPort = _portController.GetByPhoneNumber(e.SourceNumber);
+
+            if (targetPort == null)
+            {
+                OnCallCanceled(this, new CallCanceledArgs()
+                {
+                    Message = "Can't reject call",
+                    SourcePhoneNumber = e.TargetNumber
+                });
+
+                return;
+            }
+
+            e.Status = CallStatus.Rejected;
+
+            targetPort.HandleRejectedCall(this, e);
+        }
+        public override void OnTerminalEndedCall(object sender, CallArgs e)
         {
             if (sender is BaseTerminal terminal && e.Status == CallStatus.Accepted)
             {
                 BasePort port = null;
 
-                if (terminal.Number == e.FromNumber)
+                if (terminal.Number == e.SourceNumber)
                 {
                     port = _portController.GetByPhoneNumber(e.TargetNumber);
                 }
                 else
                 {
-                    port = _portController.GetByPhoneNumber(e.FromNumber);
+                    port = _portController.GetByPhoneNumber(e.SourceNumber);
                 }
 
                 e.Status = CallStatus.Ended;
@@ -83,7 +126,13 @@ namespace ATE.Entities.ATE
             var port = _portController.GetByPhoneNumber(e.TargetNumber);
             if (port == null)
             {
-                throw new ArgumentException("Неправильно набран номер");
+                OnCallCanceled(this, new CallCanceledArgs()
+                {
+                    Message = "Wrong number",
+                    SourcePhoneNumber = e.SourceNumber
+                });
+
+                return;
             }
 
             port.HandleIncomingCall(sender, e);

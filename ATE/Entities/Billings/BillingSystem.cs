@@ -66,7 +66,7 @@ namespace ATE.Entities.Billings
         }
         private void OnTerminalCall(object sender, CallArgs e)
         {
-            var sourceClient = Company.GetClientByPhoneNumber(e.FromNumber);
+            var sourceClient = Company.GetClientByPhoneNumber(e.SourceNumber);
             var callCostInOneMinute = CalculateCallPrice(DataConstants.OneMinute, sourceClient.Contract.Tariff);
 
             if (sourceClient.Balance < callCostInOneMinute)
@@ -88,7 +88,7 @@ namespace ATE.Entities.Billings
         }
         protected void HandleCall(CallArgs e)
         {
-            var sourceClient = Company.GetClientByPhoneNumber(e.FromNumber);
+            var sourceClient = Company.GetClientByPhoneNumber(e.SourceNumber);
             var targetClient = Company.GetClientByPhoneNumber(e.TargetNumber);
 
             var sourceClientCallInformation = CallMapper.MapToCallInformation(e, sourceClient);

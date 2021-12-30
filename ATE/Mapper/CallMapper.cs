@@ -14,7 +14,7 @@ namespace ATE.Mapper
             {
                 Date = callArgs.Date,
                 EndDate = callArgs.EndDate,
-                FromNumber = callArgs.FromNumber,
+                FromNumber = callArgs.SourceNumber,
                 StartDate = callArgs.StartDate,
                 TargetNumber = callArgs.TargetNumber,
                 Status = callArgs.Status,
@@ -28,7 +28,7 @@ namespace ATE.Mapper
                 Date = call.Date,
                 StartDate = call.StartDate,
                 EndDate = call.EndDate,
-                FromNumber = call.FromNumber,
+                SourceNumber = call.FromNumber,
                 Status = call.Status,
                 TargetNumber = call.TargetNumber
             };
@@ -36,12 +36,12 @@ namespace ATE.Mapper
 
         public static CallInformation MapToCallInformation(CallArgs callArgs, Client client)
         {
-            CallType callType = client.PhoneNumber == callArgs.FromNumber ? CallType.Outgoing : CallType.Incoming;
+            CallType callType = client.PhoneNumber == callArgs.SourceNumber ? CallType.Outgoing : CallType.Incoming;
 
             CallInformation callInformation = new CallInformation()
             {
                 Client = client,
-                DestinationPhoneNumber = callType == CallType.Incoming ? callArgs.FromNumber : callArgs.TargetNumber,
+                DestinationPhoneNumber = callType == CallType.Incoming ? callArgs.SourceNumber : callArgs.TargetNumber,
                 Date = callArgs.Date,
                 StartDate = callArgs.StartDate,
                 EndDate = callArgs.EndDate,

@@ -22,42 +22,42 @@ namespace ATE.Entities.Terminal
             var callArgs = new CallArgs()
             {
                 Date = DateTime.Now,
-                FromNumber = Number,
+                SourceNumber = Number,
                 TargetNumber = targetNumber
             };
 
-            RaiseStartCallEvent(this, callArgs);
+            OnOutgoingCallEvent(this, callArgs);
         }
         public override void HandleIncomingCall(object sender, CallArgs e)
         {
             if (e.Status == CallStatus.Await)
             {
                 CurrentCall = CallMapper.MapToCall(e);
-                RaiseIncomingCallEvent(this, e);
+                OnIncomingCallEvent(this, e);
             }
         }
-        public override void HandleOutgoingAcceptedCall(object sender, CallArgs e)
+        public override void HandleAcceptedCall(object sender, CallArgs e)
         {
             if (e.Status == CallStatus.Accepted)
             {
                 CurrentCall = CallMapper.MapToCall(e);
-                RaiseOutgoingCallAcceptedEvent(this, e);
+                OnOutgoingCallAcceptedEvent(this, e);
             }
         }
-        public override void HandleOutgoingRejectedCall(object sender, CallArgs e)
+        public override void HandleRejectedCall(object sender, CallArgs e)
         {
-            if (e.Status == CallStatus.Rejected)
+            if (e.Status == CallStatus.Rejected && CurrentCall != null)
             {
                 CurrentCall = null;
-                RaiseOutgoingRejectedCallEvent(sender, e);
+                OnOutgoingRejectedCallEvent(sender, e);
             }
         }
-        public override void HandleEndCall(object sender, CallArgs e)
+        public override void HandleEndedCall(object sender, CallArgs e)
         {
             if (e.Status == CallStatus.Ended && CurrentCall != null)
             {
                 CurrentCall = null;
-                RaiseCallEndedEvent(sender, e);
+                OnCallEndedEvent(sender, e);
             }
         }
         public override void HandleCanceledCall(object sender, CallCanceledArgs e)
@@ -71,7 +71,7 @@ namespace ATE.Entities.Terminal
             {
                 CurrentCall.Accept();
 
-                RaiseCallAcceptedEvent(this, CallMapper.MapToArgs(CurrentCall));
+                OnCallAcceptedEvent(this, CallMapper.MapToArgs(CurrentCall));
             }
         }
         public override void RejectCall()
@@ -83,7 +83,7 @@ namespace ATE.Entities.Terminal
 
                 CurrentCall = null;
 
-                RaiseIncomingRejectedCallEvent(this, args);
+                OnRejectedCallEvent(this, args);
             }
         }
         public override void EndCall()
@@ -94,17 +94,18 @@ namespace ATE.Entities.Terminal
                 
                 CurrentCall = null;
                 
-                RaiseCallEndedEvent(this, args);
+                OnCallEndedEvent(this, args);
             }
         }
         protected override void ConnectToPort(BasePort port)
         {
             CurrentPort = port;
 
-            CurrentPort.IncomingCallEvent += HandleIncomingCall;
-            CurrentPort.AcceptedOutgoingCallEvent += HandleOutgoingAcceptedCall;
-            CurrentPort.EndedCallEvent += HandleEndCall;
+            CurrentPort.CallAcceptedEvent += HandleAcceptedCall;
+            CurrentPort.CallRejectedEvent += HandleRejectedCall;
             CurrentPort.CallCanceledEvent += HandleCanceledCall;
+            CurrentPort.IncomingCallEvent += HandleIncomingCall;
+            CurrentPort.CallEndedEvent += HandleEndedCall;
         }
     }
 }

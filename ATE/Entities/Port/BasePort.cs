@@ -10,11 +10,9 @@ namespace ATE.Entities.Port
     {
         public event EventHandler<CallArgs> OutgoingCallEvent;
         public event EventHandler<CallArgs> IncomingCallEvent;
-        public event EventHandler<CallArgs> IncomingRejectedCallEvent;
-        public event EventHandler<CallArgs> OutgoingRejectedCallEvent;
-        public event EventHandler<CallArgs> AcceptedIncomingCallEvent;
-        public event EventHandler<CallArgs> AcceptedOutgoingCallEvent;
-        public event EventHandler<CallArgs> EndedCallEvent;
+        public event EventHandler<CallArgs> CallRejectedEvent;
+        public event EventHandler<CallArgs> CallAcceptedEvent;
+        public event EventHandler<CallArgs> CallEndedEvent;
         public event EventHandler<CallCanceledArgs> CallCanceledEvent;
 
         public int Id { get; protected set; }
@@ -31,49 +29,36 @@ namespace ATE.Entities.Port
         public abstract void ConnectToStation(BaseStation station);
         public abstract void Disconnect(BaseTerminal terminal);
         public abstract void HandleIncomingCall(object sender, CallArgs e);
-        public abstract void HandleIncomingAcceptedCall(object sender, CallArgs e);
-        public abstract void HandleOutgoingAcceptedCall(object sender, CallArgs e);
-        public abstract void HandleIncomingRejectedCall(object sender, CallArgs e);
-        public abstract void HandleOutgoingRejectedCall(object sender, CallArgs e);
+        public abstract void HandleOutgoingCall(object sender, CallArgs e);
+        public abstract void HandleRejectedCall(object sender, CallArgs e);
+        public abstract void HandleAcceptedCall(object sender, CallArgs e);
         public abstract void HandleEndedCall(object sender, CallArgs e);
         public abstract void HandleCanceledCall(object sender, CallCanceledArgs e);
 
-        protected virtual void RaiseIncomingCall(object sender, CallArgs e)
+        protected virtual void OnIncomingCallEvent(object sender, CallArgs e)
         {
             IncomingCallEvent?.Invoke(sender, e);
         }
-        protected virtual void RaiseOutgoingCall(object sender, CallArgs e)
+        protected virtual void OnOutgoingCallEvent(object sender, CallArgs e)
         {
             Status = PortStatus.InCall;
             OutgoingCallEvent?.Invoke(sender, e);
         }
-        protected virtual void RaiseAcceptedIncomingCall(object sender, CallArgs e)
+        protected virtual void OnAcceptedCallEvent(object sender, CallArgs e)
         {
-            AcceptedIncomingCallEvent?.Invoke(sender, e);
+            CallAcceptedEvent?.Invoke(sender, e);
         }
-        protected virtual void RaiseAcceptedOutgoingCall(object sender, CallArgs e)
-        {
-            AcceptedOutgoingCallEvent?.Invoke(sender, e);
-        }
-        protected virtual void RaiseIncomingRejectedCall(object sender, CallArgs e)
+        protected virtual void OnRejectedCallEvent(object sender, CallArgs e)
         {
             IncomingRejectedCallEvent?.Invoke(sender, e);
         }
-        protected virtual void RaiseOutgoingRejectedCall(object sender, CallArgs e)
-        {
-            OutgoingRejectedCallEvent?.Invoke(sender, e);
-        }
-        protected virtual void RaiseEndedCall(object sender, CallArgs e)
+        protected virtual void OnEndedCallEvent(object sender, CallArgs e)
         {
             if (Status == PortStatus.InCall)
             {
                 Status = PortStatus.Connected;
-                EndedCallEvent?.Invoke(sender, e);
+                CallEndedEvent?.Invoke(sender, e);
             }
-        }
-        protected virtual void RaiseRejectedCall(object sender, CallArgs e)
-        {
-            IncomingRejectedCallEvent?.Invoke(sender, e);
         }
         protected virtual void OnCallCanceledEvent(object sender, CallCanceledArgs e)
         {
