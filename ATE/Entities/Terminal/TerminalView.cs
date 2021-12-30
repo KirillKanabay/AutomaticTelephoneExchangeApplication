@@ -39,68 +39,74 @@ namespace ATE.Entities.Terminal
 
         protected virtual void OnCall(object sender, CallArgs e)
         {
-            ConsoleEx.WriteLineWithColor($"[{_terminal.Number}]: Происходит вызов номера: {e.TargetNumber}\n",
+            WriteTerminalNumber();
+            ConsoleEx.WriteLineWithColor($"Calling to: {e.TargetNumber}\n",
                 ConsoleColor.Green);
         }
         protected virtual void OnIncomingCall(object sender, CallArgs e)
         {
-            ConsoleEx.WriteLineWithColor($"[{_terminal.Number}]: Входящий вызов от {e.FromNumber}\n",
+            WriteTerminalNumber();
+            ConsoleEx.WriteLineWithColor($"Incoming call from {e.FromNumber}\n",
                 ConsoleColor.Green);
-            if (ConsoleEx.CheckContinue("Принять вызов?([Y]es/[N]o):"))
+            if (ConsoleEx.CheckContinue("Accept call?([Y]es/[N]o):"))
             {
+                Console.WriteLine();
                 _terminal.AcceptCall();
             }
             else
             {
+                Console.WriteLine();
                 _terminal.RejectCall();
             }
         }
         protected virtual void OnCallAccepted(object sender, CallArgs e)
         {
-            ConsoleEx.WriteLineWithColor($"[{_terminal.Number}] Звонок от {e.FromNumber} был принят\n",
+            WriteTerminalNumber();
+            ConsoleEx.WriteLineWithColor($"Call with {e.FromNumber} accepted\n",
                 ConsoleColor.Green);
         }
         protected virtual void OnCallRejected(object sender, CallArgs e)
         {
+            WriteTerminalNumber();
             if (_terminal.Number == e.TargetNumber)
             {
-                ConsoleEx.WriteLineWithColor($"[{_terminal.Number}] Звонок с {e.FromNumber} был отклонен\n",
+                ConsoleEx.WriteLineWithColor($"Call with {e.FromNumber} rejected\n",
                     ConsoleColor.Red);
             }
             else
             {
-                ConsoleEx.WriteLineWithColor($"[{_terminal.Number}] Звонок с {e.TargetNumber} был отклонен\n",
+                ConsoleEx.WriteLineWithColor($"Call with {e.TargetNumber} rejected\n",
                     ConsoleColor.Red);
             }
         }
         protected virtual void OnCallEnded(object sender, CallArgs e)
         {
-            var targetNumber = String.Empty;
+            string targetNumber = _terminal.Number == e.FromNumber ? e.TargetNumber : e.FromNumber;
 
-            if (_terminal.Number == e.FromNumber)
-            {
-                targetNumber = e.TargetNumber;
-            }
-            else
-            {
-                targetNumber = e.FromNumber;
-            }
-
-
-            ConsoleEx.WriteLineWithColor($"[{_terminal.Number}] Звонок с {targetNumber} был завершен\n",
+            WriteTerminalNumber();
+            ConsoleEx.WriteLineWithColor($"Call with {targetNumber} ended\n",
                 ConsoleColor.Gray);
         }
         protected virtual void OnTerminalConnected(object sender, TerminalArgs e)
         {
-            ConsoleEx.WriteLineWithColor($"[{_terminal.Number}] Был подключен к АТС", ConsoleColor.DarkMagenta);
+            WriteTerminalNumber();
+            ConsoleEx.WriteLineWithColor($"successfully connected to station", ConsoleColor.DarkMagenta);
         }
         protected virtual void OnTerminalDisconnected(object sender, TerminalArgs e)
         {
-            ConsoleEx.WriteLineWithColor($"[{_terminal.Number}] отключен от станции АТС\n", ConsoleColor.DarkMagenta);
+            WriteTerminalNumber();
+            ConsoleEx.WriteLineWithColor($"disconnected from station\n", ConsoleColor.DarkMagenta);
         }
         protected virtual void OnCallCanceled(object sender, CallCanceledArgs e)
         {
-            ConsoleEx.WriteLineError($"[{_terminal.Number}] Call error: {e.Message}\n");
+            WriteTerminalNumber();
+            ConsoleEx.WriteLineError($"Call error: {e.Message}\n");
+        }
+
+        private void WriteTerminalNumber()
+        {
+            ConsoleEx.WriteWithColor($"[{_terminal.Number}]:", ConsoleColor.White, ConsoleColor.Blue);
+            Console.Write(" ");
         }
     }
 }
