@@ -70,6 +70,7 @@ namespace ATE.Entities.Terminal
             if (CurrentCall is {Status: CallStatus.Await})
             {
                 OnCallAcceptedEvent(this, CallMapper.MapToArgs(CurrentCall));
+                CurrentCall.Accept();
             }
         }
         public override void RejectCall()
