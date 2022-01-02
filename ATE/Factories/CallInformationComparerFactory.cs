@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using ATE.Abstractions.Factories;
 using ATE.Comparers.Calls;
-using ATE.Entities.Calls;
+using ATE.Domain.Calls;
 using ATE.Enums;
 
 namespace ATE.Factories

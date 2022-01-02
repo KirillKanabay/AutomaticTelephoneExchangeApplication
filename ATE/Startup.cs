@@ -1,5 +1,6 @@
-﻿using ATE.Abstractions.Factories;
-using ATE.Entities.Calls;
+﻿using ATE.Abstractions.Domain.Calls;
+using ATE.Abstractions.Factories;
+using ATE.Domain.Calls;
 using ATE.Factories;
 using ATE.Generators;
 using ATE.Interfaces;

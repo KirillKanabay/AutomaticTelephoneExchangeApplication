@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using ATE.Entities.Calls;
+using ATE.Domain.Calls;
 
 namespace ATE.Comparers.Calls
 {

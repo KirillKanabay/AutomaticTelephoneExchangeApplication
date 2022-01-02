@@ -1,4 +1,5 @@
-﻿using ATE.Entities.ATE;
+﻿using ATE.Abstractions.Domain.Station;
+using ATE.Domain.Station;
 
 namespace ATE.Abstractions.Factories
 {

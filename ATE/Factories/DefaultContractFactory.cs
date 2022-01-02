@@ -1,6 +1,7 @@
-﻿using ATE.Entities.Company;
-using ATE.Entities.Company.Contracts;
-using ATE.Entities.Company.Tariff;
+﻿using ATE.Abstractions.Domain.Company;
+using ATE.Domain.Company;
+using ATE.Domain.Company.Contracts;
+using ATE.Domain.Company.Tariff;
 using ATE.Interfaces;
 
 namespace ATE.Factories

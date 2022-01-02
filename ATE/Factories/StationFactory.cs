@@ -1,8 +1,9 @@
-﻿using ATE.Abstractions.Factories;
+﻿using ATE.Abstractions.Domain.Port;
+using ATE.Abstractions.Domain.Station;
+using ATE.Abstractions.Factories;
 using ATE.Constants;
-using ATE.Entities.ATE;
-using ATE.Entities.Port;
-using ATE.Entities.Station;
+using ATE.Domain.Port;
+using ATE.Domain.Station;
 
 namespace ATE.Factories
 {

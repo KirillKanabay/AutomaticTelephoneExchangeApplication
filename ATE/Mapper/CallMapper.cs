@@ -1,6 +1,6 @@
 ﻿using ATE.Args;
-using ATE.Entities.Calls;
-using ATE.Entities.Company;
+using ATE.Domain.Calls;
+using ATE.Domain.Users;
 using ATE.Entities.Users;
 using ATE.Enums;
 

@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Threading;
+using ATE.Abstractions.Domain.Calls;
 using ATE.Abstractions.Factories;
-using ATE.Entities.Calls;
-using ATE.Entities.Company;
-using ATE.Entities.Terminal;
+using ATE.Domain.Terminal;
 using ATE.Entities.Users;
 using ATE.Enums;
 
@@ -25,21 +25,21 @@ namespace ATE
 
         public void Run()
         {
-            User user1 = new User()
+            var user1 = new User
             {
                 FirstName = "Kirill", 
-                LastName = "Kanabay"
+                LastName = "Kanabay",
             };
-            User user2 = new User()
+            var user2 = new User
             {
                 FirstName = "Ivan",
-                LastName = "Ivanov"
+                LastName = "Ivanov",
             };
 
-            BaseCompany company = _companyFactory.CreateCompany();
+            var company = _companyFactory.CreateCompany();
 
-            Client client1 = company.RegisterClient(user1);
-            Client client2 = company.RegisterClient(user2);
+            var client1 = company.RegisterClient(user1);
+            var client2 = company.RegisterClient(user2);
 
             var terminal1 = client1.Terminal;
             var terminal2 = client2.Terminal;
@@ -57,13 +57,21 @@ namespace ATE
             terminal1.ConnectToStation(station);
             terminal2.ConnectToStation(station);
 
-            terminal1.Call(client1.PhoneNumber);
+            terminal1.Call(client2.PhoneNumber);
 
             if (terminal1.CurrentCall != null)
             {
+                Thread.Sleep(5000);
                 terminal1.EndCall();
             }
             
+            terminal2.Call(client1.PhoneNumber);
+            if (terminal1.CurrentCall != null)
+            {
+                Thread.Sleep(3000);
+                terminal1.EndCall();
+            }
+
             _callPresenter.Present(company.BillingSystem, client1);
             Console.WriteLine(new string('=', 80));
             _callPresenter.Present(company.BillingSystem, client2, CallSortType.Price);

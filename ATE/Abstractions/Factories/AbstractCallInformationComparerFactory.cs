@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
-using ATE.Entities.ATE;
-using ATE.Entities.Calls;
+using ATE.Domain.Calls;
 using ATE.Enums;
 
 namespace ATE.Abstractions.Factories

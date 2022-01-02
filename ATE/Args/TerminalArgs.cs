@@ -1,6 +1,5 @@
 ﻿using System;
-using ATE.Core.Interfaces.ATE;
-using ATE.Entities.Terminal;
+using ATE.Abstractions.Domain.Terminal;
 
 namespace ATE.Args
 {

@@ -1,4 +1,5 @@
-﻿using ATE.Entities.Company;
+﻿using ATE.Abstractions.Domain.Company;
+using ATE.Domain.Company;
 
 namespace ATE.Interfaces
 {

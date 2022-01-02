@@ -1,5 +1,6 @@
-﻿using ATE.Entities.Company;
-using ATE.Entities.Company.Contracts;
+﻿using ATE.Abstractions.Domain.Company;
+using ATE.Domain.Company;
+using ATE.Domain.Company.Contracts;
 
 namespace ATE.Factories
 {
