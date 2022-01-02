@@ -12,7 +12,16 @@ namespace ATE.Domain.Terminal
     {
         public override void ConnectToStation(BaseStation station)
         {
-            var stationPort = station.ConnectTerminal(this);
+            BasePort stationPort;
+            try
+            {
+                stationPort = station.ConnectTerminal(this);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
             if (stationPort != null)
             {
                 ConnectToPort(stationPort);
@@ -24,6 +33,7 @@ namespace ATE.Domain.Terminal
 
         public override void Disconnect()
         {
+            DisconnectFromPort();
             OnDisconnectedEvent(this, new TerminalArgs());
         }
 
@@ -38,6 +48,7 @@ namespace ATE.Domain.Terminal
 
             OnOutgoingCallEvent(this, callArgs);
         }
+
         public override void HandleIncomingCall(object sender, CallArgs e)
         {
             if (e.Status == CallStatus.Await)
@@ -46,6 +57,7 @@ namespace ATE.Domain.Terminal
                 OnIncomingCallEvent(this, e);
             }
         }
+
         public override void HandleAcceptedCall(object sender, CallArgs e)
         {
             if (e.Status == CallStatus.Accepted)
@@ -54,14 +66,16 @@ namespace ATE.Domain.Terminal
                 OnCallAcceptedEvent(this, e);
             }
         }
+
         public override void HandleRejectedCall(object sender, CallArgs e)
         {
             if (e.Status == CallStatus.Rejected)
             {
-                OnRejectedCallEvent(sender, e);
                 CurrentCall = null;
+                OnRejectedCallEvent(sender, e);
             }
         }
+
         public override void HandleEndedCall(object sender, CallArgs e)
         {
             if (e.Status == CallStatus.Ended && CurrentCall != null)
@@ -70,11 +84,13 @@ namespace ATE.Domain.Terminal
                 OnCallEndedEvent(sender, e);
             }
         }
+
         public override void HandleCanceledCall(object sender, CallCanceledArgs e)
         {
             CurrentCall = null;
             OnCallCanceledEvent(sender, e);
         }
+
         public override void AcceptCall()
         {
             if (CurrentCall is {Status: CallStatus.Await})
@@ -91,6 +107,7 @@ namespace ATE.Domain.Terminal
                 CurrentCall = null;
             }
         }
+
         public override void EndCall()
         {
             if (CurrentCall is {Status: CallStatus.Accepted})
@@ -102,6 +119,7 @@ namespace ATE.Domain.Terminal
                 OnCallEndedEvent(this, args);
             }
         }
+
         protected override void ConnectToPort(BasePort port)
         {
             CurrentPort = port;
@@ -111,6 +129,20 @@ namespace ATE.Domain.Terminal
             CurrentPort.CallCanceledEvent += HandleCanceledCall;
             CurrentPort.IncomingCallEvent += HandleIncomingCall;
             CurrentPort.CallEndedEvent += HandleEndedCall;
+        }
+
+        protected override void DisconnectFromPort()
+        {
+            if (CurrentPort != null)
+            {
+                CurrentPort.CallAcceptedEvent -= HandleAcceptedCall;
+                CurrentPort.CallRejectedEvent -= HandleRejectedCall;
+                CurrentPort.CallCanceledEvent -= HandleCanceledCall;
+                CurrentPort.IncomingCallEvent -= HandleIncomingCall;
+                CurrentPort.CallEndedEvent -= HandleEndedCall;
+
+                CurrentPort = null;
+            }
         }
     }
 }

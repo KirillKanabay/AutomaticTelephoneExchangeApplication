@@ -2,9 +2,8 @@
 using ATE.Abstractions.Factories;
 using ATE.Constants;
 using ATE.Domain;
+using ATE.Domain.Billings;
 using ATE.Domain.Company;
-using ATE.Entities;
-using ATE.Entities.Billings;
 
 namespace ATE.Factories
 {

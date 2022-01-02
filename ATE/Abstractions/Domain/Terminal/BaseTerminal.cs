@@ -34,6 +34,7 @@ namespace ATE.Abstractions.Domain.Terminal
         public abstract void RejectCall();
         public abstract void EndCall();
         protected abstract void ConnectToPort(BasePort port);
+        protected abstract void DisconnectFromPort();
 
         protected virtual void OnOutgoingCallEvent(object sender, CallArgs e)
         {

@@ -60,15 +60,17 @@ namespace ATE
             
             var terminalView1 = new TerminalView(client1.Terminal);
             var terminalView2 = new TerminalView(client2.Terminal);
+            var terminalView3 = new TerminalView(client3.Terminal);
 
             var station = company.Stations.FirstOrDefault();
 
             Call(client1, client2, station);
             Call(client2, client1, station);
+            Call(client2, client1, station);
             Call(client1, client3, station);
             Call(client1,client3, station);
-            Call(client1, client1, station);
-
+            Call(client3, client2, station);
+            
             PrintClientCalls(client1, company.BillingSystem);
             PrintClientCalls(client2, company.BillingSystem);
             PrintClientCalls(client3, company.BillingSystem);

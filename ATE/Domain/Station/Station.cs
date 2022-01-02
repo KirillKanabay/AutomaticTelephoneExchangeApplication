@@ -4,8 +4,6 @@ using ATE.Abstractions.Domain.Port;
 using ATE.Abstractions.Domain.Station;
 using ATE.Abstractions.Domain.Terminal;
 using ATE.Args;
-using ATE.Domain.Port;
-using ATE.Domain.Terminal;
 using ATE.Enums;
 
 namespace ATE.Domain.Station
@@ -19,8 +17,14 @@ namespace ATE.Domain.Station
         }
         public override BasePort ConnectTerminal(BaseTerminal terminal)
         {
-            var port = _portController.GetAvailablePort();
+            var terminalPort = _portController.GetByPhoneNumber(terminal.Number);
 
+            if (terminalPort != null)
+            {
+                throw new Exception("Terminal has already connected to station");
+            }
+
+            var port = _portController.GetAvailablePort();
             if (port != null)
             {
                 if (!port.IsConnectedToStation)

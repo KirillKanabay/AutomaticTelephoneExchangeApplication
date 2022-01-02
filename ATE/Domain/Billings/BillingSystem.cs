@@ -8,13 +8,10 @@ using ATE.Args;
 using ATE.Constants;
 using ATE.Domain.Calls;
 using ATE.Domain.Company;
-using ATE.Domain.Company.Tariff;
-using ATE.Domain.Station;
-using ATE.Domain.Users;
 using ATE.Enums;
 using ATE.Mappers;
 
-namespace ATE.Entities.Billings
+namespace ATE.Domain.Billings
 {
     public class BillingSystem : BaseBillingSystem
     {
