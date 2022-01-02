@@ -1,11 +1,9 @@
 ﻿using System;
 using ATE.Abstractions.Domain.Company;
 using ATE.Abstractions.Domain.Terminal;
-using ATE.Domain.Company.Contracts;
-using ATE.Domain.Terminal;
-using ATE.Entities.Users;
+using ATE.Domain.Users;
 
-namespace ATE.Domain.Users
+namespace ATE.Domain.Company
 {
     public class Client
     {

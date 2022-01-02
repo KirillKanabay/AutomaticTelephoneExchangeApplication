@@ -9,5 +9,6 @@
         public const int DefaultPortCount = 16;
         public const double OneMinute = 1.0d;
         public const string InsufficientFundsError = "Insufficient funds";
+        public const int DefaultCallDuration = 3000;
     }
 }

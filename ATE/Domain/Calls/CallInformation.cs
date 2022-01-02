@@ -1,4 +1,5 @@
 ﻿using System;
+using ATE.Domain.Company;
 using ATE.Domain.Users;
 using ATE.Enums;
 

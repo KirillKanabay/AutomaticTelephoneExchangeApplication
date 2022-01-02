@@ -1,10 +1,9 @@
 ﻿using ATE.Args;
 using ATE.Domain.Calls;
-using ATE.Domain.Users;
-using ATE.Entities.Users;
+using ATE.Domain.Company;
 using ATE.Enums;
 
-namespace ATE.Mapper
+namespace ATE.Mappers
 {
     public static class CallMapper
     {

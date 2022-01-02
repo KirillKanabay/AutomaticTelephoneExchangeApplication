@@ -1,4 +1,4 @@
-﻿namespace ATE.Entities.Users
+﻿namespace ATE.Domain.Users
 {
     public class User
     {
@@ -7,7 +7,7 @@
         
         public override string ToString()
         {
-            return $"#{FirstName} {LastName}";
+            return $"{FirstName} {LastName}";
         }
     }
 }

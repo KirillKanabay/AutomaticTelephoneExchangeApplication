@@ -2,8 +2,6 @@
 using ATE.Abstractions.Domain.Station;
 using ATE.Abstractions.Domain.Terminal;
 using ATE.Args;
-using ATE.Domain.Station;
-using ATE.Domain.Terminal;
 using ATE.Enums;
 
 namespace ATE.Abstractions.Domain.Port
@@ -29,8 +27,7 @@ namespace ATE.Abstractions.Domain.Port
 
         public abstract void ConnectToTerminal(BaseTerminal terminal);
         public abstract void ConnectToStation(BaseStation station);
-        public abstract void Disconnect(BaseTerminal terminal);
-
+        public abstract void HandleDisconnectedTerminal(object sender, TerminalArgs e);
         public abstract void HandleIncomingCall(object sender, CallArgs e);
         public abstract void HandleOutgoingCall(object sender, CallArgs e);
         public abstract void HandleRejectedCall(object sender, CallArgs e);
@@ -42,22 +39,27 @@ namespace ATE.Abstractions.Domain.Port
         {
             IncomingCallEvent?.Invoke(sender, e);
         }
+
         protected virtual void OnOutgoingCallEvent(object sender, CallArgs e)
         {
             OutgoingCallEvent?.Invoke(sender, e);
         }
+        
         protected virtual void OnAcceptedCallEvent(object sender, CallArgs e)
         {
             CallAcceptedEvent?.Invoke(sender, e);
         }
+        
         protected virtual void OnRejectedCallEvent(object sender, CallArgs e)
         {
             CallRejectedEvent?.Invoke(sender, e);
         }
+        
         protected virtual void OnEndedCallEvent(object sender, CallArgs e)
         {
             CallEndedEvent?.Invoke(sender, e);
         }
+        
         protected virtual void OnCallCanceledEvent(object sender, CallCanceledArgs e)
         {
             CallCanceledEvent?.Invoke(sender, e);

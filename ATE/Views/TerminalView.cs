@@ -3,7 +3,7 @@ using ATE.Abstractions.Domain.Terminal;
 using ATE.Args;
 using ATE.Helpers;
 
-namespace ATE.Domain.Terminal
+namespace ATE.Views
 {
     public class TerminalView
     {
@@ -61,6 +61,7 @@ namespace ATE.Domain.Terminal
                 _terminal.RejectCall();
             }
         }
+
         protected virtual void OnCallAccepted(object sender, CallArgs e)
         {
             WriteTerminalNumber();
@@ -75,6 +76,7 @@ namespace ATE.Domain.Terminal
                     ConsoleColor.Green);
             }
         }
+
         protected virtual void OnCallRejected(object sender, CallArgs e)
         {
             WriteTerminalNumber();
@@ -89,6 +91,7 @@ namespace ATE.Domain.Terminal
                     ConsoleColor.Red);
             }
         }
+
         protected virtual void OnCallEnded(object sender, CallArgs e)
         {
             string targetNumber = _terminal.Number == e.SourceNumber ? e.TargetNumber : e.SourceNumber;
@@ -97,16 +100,19 @@ namespace ATE.Domain.Terminal
             ConsoleEx.WriteLineWithColor($"Call with {targetNumber} ended\n",
                 ConsoleColor.Gray);
         }
+
         protected virtual void OnTerminalConnected(object sender, TerminalArgs e)
         {
             WriteTerminalNumber();
-            ConsoleEx.WriteLineWithColor($"successfully connected to station", ConsoleColor.DarkMagenta);
+            ConsoleEx.WriteLineWithColor($"Successfully connected to station", ConsoleColor.DarkMagenta);
         }
+
         protected virtual void OnTerminalDisconnected(object sender, TerminalArgs e)
         {
             WriteTerminalNumber();
-            ConsoleEx.WriteLineWithColor($"disconnected from station\n", ConsoleColor.DarkMagenta);
+            ConsoleEx.WriteLineWithColor($"Disconnected from station\n", ConsoleColor.DarkMagenta);
         }
+
         protected virtual void OnCallCanceled(object sender, CallCanceledArgs e)
         {
             WriteTerminalNumber();

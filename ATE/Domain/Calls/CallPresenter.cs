@@ -2,6 +2,7 @@
 using ATE.Abstractions.Domain.Billings;
 using ATE.Abstractions.Domain.Calls;
 using ATE.Abstractions.Factories;
+using ATE.Domain.Company;
 using ATE.Domain.Users;
 using ATE.Enums;
 using ATE.Helpers;

@@ -3,10 +3,8 @@ using ATE.Abstractions.Domain.Port;
 using ATE.Abstractions.Domain.Station;
 using ATE.Abstractions.Domain.Terminal;
 using ATE.Args;
-using ATE.Domain.Port;
-using ATE.Domain.Station;
 using ATE.Enums;
-using ATE.Mapper;
+using ATE.Mappers;
 
 namespace ATE.Domain.Terminal
 {
@@ -19,7 +17,16 @@ namespace ATE.Domain.Terminal
             {
                 ConnectToPort(stationPort);
             }
+
+            IsConnected = true;
+            OnConnectedEvent(this, new TerminalArgs());
         }
+
+        public override void Disconnect()
+        {
+            OnDisconnectedEvent(this, new TerminalArgs());
+        }
+
         public override void Call(string targetNumber)
         {
             var callArgs = new CallArgs

@@ -5,7 +5,6 @@ using ATE.Abstractions.Domain.Company;
 using ATE.Abstractions.Domain.Station;
 using ATE.Domain.Station;
 using ATE.Domain.Users;
-using ATE.Entities.Users;
 using ATE.Factories;
 
 namespace ATE.Domain.Company
@@ -19,7 +18,7 @@ namespace ATE.Domain.Company
             _clientFactory = clientFactory;
 
             Clients = new List<Client>();
-            Stations = new List<BaseStation>();
+            StationCollection = new List<BaseStation>();
         }
         
         public override Client RegisterClient(User user)
@@ -37,7 +36,7 @@ namespace ATE.Domain.Company
                 throw new ArgumentNullException(nameof(station), "Station cannot be null");
             }
 
-            Stations.Add(station);
+            StationCollection.Add(station);
             BillingSystem.SubscribeToStation(station);
             station.SubscribeToBillingSystem(BillingSystem);
         }

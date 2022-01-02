@@ -3,8 +3,6 @@ using ATE.Abstractions.Domain.Port;
 using ATE.Abstractions.Domain.Station;
 using ATE.Abstractions.Domain.Terminal;
 using ATE.Args;
-using ATE.Domain.Station;
-using ATE.Domain.Terminal;
 using ATE.Enums;
 
 namespace ATE.Domain.Port
@@ -25,6 +23,7 @@ namespace ATE.Domain.Port
                 CurrentTerminal.CallEndedEvent += HandleEndedCall;
                 CurrentTerminal.CallRejectedEvent += HandleRejectedCall;
                 CurrentTerminal.CallAcceptedEvent += HandleAcceptedCall;
+                CurrentTerminal.DisconnectedEvent += HandleDisconnectedTerminal;
 
                 Status = PortStatus.Connected;
             }
@@ -33,6 +32,7 @@ namespace ATE.Domain.Port
                 throw new ArgumentException("Port isn't available");
             }
         }
+        
         public override void ConnectToStation(BaseStation station)
         {
             OutgoingCallEvent += station.OnTerminalStartedCall;
@@ -42,19 +42,18 @@ namespace ATE.Domain.Port
 
             IsConnectedToStation = true;
         }
-        public override void Disconnect(BaseTerminal terminal)
+        
+        public override void HandleDisconnectedTerminal(object sender, TerminalArgs e)
         {
-            if (CurrentTerminal == terminal)
-            {
-                CurrentTerminal.OutgoingCallEvent -= HandleOutgoingCall;
-                CurrentTerminal.CallEndedEvent -= HandleEndedCall;
-                CurrentTerminal.CallRejectedEvent -= HandleRejectedCall;
-                CurrentTerminal.CallAcceptedEvent -= HandleAcceptedCall;
-            }
-            else
-            {
-                throw new ArgumentException("This terminal doesn't have connection with this port");
-            }
+            CurrentTerminal.OutgoingCallEvent -= HandleOutgoingCall;
+            CurrentTerminal.CallEndedEvent -= HandleEndedCall;
+            CurrentTerminal.CallRejectedEvent -= HandleRejectedCall;
+            CurrentTerminal.CallAcceptedEvent -= HandleAcceptedCall;
+            CurrentTerminal.DisconnectedEvent -= HandleDisconnectedTerminal;
+            
+            CurrentTerminal = null;
+            
+            Status = PortStatus.Available;
         }
 
         public override void HandleIncomingCall(object sender, CallArgs e)
@@ -83,6 +82,7 @@ namespace ATE.Domain.Port
                 OnRejectedCallEvent(sender, e);
             }
         }
+        
         public override void HandleAcceptedCall(object sender, CallArgs e)
         {
             if (Status == PortStatus.AwaitConfirmCall)
@@ -91,6 +91,7 @@ namespace ATE.Domain.Port
                 OnAcceptedCallEvent(sender, e);
             }
         }
+        
         public override void HandleEndedCall(object sender, CallArgs e)
         {
             if (Status == PortStatus.InCall)
@@ -99,6 +100,7 @@ namespace ATE.Domain.Port
                 OnEndedCallEvent(sender, e);
             }
         }
+        
         public override void HandleCanceledCall(object sender, CallCanceledArgs e)
         {
             Status = PortStatus.Connected;

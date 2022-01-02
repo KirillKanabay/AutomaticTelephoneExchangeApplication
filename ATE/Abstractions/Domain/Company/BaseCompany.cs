@@ -2,16 +2,16 @@
 using ATE.Abstractions.Domain.Billings;
 using ATE.Abstractions.Domain.Station;
 using ATE.Domain;
-using ATE.Domain.Station;
+using ATE.Domain.Company;
 using ATE.Domain.Users;
-using ATE.Entities.Users;
 
 namespace ATE.Abstractions.Domain.Company
 {
     public abstract class BaseCompany
     {
         protected ICollection<Client> Clients;
-        protected ICollection<BaseStation> Stations;
+        protected ICollection<BaseStation> StationCollection;
+        public IEnumerable<BaseStation> Stations => StationCollection;
         public string Name { get; set; }
         public PhoneNumberOptions PhoneNumberOptions { get; set; }
         public BaseBillingSystem BillingSystem { get; set; }

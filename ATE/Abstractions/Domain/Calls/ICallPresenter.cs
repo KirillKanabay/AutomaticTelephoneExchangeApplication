@@ -1,4 +1,5 @@
 ﻿using ATE.Abstractions.Domain.Billings;
+using ATE.Domain.Company;
 using ATE.Domain.Users;
 using ATE.Enums;
 

@@ -1,10 +1,16 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
+using ATE.Abstractions.Domain.Billings;
 using ATE.Abstractions.Domain.Calls;
+using ATE.Abstractions.Domain.Station;
 using ATE.Abstractions.Factories;
+using ATE.Constants;
+using ATE.Domain.Company;
 using ATE.Domain.Terminal;
-using ATE.Entities.Users;
+using ATE.Domain.Users;
 using ATE.Enums;
+using ATE.Views;
 
 namespace ATE
 {
@@ -35,46 +41,64 @@ namespace ATE
                 FirstName = "Ivan",
                 LastName = "Ivanov",
             };
+            var user3 = new User
+            {
+                FirstName = "Peter",
+                LastName = "Parker",
+            };
 
             var company = _companyFactory.CreateCompany();
 
             var client1 = company.RegisterClient(user1);
             var client2 = company.RegisterClient(user2);
+            var client3 = company.RegisterClient(user3);
 
-            var terminal1 = client1.Terminal;
-            var terminal2 = client2.Terminal;
-            
-            var terminalView1 = new TerminalView(terminal1);
-            var terminalView2 = new TerminalView(terminal2);
-
-            var station = _stationFactory.CreateStation();
-
-            company.AddStation(station);
+            company.AddStation(_stationFactory.CreateStation());
 
             company.BillingSystem.Deposit(client1, 0.5m);
             company.BillingSystem.Deposit(client2, 5.0m);
-
-            terminal1.ConnectToStation(station);
-            terminal2.ConnectToStation(station);
-
-            terminal1.Call(client2.PhoneNumber);
-
-            if (terminal1.CurrentCall != null)
-            {
-                Thread.Sleep(5000);
-                terminal1.EndCall();
-            }
             
-            terminal2.Call(client1.PhoneNumber);
-            if (terminal1.CurrentCall != null)
+            var terminalView1 = new TerminalView(client1.Terminal);
+            var terminalView2 = new TerminalView(client2.Terminal);
+
+            var station = company.Stations.FirstOrDefault();
+
+            Call(client1, client2, station);
+            Call(client2, client1, station);
+            Call(client1, client3, station);
+            Call(client1,client3, station);
+            Call(client1, client1, station);
+
+            PrintClientCalls(client1, company.BillingSystem);
+            PrintClientCalls(client2, company.BillingSystem);
+            PrintClientCalls(client3, company.BillingSystem);
+        }
+
+        private void Call(Client source, Client target, BaseStation station)
+        {
+            Console.WriteLine($"==== Call from {source.User} to {target.User} ====\n");
+            source.Terminal.ConnectToStation(station);
+            target.Terminal.ConnectToStation(station);
+
+            source.Terminal.Call(target.PhoneNumber);
+
+            if (source.Terminal.CurrentCall != null)
             {
-                Thread.Sleep(3000);
-                terminal1.EndCall();
+                Thread.Sleep(DataConstants.DefaultCallDuration);
+                source.Terminal.EndCall();
             }
 
-            _callPresenter.Present(company.BillingSystem, client1);
-            Console.WriteLine(new string('=', 80));
-            _callPresenter.Present(company.BillingSystem, client2, CallSortType.Price);
+            Console.WriteLine();
+
+            source.Terminal.Disconnect();
+            target.Terminal.Disconnect();
+        }
+
+        private void PrintClientCalls(Client client, BaseBillingSystem billingSystem)
+        {
+            Console.WriteLine($"{client.User} calls");
+            _callPresenter.Present(billingSystem, client);
+            Console.WriteLine();
         }
     }
 }

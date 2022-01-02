@@ -8,9 +8,8 @@ namespace ATE.Abstractions.Domain.Terminal
 {
     public abstract class BaseTerminal
     {
-        public event EventHandler<TerminalArgs> ConnectedEvent;
+        public event EventHandler<TerminalArgs> ConnectedEvent; 
         public event EventHandler<TerminalArgs> DisconnectedEvent;
-        
         public event EventHandler<CallArgs> OutgoingCallEvent;
         public event EventHandler<CallArgs> IncomingCallEvent;
         public event EventHandler<CallArgs> CallAcceptedEvent;
@@ -21,8 +20,10 @@ namespace ATE.Abstractions.Domain.Terminal
         public Call CurrentCall { get; set; }
         public BasePort CurrentPort { get; set; }
         public string Number { get; set; }
+        public bool IsConnected { get; protected set; }
 
         public abstract void ConnectToStation(BaseStation station);
+        public abstract void Disconnect();
         public abstract void Call(string phoneNumber);
         public abstract void HandleIncomingCall(object sender, CallArgs e);
         public abstract void HandleAcceptedCall(object sender, CallArgs e);
@@ -33,34 +34,45 @@ namespace ATE.Abstractions.Domain.Terminal
         public abstract void RejectCall();
         public abstract void EndCall();
         protected abstract void ConnectToPort(BasePort port);
+
         protected virtual void OnOutgoingCallEvent(object sender, CallArgs e)
         {
             OutgoingCallEvent?.Invoke(sender, e);
         }
+
         protected virtual void OnIncomingCallEvent(object sender, CallArgs e)
         {
             IncomingCallEvent?.Invoke(sender, e);
         }
+
         protected virtual void OnCallAcceptedEvent(object sender, CallArgs e)
         {
             CallAcceptedEvent?.Invoke(sender, e);
         }
+
         protected virtual void OnRejectedCallEvent(object sender, CallArgs e)
         {
             CallRejectedEvent?.Invoke(sender, e);
         }
+
         protected virtual void OnCallEndedEvent(object sender, CallArgs e)
         {
             CallEndedEvent?.Invoke(this, e);
         }
+
         protected virtual void OnCallCanceledEvent(object sender, CallCanceledArgs e)
         {
             CallCanceledEvent?.Invoke(sender, e);
         }
-        protected virtual void OnTerminalDisconnectedEvent()
+
+        protected virtual void OnConnectedEvent(object sender, TerminalArgs e)
         {
-            var args = new TerminalArgs(this);
-            DisconnectedEvent?.Invoke(this, args);
+            ConnectedEvent?.Invoke(sender, e);
+        }
+
+        protected virtual void OnDisconnectedEvent(object sender, TerminalArgs e)
+        {
+            DisconnectedEvent?.Invoke(this, e);
         }
     }
 }

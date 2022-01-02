@@ -3,7 +3,6 @@ using ATE.Abstractions.Domain.Company;
 using ATE.Constants;
 using ATE.Domain.Company;
 using ATE.Domain.Users;
-using ATE.Entities.Users;
 
 namespace ATE.Factories
 {
