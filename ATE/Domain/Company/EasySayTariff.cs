@@ -1,6 +1,6 @@
 ﻿using ATE.Abstractions.Domain.Company;
 
-namespace ATE.Domain.Company.Tariff
+namespace ATE.Domain.Company
 {
     public class EasySayTariff : BaseTariff
     {

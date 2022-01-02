@@ -11,6 +11,7 @@ namespace ATE.Abstractions.Domain.Station
     {
         public event EventHandler<CallArgs> CallStartedEvent; 
         public event EventHandler<CallArgs> CallEndedEvent;
+
         public abstract BasePort ConnectTerminal(BaseTerminal terminal);
         public abstract void SubscribeToBillingSystem(BaseBillingSystem billingSystem);
         public abstract void OnTerminalStartedCall(object sender, CallArgs e);
@@ -24,6 +25,7 @@ namespace ATE.Abstractions.Domain.Station
         {
             CallEndedEvent?.Invoke(sender, e);
         }
+
         protected virtual void OnCallStartedEvent(object sender, CallArgs e)
         {
             CallStartedEvent?.Invoke(sender, e);

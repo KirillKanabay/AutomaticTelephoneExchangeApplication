@@ -1,5 +1,6 @@
 ﻿using System;
 using ATE.Abstractions.Domain.Company;
+using ATE.Abstractions.Factories;
 using ATE.Constants;
 using ATE.Domain.Company;
 using ATE.Domain.Users;

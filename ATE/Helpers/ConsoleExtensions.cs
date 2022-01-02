@@ -8,6 +8,7 @@ namespace ATE.Helpers
         {
             WriteLineWithColor(error, ConsoleColor.Red);
         }
+
         public static bool CheckContinue(string message)
         {
             char readedKey = ' ';
@@ -20,6 +21,7 @@ namespace ATE.Helpers
             
             return readedKey == 'y';
         }
+        
         public static void WriteLineWithColor(string message, ConsoleColor foregroundColor)
         {
             var defaultConsoleForeground = Console.ForegroundColor;
@@ -29,6 +31,7 @@ namespace ATE.Helpers
 
             Console.ForegroundColor = defaultConsoleForeground;
         }
+        
         public static void WriteWithColor(string message, ConsoleColor foregroundColor,
             ConsoleColor backgroundColor = ConsoleColor.Black)
         {

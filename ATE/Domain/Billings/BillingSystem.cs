@@ -19,15 +19,18 @@ namespace ATE.Domain.Billings
         {
             Calls = new List<CallInformation>();
         }
+
         public override void SubscribeToStation(BaseStation station)
         {
             station.CallStartedEvent += OnTerminalCall;
             station.CallEndedEvent += OnCallEnded;
         }
+
         public override IEnumerable<CallInformation> GetClientCalls(Client client)
         {
            return Calls.Where(c => c.Client.Equals(client));
         }
+
         public override void Deposit(Client client, decimal money)
         {
             if (client == null)
@@ -42,6 +45,7 @@ namespace ATE.Domain.Billings
 
             client.Balance += money;
         }
+
         protected override void WriteOff(Client client, decimal money)
         {
             if (money < 0)
@@ -51,6 +55,7 @@ namespace ATE.Domain.Billings
             
             client.Balance -= money;
         }
+
         protected override decimal CalculateCallPrice(double duration, BaseTariff tariff)
         {
             decimal price = 0;
@@ -86,10 +91,12 @@ namespace ATE.Domain.Billings
                 OnCallAllowedEvent(sender, e);
             }
         }
+
         private void OnCallEnded(object sender, CallArgs e)
         {
             HandleCall(e);
         }
+
         protected void HandleCall(CallArgs e)
         {
             var sourceClient = Company.GetClientByPhoneNumber(e.SourceNumber);

@@ -12,6 +12,7 @@ namespace ATE.Domain.Calls
     public class CallPresenter : ICallPresenter
     {
         private readonly AbstractCallInformationComparerFactory _callComparerFactory;
+
         public CallPresenter(AbstractCallInformationComparerFactory callComparerFactory)
         {
             _callComparerFactory = callComparerFactory;

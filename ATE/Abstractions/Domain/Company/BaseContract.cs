@@ -1,6 +1,4 @@
-﻿using ATE.Domain.Company.Tariff;
-
-namespace ATE.Abstractions.Domain.Company
+﻿namespace ATE.Abstractions.Domain.Company
 {
     public abstract class BaseContract
     {

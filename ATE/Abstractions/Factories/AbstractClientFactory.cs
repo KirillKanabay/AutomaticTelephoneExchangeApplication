@@ -2,7 +2,7 @@
 using ATE.Domain.Company;
 using ATE.Domain.Users;
 
-namespace ATE.Factories
+namespace ATE.Abstractions.Factories
 {
     public abstract class AbstractClientFactory
     {

@@ -1,6 +1,6 @@
 ﻿using ATE.Abstractions.Domain.Company;
 using ATE.Abstractions.Domain.Terminal;
-using ATE.Domain.Company.Contracts;
+using ATE.Abstractions.Factories;
 using ATE.Domain.Terminal;
 
 namespace ATE.Factories

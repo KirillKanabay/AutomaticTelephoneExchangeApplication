@@ -5,9 +5,6 @@ using ATE.Abstractions.Domain.Station;
 using ATE.Args;
 using ATE.Domain.Calls;
 using ATE.Domain.Company;
-using ATE.Domain.Company.Tariff;
-using ATE.Domain.Station;
-using ATE.Domain.Users;
 
 namespace ATE.Abstractions.Domain.Billings
 {
@@ -15,8 +12,10 @@ namespace ATE.Abstractions.Domain.Billings
     {
         public event EventHandler<CallArgs> CallAllowedEvent;
         public event EventHandler<CallCanceledArgs> CallCanceledEvent; 
+        
         public BaseCompany Company { get; set; }
         protected ICollection<CallInformation> Calls { get; set; }
+        
         public abstract void SubscribeToStation(BaseStation station);
         public abstract IEnumerable<CallInformation> GetClientCalls(Client client);
         public abstract void Deposit(Client client, decimal money);

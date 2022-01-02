@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ATE.Abstractions.Domain.Company;
 using ATE.Abstractions.Domain.Station;
+using ATE.Abstractions.Factories;
 using ATE.Domain.Station;
 using ATE.Domain.Users;
 using ATE.Factories;

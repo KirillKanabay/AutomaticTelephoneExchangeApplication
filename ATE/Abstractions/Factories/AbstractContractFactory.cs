@@ -1,8 +1,6 @@
 ﻿using ATE.Abstractions.Domain.Company;
-using ATE.Domain.Company;
-using ATE.Domain.Company.Contracts;
 
-namespace ATE.Factories
+namespace ATE.Abstractions.Factories
 {
     public abstract class AbstractContractFactory
     {

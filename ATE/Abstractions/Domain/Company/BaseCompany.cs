@@ -15,6 +15,7 @@ namespace ATE.Abstractions.Domain.Company
         public string Name { get; set; }
         public PhoneNumberOptions PhoneNumberOptions { get; set; }
         public BaseBillingSystem BillingSystem { get; set; }
+        
         public abstract Client RegisterClient(User user);
         public abstract void AddStation(BaseStation station);
         public abstract bool PhoneNumberExists(string phoneNumber);

@@ -11,10 +11,12 @@ namespace ATE.Domain.Station
     public class Station: BaseStation
     {
         private readonly IPortController _portController;
+
         public Station(IPortController portController)
         {
             _portController = portController;
         }
+        
         public override BasePort ConnectTerminal(BaseTerminal terminal)
         {
             var terminalPort = _portController.GetByPhoneNumber(terminal.Number);
@@ -39,11 +41,13 @@ namespace ATE.Domain.Station
             }
             return port;
         }
+        
         public override void SubscribeToBillingSystem(BaseBillingSystem billingSystem)
         {
             billingSystem.CallAllowedEvent += OnCallAllowed;
             billingSystem.CallCanceledEvent += OnCallCanceled;
         }
+        
         public override void OnTerminalStartedCall(object sender, CallArgs e)
         {
             BasePort port = _portController.GetByPhoneNumber(e.TargetNumber);
@@ -110,6 +114,7 @@ namespace ATE.Domain.Station
                 });
             }
         }
+        
         public override void OnTerminalRejectedCall(object sender, CallArgs e)
         {
             if (e.Status == CallStatus.Await)
@@ -139,6 +144,7 @@ namespace ATE.Domain.Station
                 });
             }
         }
+        
         public override void OnTerminalEndedCall(object sender, CallArgs e)
         {
             if (sender is BaseTerminal terminal && e.Status == CallStatus.Accepted)
@@ -169,6 +175,7 @@ namespace ATE.Domain.Station
                 OnCallEndedEvent(sender, args);
             }
         }
+        
         public override void OnCallAllowed(object sender, CallArgs e)
         {
             var port = _portController.GetByPhoneNumber(e.TargetNumber);
@@ -186,6 +193,7 @@ namespace ATE.Domain.Station
             port.HandleIncomingCall(sender, e);
 
         }
+        
         public override void OnCallCanceled(object sender, CallCanceledArgs e)
         {
             var port = _portController.GetByPhoneNumber(e?.SourcePhoneNumber);
